@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="property_sheets_vs" />
+  <PropertyGroup Label="UserMacros">
+    <OPENVX_APEX_FAST_DIR>$(S32V234_SDK_ROOT)\libs\app_libs\apex_fast_lib</OPENVX_APEX_FAST_DIR>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(S32V234_SDK_ROOT)\libs\app_libs\apex_fast_lib\inc;$(S32V234_SDK_ROOT)\libs\apex_fast_lib\inc\graphs;$(S32V234_SDK_ROOT)\libs\apexcv_base\apexcv_utils\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(OPENVX_APEX_FAST_DIR)\build-deskwin32\mvc\$(Configuration)%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <ProjectReference>
+      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <Lib>
+      <AdditionalLibraryDirectories>$(OPENVX_APEX_FAST_DIR)\build-deskwin32\mvc\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="APULibInstall">
+      <Value>$(APULibInstall)</Value>
+    </BuildMacro>
+    <BuildMacro Include="OPENVX_APEX_FAST_DIR">
+      <Value>$(OPENVX_APEX_FAST_DIR)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>

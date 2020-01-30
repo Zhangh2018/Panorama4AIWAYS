@@ -1,0 +1,61 @@
+#.org    0x00
+#Engine: IPUS2, IPUS3 (LUT)
+#Function:
+#LUT with 12 bit in 16 out with interpoaltion between two seeds
+#
+#step_x, step_in, step_out=1
+# no neighborhood used
+#input:
+#line0: Y 16 bit
+#output:
+#line0: Y 16 bit
+#
+# parameters:
+# gpr14   Shift value
+# gpr15   LUT offset
+#variables:
+# gpr0    shifted down input
+# gpr1    fractional bits of input word
+# gpr2    diff between higher and lower lut 
+# constants:
+# gpr3    max luta for clipping
+# gpr4    fractional bit mask
+# gpr13   maximum ypos
+
+.global luti_start
+
+luti_start:
+  lsl gpr4,gpr14,4 // get mulh fixed point for interpolation
+  or  gpr4,(0 /* unsigned*/ | (1 << 1) /* saturate*/)
+  mov confalu,gpr4
+  lsr gpr3,one,gpr14    // maximum lut bin
+  add gpr3,gpr3,gpr15   // add offset to maximum lut bin
+  mov gpr4,16
+  sub gpr4,gpr4,gpr14   // get no of fractional bits
+  lsr gpr4,one,gpr4     // get fractional bit mask
+  done luti_d1,i
+luti_d1:
+  max  gpr13,gpr13,ypos
+  done luti_d2,i
+luti_d2:
+  lsr  gpr0,ina1,gpr14  // 16bit to 11bit
+
+luti_loop:
+  add  luta,gpr0,gpr15  // add lut offset to 11bit
+  //lsr  hbinincl,ina1,8  // 16bit to 8bit
+  add gpr0,1            // get next luta
+  mov sacc0,lut         // save lower lut boundatry
+  max luta,gpr0,gpr3    //    after clipping to max
+  //lsr hbinincl,ina1,8   // add to histogram
+  and gpr1,ina1,gpr4    // mask out fractional bits
+  sub gpr2,lut,acc0     // get slope between both seeds	
+  mulh acc0,gpr1,gpr2   // multiply slope with fraction bits
+  
+  lsr  gpr0,ina0,gpr14  // do shift for next value to fill stall slot
+  //nop
+  // stall  two cycles from luta->lut
+  dout acc0,luti_loop,ixo
+//      halt
+
+.global luti_end
+luti_end:

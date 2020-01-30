@@ -1,0 +1,86 @@
+# IPUS
+# Function:
+# compute low pass filtered by gaussian 3x3
+# if absolute difference between low pass filtered and input is greater
+# than threshold, then use input, else use low pass filtered
+# Channels:
+# set shift_in/x/out to 1 pixels
+# in0  :  Y
+# in1  :  Y
+# in2  :  Y
+# out0 :  Y denoised / or original
+
+# gaussian coefficients
+# 1  2  1                   4 3 4
+# 2  4  2   right shift = > 3 2 3
+# 1  2  1                   4 3 4
+
+# sum = 16
+
+# Parameters:
+# GPR7       threshold
+# GPR12      0: mark edge pixels black 0xffff: normal mode.
+# GPR13      maximum ypos
+# Variables:
+# GPR8       absdiff(low_pass_filtered - input)
+# GPR10      low pass filtered signal
+# GPR14      # of pixels above threshold of current frame
+# GPR15      # of pixels above threshold of last frame
+
+
+.global denoise_gauss_start
+denoise_gauss_start:
+        sub zero,ypos,zero     // check for frame start
+	beq denoise_gauss_framestart  // init counter
+
+denoise_gauss_continue:
+        mov confalu,(0 /*unsigned*/ | (1<<1) /*saturate*/ | (4<<4) /*shr*/)
+        mov confaddt,(0 /*w*/ | (0<<2) /*use mask*/ | (0<<3) /*unsigned*/)
+	max gpr13,gpr13,ypos
+
+	mov maskv, 0b101000101 // corners
+	mov w,4
+	mov maskv, 0b010101010 // edges
+	mov w,3
+	mov w4,2               // center
+	mov maskv, 0b111111111 // all
+	swp                    // mov shift mask to ww
+
+        done denoise_gauss_d1,i
+denoise_gauss_d1:
+        done denoise_gauss_d2,i
+denoise_gauss_d2:
+        done denoise_gauss_loop,i
+denoise_gauss_loop:
+
+        // compare difference with threshold
+	//and gpr9,ina4,gpr12  // to view edge pixels
+	lsr w,ina,ww
+	// nop // stall one cycle from updating w to getting the su
+	mov gpr10,sum
+        abd gpr8,gpr10,ina4
+
+	done denoise_gauss_check_thr,i  // to reduce stalls
+denoise_gauss_check_thr:
+        sub gpr8,gpr8,gpr7
+	// nop  //stall before branch
+
+	// select filtered if lower than threshold
+	and gpr9,ina5,gpr12  // to view edge pixels
+        bcc denoise_gauss_above_thr    // carry cleared
+        dout gpr10,denoise_gauss_loop,xo
+
+denoise_gauss_above_thr:
+	// keep input signal when higher than threshold
+	add gpr14,1
+	dout gpr9,denoise_gauss_loop,xo
+	//dout ina5,denoise_gauss_loop,xo
+
+denoise_gauss_framestart:
+	mov gpr15,gpr14
+	mov gpr14,zero
+	bal denoise_gauss_continue
+
+        //halt
+.global denoise_gauss_end
+denoise_gauss_end:

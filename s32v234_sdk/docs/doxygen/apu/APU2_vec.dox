@@ -1,0 +1,2765 @@
+
+//////////////////////////////////////////////////////////////////////////////////
+//
+// NXP Confidential Proprietary
+//
+// Copyright 2018 NXP
+// All Rights Reserved
+/
+//////////////////////////////////////////////////////////////////////////////////
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Main Page
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*! \mainpage
+    \image html logo.png
+    
+    To view documentation for the instruction set, visit the <a href="modules.html">modules page</a>.\n
+
+    \todo this uses relative paths, not the best idea?
+*/
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+// APU Compiler - Vector Extensions: Data types, intrinsic functions and operators.
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*! \file APU2_vector.h
+    \brief APU2 Vector Extensions
+*/
+
+/*! \file APU2_vec32.h
+    \brief APU2 Vector Extensions for 32-bit Data Types
+*/
+
+/*! \file APU2_vectorPtr.h
+    \brief APU2 Vector Pointer Extensions
+*/
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+/** \defgroup MemoryStorageQualifier Memory Storage Qualifiers
+   \brief Vector storage qualifiers allow to specify explicitly in which memory the data is stored.
+
+   There two (2) vector qualifiers:
+      - __cmem : data are stored in vector memory  (CMEM);
+      - __dmem : data are stored in data memory    (DMEM);   
+   The default storage location is associated with the data type.
+   The scalar data types are stored in DMEM, and the vector data types are stored in VMEM.
+   
+   \note At this point, the data can only be stored in its default memory.
+ @{
+ */ 
+/** @}*/ // MemoryStorageQualifier
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+/** \defgroup VectorDataTypes Vector Data Types
+   \brief The vector datatypes composed of the scalar elements.
+   
+      Otherwise specified, the vector behavior is essentially the same as its elements.
+      The vector number of elements is depending on the APU configuration.
+ @{
+ */
+ 
+/** \defgroup VectorDataTypeConversions Vector Data Type Conversions
+    \details 
+    Conversion between different vector datatypes, as well as some scalar to vector conversions. Type promotion, Implicit and Explicit conversions. Otherwise specified, the vector conversion behavior is essentially the same as its elements.<BR><BR>
+    The APU2-Tools compiler does not allow implicit casting for all operations and combinations of operands. Relying on implicit casts may cause problems due to native data sizes.  The scalar processor is a 32-bit processor.  The vector processor is a 16-bit processor.  Casting scalar types of int, int32s or int32u implicitly to vector will result in a vec16s type.<BR>
+    
+    <B>Pure vector operations:</B> <BR>
+    -	Vectors of the same type and size may rely on implicit casting.<BR>
+    -	Vectors of same size but different sign require explicit casting.<BR>
+    -	Implicit casting may be used when mixing vec16s and any vec08 operands.  In this case, all operands and results will be implicitly cast to vec16s.<BR>
+    -	Excepting the above, all operations containing operands of different sizes require an explicit cast.<BR>
+    
+    <B>Mixed vector/scalar operations:</B> <BR>
+    -	No implicit casts from scalar to 32-bit vector types occur.  (see above)<BR>
+    -	Implicit casting may be used if both scalar and vector operands have the same size and sign, for 8- and 16-bit types.  In this case, they will be converted to vector types.<BR>
+    -	Implicit casting may also be used if the scalar and vector operands are of the same sign, but the scalar operand is smaller than the vector type.<BR>
+    -	In all other cases, an explicit cast needed.<BR>
+    
+    <B>Other:</B> <BR>
+    The compiler will never require an explicit cast for operations between two or more scalar operands<BR>
+    Logical and relational vector operations implicitly return vbool.<BR>
+    Relying on implicit casting will, where appropriate, result in an output type which is:<BR>
+    -	Vector, if at least one operand was vector.<BR>
+    -	Unsigned, if all operands were of the same size but both signed and unsigned operands were present.<BR>
+    -	The size is set to be the same of the largest size of the operand types.<BR>
+
+    <B>Scalar to scalar</B> <BR>
+    The APU-2 compiler supports all implicit type conversions from one basic scalar data type to any basic scalar data type of the same size or bigger.<BR> 
+    Explicit cast is needed when going to a type of small size.<BR>
+    For example:<BR>
+    int8u b;<BR>
+    int16s a = (int16s)b;<BR>
+    The compiler imposes the following casting rules:<BR>
+    When the size of the destination type is less than the source type, the least significant bits are copied to the destination without any sign conversion.<BR>
+    
+    For example:<BR>
+    int08s a;<BR>
+    int16u b = 0x008F; // b = 143<br><BR>
+    a = b;             // a = 0x8F = -113<BR>
+
+    <B>Scalar to vector</B> <BR>
+    When a scalar assignment is applied to a vector, the scalar value is implicitly casted to all elements of the vector.<BR>
+    For example,<BR>
+    int16u a = 5;<BR>
+    vec16u b = (vec16u)a; // all elements of vector b are equal to a ? equal to 5 <BR>
+
+    <B>Vector to scalar</B> <BR>
+    Vector to scalar cast is prohibited and results in a compiler error.<BR>
+
+    <B>Pointer to scalar</B> <BR>
+    The scalar pointer to a scalar is like any other pointer on a generic CPU. It represents the address where a variable of a given type is located.<BR>
+    For example:<BR>
+    int32u s0;<BR>
+    int32u *p_s0 = &s0;<BR>
+    declares p_s0 as a scalar pointer pointing to a scalar unsigned 32-bit integer stored in DMEM.<BR>
+
+    <B>Pointers to vectors and array of vectors</B> <BR>
+    The same way we can declare scalar pointers to scalars we can declare scalar pointers to vector. For example, first we define an array of 32-bit unsigned vectors that we call v0_ar. Each element of this array is then a 32-bit unsigned vector. Then we define a pointer to a 32-bit unsigned vector and assign to it the address of the first element of our array of vector.<BR>
+    We would write,<BR>
+    
+    vec16s v0_ar[16];<BR>
+    vec16s *pv_v0 = &(v0_ar[0]); // Declares a pointer to a vector in CMEM<BR>
+    pv_v0++;                     // Now point to v0_ar[1];<BR>
+
+    The next line <BR>
+    pv_v0++;<BR>
+    increments the pointer by the vector data type size (here, the vec16u is 2 vecbytes*, so the pointer address increments by 2), and now pv_v0 points to the next element in the array, which is  v0_ar[1].<BR>
+    
+    (*where a vecbyte is the smallest addressable unit in CMEM)<BR>
+ @{
+ */
+
+/** @}*/ // VectorDataTypeConversions
+ 
+/** @}*/ // VectorDataTypes
+
+/** \addtogroup VectorDataTypeConversions Vector Data Type Conversions
+ *  @{
+ */
+/** @}*/ // VectorDataTypeConversions
+
+
+/** \addtogroup VectorDataTypes Vector Data Types
+ *  @{
+ */
+
+/*!
+    \brief Vector Data Type (boolean element).
+    \class vbool
+ */
+
+/*!
+    \brief Vector Data Type (signed 8-bit element).
+    \class vec08s
+ */
+
+/*!
+    \brief Vector Data Type (unsigned 8-bit element).
+    \class vec08u
+ */
+
+/*!
+    \brief Vector Data Type (signed 16-bit element).
+    \class vec16s
+ */
+
+/*!
+    \brief Vector Data Type (unsigned 16-bit element).
+    \class vec16u
+ */
+
+/*!
+    \brief Vector Data Type (signed 32-bit element).
+    \class vec32s
+ */
+
+/*!
+    \brief Vector Data Type (unsigned 32-bit element).
+    \class vec32u
+ */
+
+/** @}*/ // VectorDataTypes
+
+/** \addtogroup VectorDataTypes Vector Data Types
+*  @{
+*/
+
+/* \relates vec16s
+    \relates vec16u
+    \relates vec08s
+    \relates vec08u
+    \fn <data-type> get(int e)
+    \brief Read vector element at CU<sub>e</sub>
+ */
+
+/*! \internal
+    \private
+    \memberof vec08s
+    \fn signed char get(int i)
+    \brief Read vector element at CU<sub>i</sub>
+ */
+
+/*! \internal
+    \private
+    \memberof vec08s
+    \fn void  put(int i, signed char v)   
+    \brief Write scalar data in vector at CU<sub>i</sub>
+ */
+
+/*! \internal
+    \private
+    \memberof vec08s
+    \fn signed char operator[](int i)
+    \brief Read vector element at CU<sub>i</sub>
+ */
+
+/*! \internal
+    \private
+    \memberof vec08u
+    \fn unsigned char get(int i)
+    \brief Read vector element at CU<sub>i</sub>
+ */
+
+/*! \internal
+    \private
+    \memberof vec08u
+    \fn void  put(int i, unsigned char v)   
+    \brief Write scalar data in vector at CU<sub>i</sub>
+ */
+
+/*! \internal
+    \private
+    \memberof vec08u
+    \fn unsigned char operator[](int i)
+    \brief Read vector element at CU<sub>i</sub>
+ */
+
+/*! \internal
+    \private
+    \memberof vec16s
+    \fn short get(int i)
+    \brief Read vector element at CU<sub>i</sub>
+ */
+
+/*! \internal
+    \private
+    \memberof vec16s
+    \fn void  put(int i, short v)   
+    \brief Write scalar data in vector at CU<sub>i</sub>
+ */
+
+/*! \internal
+    \private
+    \memberof vec16s
+    \fn short operator[](int i)
+    \brief Read vector element at CU<sub>i</sub>
+ */
+
+/*! \internal
+    \private
+    \memberof vec16u
+    \fn unsigned short get(int i)
+    \brief Read vector element at CU<sub>i</sub>
+ */
+
+/*! \internal
+    \private
+    \memberof vec16u
+    \fn void  put(int i, unsigned short v)   
+    \brief Write scalar data in vector at CU<sub>i</sub>
+ */
+
+/*! \internal
+    \private
+    \memberof vec16u
+    \fn unsigned short operator[](int i)
+    \brief Read vector element at CU<sub>i</sub>
+ */
+
+/*! \internal
+    \private
+    \memberof vec32s
+    \fn int get(int i)
+    \brief Read vector element at CU<sub>i</sub>
+ */
+
+/*! \internal
+    \private
+    \memberof vec32s
+    \fn void  put(int i, int v)   
+    \brief Write scalar data in vector at CU<sub>i</sub>
+ */
+
+/*! \internal
+    \private
+    \memberof vec32s
+    \fn int operator[](int i)
+    \brief Read vector element at CU<sub>i</sub>
+ */
+
+/*! \internal
+    \private
+    \memberof vec32u
+    \fn unsigned int get(int i)
+    \brief Read vector element at CU<sub>i</sub>
+ */
+
+/*! \internal
+    \private
+    \memberof vec32u
+    \fn void  put(int i, unsigned int v)   
+    \brief Write scalar data in vector at CU<sub>i</sub>
+ */
+
+/*! \internal
+    \private
+    \memberof vec32u
+    \fn unsigned int operator[](int i)
+    \brief Read vector element at CU<sub>i</sub>
+ */
+
+/** @}*/ // VectorDataTypes
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+/** \defgroup VectorOperators Vector Operators
+   \brief The vector operators are similar to its element counterparts.
+ @{
+ */
+
+/** \defgroup VectorArithmeticOperators Arithmetic Operators
+ @{
+ */
+/** @}*/ // VectorArithmeticOperators
+
+/** \defgroup VectorBitwiseOperators Bitwise Operators
+ @{
+ */
+/** @}*/ // VectorBitwiseOperators
+
+/** \defgroup VectorShiftOperators Shift Operators
+ @{
+ */
+/** @}*/ // VectorShiftOperators
+
+/** \defgroup VectorComparisonOperators Comparison Operators
+ @{
+ */
+/** @}*/ // VectorComparisonOperators
+
+/** \defgroup VectorLogicalOperators Logical Operators
+ @{
+ */
+/** @}*/ // VectorLogicalOperators
+
+/** @}*/ // VectorOperators
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+/** \defgroup VectorConditionalExecution Vector Conditional Execution
+    \brief      All vector intructions use predication (conditional execution).
+    \details    The following vector extensions possess the same behavior as the scalar counterpart:
+                 - vif (vbool)
+                 - velse
+                 - vendif          
+ @{
+ */
+
+ /*! \fn int vany(vbool vc)
+  \brief Return true if any vector conditon element is true.   
+  \param    vc  Source condition vector
+  \return   Return true if any vector conditons elements is true.  
+  \todo:    Verify behavior in case of guarded conditional execution.
+ */
+
+ /*! \fn int vall(vbool vc)
+  \brief Return true only if all vector conditon elements are true.  
+  \param    vc  Source condition vector
+  \return   Return true only if all vector conditons elements are true.  
+  \todo:    Verify behavior in case of guarded conditional execution.
+ */
+ 
+/** @}*/ // VectorConditionalExecution 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+/** \defgroup VectorInstrinsicInstructions Vector Intrinsic Functions
+   \brief The vector intrinsic functions are built-in functions with the APU2 compiler
+      that provide explicit access to lower level assembly instructions from C.
+ @{
+ */
+
+/** \defgroup VectorInstrinsicArithmeticInstructions Arithmetic Instructions
+ @{
+ */
+/** @}*/ // VectorInstrinsicArithmeticInstructions
+ 
+/** \defgroup VectorInstrinsicBitwiseInstructions Bitwise Instructions
+ @{
+ */
+/** @}*/ // VectorInstrinsicBitwiseInstructions
+
+/** \defgroup VectorInstrinsicShiftInstructions Shift Instructions
+ @{
+ */
+/** @}*/ // VectorInstrinsicShiftInstructions
+
+/** \defgroup VectorInstrinsicComparisonInstructions Comparison Instructions
+   \brief Comparison instructions between vector with a vbool result.
+ @{
+ */
+/** @}*/ // VectorInstrinsicComparisonInstructions
+
+/** \addtogroup VectorInstrinsicSwapInstructions Vector Swap
+    \brief Swap instructions allow to condtionally swap the content of vector based on a condition.
+    @{
+ */
+/** @}*/ // VectorInstrinsicSwapInstructions
+
+/** \defgroup VectorInstrinsicElementAccessInstructions Element Instructions
+    \brief Vector Element Access instructions provide read and write accesses to a single element of a vector.
+    @{
+ */
+/** @}*/ // VectorInstrinsicElementAccessInstructions
+
+/** \defgroup VectorInstrinsicMemoryInstructions Memory Instructions
+    \brief Vector Memory Access instructions provide read and write accesses to a vector memory.
+    @{
+ */
+/** @}*/ // VectorInstrinsicMemoryInstructions
+
+/** \defgroup VectorInstrinsicSpecializedInstructions Specialized Instructions
+    @{
+ */
+
+/** \defgroup VectorInstrinsicSpecializedShiftInstructions Specialized Shift Instructions
+    @{
+ */
+/** @}*/ // VectorInstrinsicSpecializedShiftInstructions
+ 
+/** \defgroup VectorInstrinsicSpecializedMultiplicationInstructions Specialized Multiplication Instructions
+    \brief  Vector 8-bit multipliers allow generating a 16-bit result based on partial 8-bit vectors
+    \details   The location (high or low) and sign (signed or unsigned) of the 8 bits can be specified 
+            generating a total of 16 combinations
+    @{
+ */
+/** @}*/ // VectorInstrinsicSpecializedMultiplicationInstructions
+ 
+/** \internal
+    \defgroup VectorInstrinsicSpecializedExtensionInstructions Specialized Extension Instructions
+    @{
+ */
+/** @}*/ // VectorInstrinsicSpecializedExtensionInstructions
+
+/** @}*/ // VectorInstrinsicSpecializedInstructions
+
+/** @}*/ // VectorInstrinsicInstructions
+ 
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+/** \addtogroup VectorArithmeticOperators
+ @{
+ */
+
+/*! \fn vec08s  operator+ (vec08s va, vec08s vb)
+  \brief Vector Addition 
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va+vb) 
+ */
+
+/*! \fn vec08u  operator+ (vec08u va, vec08u vb)
+  \brief Vector Addition 
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va+vb) 
+ */
+
+/*! \fn vec16s  operator+ (vec16s va, vec16s vb)
+  \brief Vector Addition 
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va+vb) 
+ */
+ 
+/*! \fn vec16u  operator+ (vec16u va, vec16u vb)
+  \brief Vector Addition 
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va+vb) 
+ */
+ 
+/*! \fn vec32s  operator+ (vec32s va, vec32s vb)
+  \brief Vector Addition 
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va+vb) 
+ */
+
+/*! \fn vec32u  operator+ (vec32u va, vec32u vb)
+  \brief Vector Addition 
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va+vb) 
+ */
+   
+/*! \fn vec08s  operator- (vec08s va, vec08s vb)
+  \brief Vector Subtraction 
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va-vb) 
+ */
+
+/*! \fn vec08u  operator- (vec08u va, vec08u vb)
+  \brief Vector Subtraction 
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va-vb) 
+ */
+
+/*! \fn vec16s  operator- (vec16s va, vec16s vb)
+  \brief Vector Subtraction 
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va-vb) 
+ */
+
+/*! \fn vec16u  operator- (vec16u va, vec16u vb)
+  \brief Vector Subtraction 
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va-vb) 
+ */
+
+/*! \fn vec32s  operator- (vec32s va, vec32s vb)
+  \brief Vector Subtraction 
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va-vb) 
+ */
+
+/*! \fn vec32u  operator- (vec32u va, vec32u vb)
+  \brief Vector Subtraction 
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va-vb) 
+ */
+
+/*! \fn vec08s  operator* (vec08s va, vec08s vb)
+  \brief Vector Multiplication 
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va*vb) 
+ */
+
+/*! \fn vec08u  operator* (vec08u va, vec08u vb)
+  \brief Vector Multiplication 
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va*vb) 
+ */
+
+/*! \fn vec16s  operator* (vec16s va, vec16s vb)
+  \brief Vector Multiplication
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va*vb) 
+ */
+
+/*! \fn vec16u  operator* (vec16u va, vec16u vb)
+  \brief Vector Multiplication 
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va*vb) 
+ */
+
+/*! \fn vec32s  operator* (vec32s va, vec32s vb)
+  \brief Vector Multiplication 
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va*vb) 
+ */
+
+/*! \fn vec32u  operator* (vec32u va, vec32u vb)
+  \brief Vector Multiplication 
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va*vb) 
+ */
+
+/*! \fn vec08s  operator/ (vec08s va, vec08s vb)
+  \brief Vector Division 
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va/vb) 
+ */
+
+/*! \fn vec08u  operator/ (vec08u va, vec08u vb)
+  \brief Vector Division 
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va/vb) 
+ */
+
+/*! \fn vec16s  operator/ (vec16s va, vec16s vb)
+  \brief Vector Division (Arithmetic)
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va/vb) 
+ */
+ 
+/*! \fn vec16u  operator/ (vec16u va, vec16u vb)
+  \brief Vector Division 
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va/vb) 
+ */
+
+/*! \fn vec32s  operator/ (vec32s va, vec32s vb)
+  \brief Vector Division 
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va/vb) 
+ */
+
+/*! \fn vec32u  operator/ (vec32u va, vec32u vb)
+  \brief Vector Division 
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va/vb) 
+ */
+
+/*! \fn vec08s  operator% (vec08s va, vec08s vb)
+  \brief Vector Modulo/Remainder 
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va\%vb) 
+ */
+
+/*! \fn vec08u  operator% (vec08u va, vec08u vb)
+  \brief Vector Modulo/Remainder 
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va\%vb) 
+ */
+
+/*! \fn vec16s  operator% (vec16s va, vec16s vb)
+  \brief Vector Modulo/Remainder
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va\%vb) 
+ */
+
+/*! \fn vec16u  operator% (vec16u va, vec16u vb)
+  \brief Vector Modulo/Remainder 
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va\%vb) 
+ */
+
+/*! \fn vec32s  operator% (vec32s va, vec32s vb)
+  \brief Vector Modulo/Remainder 
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va\%vb) 
+ */
+
+/*! \fn vec32u  operator% (vec32u va, vec32u vb)
+  \brief Vector Modulo/Remainder 
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va\%vb) 
+ */
+
+/** @}*/ // VectorArithmeticOperators 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+/** \addtogroup VectorBitwiseOperators
+ @{
+ */
+
+/*! \fn vec08s  operator& (vec08s va, vec08s vb)
+  \brief Vector Bitwise And
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va&vb) 
+ */
+
+/*! \fn vec08u  operator& (vec08u va, vec08u vb)
+  \brief Vector Bitwise And
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va&vb) 
+ */
+
+/*! \fn vec16s  operator& (vec16s va, vec16s vb)
+  \brief Vector Bitwise And
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va&vb) 
+ */
+
+/*! \fn vec16u  operator& (vec16u va, vec16u vb)
+  \brief Vector Bitwise And
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va&vb) 
+ */
+
+/*! \fn vec32s  operator& (vec32s va, vec32s vb)
+  \brief Vector Bitwise And
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va&vb) 
+ */
+
+/*! \fn vec32u  operator& (vec32u va, vec32u vb)
+  \brief Vector Bitwise And
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va&vb) 
+ */
+
+/*! \fn vec08s  operator| (vec08s va, vec08s vb)
+  \brief Vector Bitwise Or
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va|vb) 
+ */
+
+/*! \fn vec08u  operator| (vec08u va, vec08u vb)
+  \brief Vector Bitwise Or
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va|vb) 
+ */
+
+/*! \fn vec16s  operator| (vec16s va, vec16s vb)
+  \brief Vector Bitwise Or
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va|vb) 
+ */
+
+/*! \fn vec16u  operator| (vec16u va, vec16u vb)
+  \brief Vector Bitwise Or
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va|vb) 
+ */
+
+/*! \fn vec32s  operator| (vec32s va, vec32s vb)
+  \brief Vector Bitwise Or
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va|vb) 
+ */
+
+/*! \fn vec08s  operator^ (vec08s va, vec08s vb)
+  \brief Vector Bitwise Exlusive-Or
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va^vb) 
+ */
+
+/*! \fn vec08u  operator^ (vec08u va, vec08u vb)
+  \brief Vector Bitwise Exlusive-Or
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va^vb) 
+ */
+
+/*! \fn vec16s  operator^ (vec16s va, vec16s vb)
+  \brief Vector Bitwise Exlusive-Or
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va^vb) 
+ */
+
+/*! \fn vec16u  operator^ (vec16u va, vec16u vb)
+  \brief Vector Bitwise Exlusive-Or
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va^vb) 
+ */
+
+/*! \fn vec32s  operator^ (vec32s va, vec32s vb)
+  \brief Vector Bitwise Exlusive-Or
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va^vb) 
+ */
+
+/*! \fn vec32u  operator^ (vec32u va, vec32u vb)
+  \brief Vector Bitwise Exlusive-Or
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va^vb) 
+ */
+
+/*! \fn vec08s  operator~ (vec08s va)
+  \brief Vector Bitwise Not
+  \param    va  Source vector
+  \return   (~va) 
+ */
+
+/*! \fn vec08u  operator~ (vec08u va)
+  \brief Vector Bitwise Not
+  \param    va  Source vector
+  \return   (~va) 
+ */
+
+/*! \fn vec16s  operator~ (vec16s va)
+  \brief Vector Bitwise Not
+  \param    va  Source vector
+  \return   (~va) 
+ */
+
+/*! \fn vec16u  operator~ (vec16u va)
+  \brief Vector Bitwise Not
+  \param    va  Source vector
+  \return   (~va) 
+ */
+
+/*! \fn vec32s  operator~ (vec32s va)
+  \brief Vector Bitwise Not
+  \param    va  Source vector
+  \return   (~va) 
+ */
+
+/*! \fn vec32u  operator~ (vec32u va)
+  \brief Vector Bitwise Not
+  \param    va  Source vector
+  \return   (~va) 
+ */
+
+/** @}*/ // VectorBitwiseOperators 
+ 
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+/** \addtogroup VectorShiftOperators
+ @{
+ */
+
+/*! \fn vec08s  operator>>(vec08s va, vec08s vs)
+  \brief Vector Shift Right
+  \param    va  Source vector
+  \param    vs  Source vector
+  \return   (va>>vs) 
+ */
+
+/*! \fn vec08u  operator>>(vec08u va, vec08u vs)
+  \brief Vector Shift Right
+  \param    va  Source vector
+  \param    vs  Source vector
+  \return   (va>>vs) 
+ */
+
+/*! \fn vec16s  operator>>(vec16s va, vec16s vs)
+  \brief Vector Shift Right
+  \param    va  Source vector
+  \param    vs  Source vector
+  \return   (va>>vs) 
+ */
+
+/*! \fn vec16u  operator>>(vec16u va, vec16u vs)
+  \brief Vector Shift Right
+  \param    va  Source vector
+  \param    vs  Source vector
+  \return   (va>>vs) 
+ */
+
+/*! \fn vec32s  operator>>(vec32s va, vec32s vs)
+  \brief Vector Shift Right
+  \param    va  Source vector
+  \param    vs  Source vector
+  \return   (va>>vs) 
+ */
+
+/*! \fn vec32u  operator>>(vec32u va, vec32u vs)
+  \brief Vector Shift Right
+  \param    va  Source vector
+  \param    vs  Source vector
+  \return   (va>>vs) 
+ */
+
+/*! \fn vec08s  operator<<(vec08s va, vec08s vs)
+  \brief Vector Shift Right
+  \param    va  Source vector
+  \param    vs  Source vector
+  \return   (va<<vs) 
+ */
+
+/*! \fn vec08u  operator<<(vec08u va, vec08u vs)
+  \brief Vector Shift Left
+  \param    va  Source vector
+  \param    vs  Source vector
+  \return   (va<<vs) 
+ */
+
+/*! \fn vec16s  operator<<(vec16s va, vec16s vs)
+  \brief Vector Shift Left
+  \param    va  Source vector
+  \param    vs  Source vector
+  \return   (va<<vs) 
+ */
+
+/*! \fn vec16u  operator<<(vec16u va, vec16u vs)
+  \brief Vector Shift Right
+  \param    va  Source vector
+  \param    vs  Source vector
+  \return   (va<<vs) 
+ */
+
+/*! \fn vec32s  operator<<(vec32s va, vec32s vs)
+  \brief Vector Shift Right
+  \param    va  Source vector
+  \param    vs  Source vector
+  \return   (va<<vs) 
+ */
+
+/*! \fn vec32u  operator<<(vec32u va, vec32u vs)
+  \brief Vector Shift Right
+  \param    va  Source vector
+  \param    vs  Source vector
+  \return   (va<<vs) 
+ */
+
+/** @}*/ // VectorShiftOperators 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+/** \addtogroup VectorComparisonOperators
+    \todo   These are not showing for vec08 in generated documentation since they are not implemented in the .h file. 
+            However, comparison ops are supported for vec08. Consider using excel input to generate documentation.
+            For instance, use an ExcelDNA alternatice to give XML ouptut then feed to doxygen to generate doc.
+ @{
+ */
+
+/*! \fn vbool operator==(vec08s va, vec08s vb)
+  \brief Vector Set Comparison Equal
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va==vs)
+ */
+
+/*! \fn vbool operator==(vec08u va, vec08u vb)
+  \brief Vector Set Comparison Equal
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va==vs)
+ */
+
+/*! \fn vbool operator==(vec16s va, vec16s vb)
+  \brief Vector Set Comparison Equal
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va==vs)
+ */
+
+/*! \fn vbool operator==(vec16u va, vec16u vb)
+  \brief Vector Set Comparison Equal
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va==vs)
+ */
+
+/*! \fn vbool operator==(vec32s va, vec32s vb)
+  \brief Vector Set Comparison Equal
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va==vs)
+ */
+
+/*! \fn vbool operator==(vec32u va, vec32u vb)
+  \brief Vector Set Comparison Equal
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va==vs)
+ */
+
+/*! \fn vbool operator!=(vec08s va, vec08s vb)
+  \brief Vector Set Comparison Not Equal
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va!=vb)
+ */
+
+/*! \fn vbool operator!=(vec08u va, vec08u vb)
+  \brief Vector Set Comparison Not Equal
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va!=vb)
+ */
+
+/*! \fn vbool operator!=(vec16s va, vec16s vb)
+  \brief Vector Set Comparison Not Equal
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va!=vb)
+ */
+
+/*! \fn vbool operator!=(vec16u va, vec16u vb)
+  \brief Vector Set Comparison Not Equal
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va!=vb)
+ */
+
+/*! \fn vbool operator!=(vec32s va, vec32s vb)
+  \brief Vector Set Comparison Not Equal
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va!=vb)
+ */
+/*! \fn vbool operator!=(vec32u va, vec32u vb)
+  \brief Vector Set Comparison Not Equal
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va!=vb)
+ */
+
+/*! \fn vbool operator>=(vec08s va, vec08s vb)
+  \brief Vector Set Greater than or Equal
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va>=vb)
+ */
+
+/*! \fn vbool operator>=(vec08u va, vec08u vb)
+  \brief Vector Set Greater than or Equal
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va>=vb)
+ */
+
+/*! \fn vbool operator>=(vec16s va, vec16s vb)
+  \brief Vector Set Greater than or Equal
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va>=vb)
+ */
+
+/*! \fn vbool operator>=(vec16u va, vec16u vb)
+  \brief Vector Set Greater than or Equal
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va>=vb)
+ */
+
+/*! \fn vbool operator>=(vec32s va, vec32s vb)
+  \brief Vector Set Greater than or Equal
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va>=vb)
+ */
+
+/*! \fn vbool operator>=(vec32u va, vec32u vb)
+  \brief Vector Set Greater than or Equal
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va>=vb)
+ */
+
+/*! \fn vbool operator> (vec08s va, vec08s vb)
+  \brief Vector Set Greater Than
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va> vb)
+ */
+
+/*! \fn vbool operator> (vec08u va, vec08u vb)
+  \brief Vector Set Greater Than
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va> vb)
+ */
+
+/*! \fn vbool operator> (vec16s va, vec16s vb)
+  \brief Vector Set Greater Than
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va> vb)
+ */
+
+/*! \fn vbool operator> (vec16u va, vec16u vb)
+  \brief Vector Set Greater Than
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va> vb)
+ */
+
+/*! \fn vbool operator> (vec32s va, vec32s vb)
+  \brief Vector Set Greater Than
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va> vb)
+ */
+
+/*! \fn vbool operator> (vec32u va, vec32u vb)
+  \brief Vector Set Greater Than
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va> vb)
+ */
+
+/*! \fn vbool operator<=(vec08s va, vec08s vb)
+  \brief Vector Set Less than or Equal
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va<=vb)
+ */
+
+/*! \fn vbool operator<=(vec08u va, vec08u vb)
+  \brief Vector Set Less than or Equal
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va<=vb)
+ */
+
+/*! \fn vbool operator<=(vec16s va, vec16s vb)
+  \brief Vector Set Less than or Equal
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va<=vb)
+ */
+
+/*! \fn vbool operator<=(vec16u va, vec16u vb)
+  \brief Vector Set Less than or Equal
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va<=vb)
+ */
+
+/*! \fn vbool operator<=(vec32s va, vec32s vb)
+  \brief Vector Set Less than or Equal
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va<=vb)
+ */
+
+/*! \fn vbool operator<=(vec32u va, vec32u vb)
+  \brief Vector Set Less than or Equal
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va<=vb)
+ */
+
+/*! \fn vbool operator< (vec08s va, vec08s vb)
+  \brief Vector Set Less Than
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va< vb)
+ */
+
+/*! \fn vbool operator< (vec08u va, vec08u vb)
+  \brief Vector Set Less Than
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va< vb)
+ */
+
+/*! \fn vbool operator< (vec16s va, vec16s vb)
+  \brief Vector Set Less Than
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va< vb)
+ */
+
+/*! \fn vbool operator< (vec16u va, vec16u vb)
+  \brief Vector Set Less Than
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va< vb)
+ */
+
+/*! \fn vbool operator< (vec32s va, vec32s vb)
+  \brief Vector Set Less Than
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va< vb)
+ */
+
+/*! \fn vbool operator< (vec32u va, vec32u vb)
+  \brief Vector Set Less Than
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va< vb)
+ */
+
+/** @}*/ // VectorComparisonOperators 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+/** \addtogroup VectorLogicalOperators
+ @{
+ */
+
+/*! \fn vbool  operator&&(vbool va, vbool vb)
+  \brief Vector Set Logical And
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va&&vb) 
+ */
+
+/*! \fn vbool  operator||(vbool va, vbool vb)
+  \brief Vector Set Logical Or
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va||vb) 
+ */
+
+/*! \fn vbool operator! (vbool va)
+  \brief Vector Set Logical Negation
+  \param    va  Source vector
+  \return   (va==0)
+ */
+
+ /** @}*/ // VectorLogicalOperators
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+/** \addtogroup VectorInstrinsicArithmeticInstructions
+ @{
+ */
+
+/*! \fn vec16s vadd(vec16s va, vec16s vb)
+  \brief Vector Addition
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va+vb)
+ */
+
+/*! \fn vec16u vadd(vec16u va, vec16u vb)
+  \brief Vector Addition
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va+vb)
+ */
+
+/*! \fn vec32s vadd(vec32s va, vec32s vb)
+  \brief Vector Addition
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va+vb)
+ */
+
+/*! \fn vec32u vadd(vec32u va, vec32u vb)
+  \brief Vector Addition
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va+vb)
+ */
+
+/*! \fn vec16s vadd(vec16s va, vec16s vb, vbool& vf)
+  \brief Vector Addition (and Carry Generation)
+  \param    va  Source vector
+  \param    vb  Source vector
+  \param    vf  Vector carry (Output)
+  \return (va+vb)
+ */
+
+ /*! \fn vec16u vadd(vec16u va, vec16u vb, vbool& vf)
+  \brief Vector Addition (and Carry Generation)
+  \param    va  Source vector
+  \param    vb  Source vector
+  \param    vf  Vector Carry (Output)
+  \return (va+vb)
+ */
+
+/*! \fn vec32s vadd(vec32s va, vec32s vb, vbool& vf)
+  \brief Vector Addition (and Carry Generation)
+  \param    va  Source vector
+  \param    vb  Source vector
+  \param    vf  Vector Carry (Output)
+  \return (va+vb)
+ */
+
+/*! \fn vec32u vadd(vec32u va, vec32u vb, vbool& vf)
+  \brief Vector Addition (and Carry Generation)
+  \param    va  Source vector
+  \param    vb  Source vector
+  \param    vf  Vector Carry (Output)
+  \return (va+vb)
+ */
+
+/*! \fn vec16s vaddx(vec16s va, vec16s vb, vbool vc)
+  \brief Vector Addition with Carry
+  \param    va  Source vector
+  \param    vb  Source vector
+  \param    vc  Vector Carry (Input)
+  \return   (va+vb+vc)
+ */
+
+/*! \fn vec16u vaddx(vec16u va, vec16u vb, vbool vc)
+  \brief Vector Addition with Carry
+  \param    va  Source vector
+  \param    vb  Source vector
+  \param    vc  Vector Carry (Input)
+  \return   (va+vb+vc)
+ */
+
+/*! \fn vec32s vaddx(vec32s va, vec32s vb, vbool vc)
+  \brief Vector Addition with Carry
+  \param    va  Source vector
+  \param    vb  Source vector
+  \param    vc  Vector Carry (Input)
+  \return   (va+vb+vc)
+ */
+
+/*! \fn vec32u vaddx(vec32u va, vec32u vb, vbool vc)
+  \brief Vector Addition with Carry
+  \param    va  Source vector
+  \param    vb  Source vector
+  \param    vc  Vector Carry (Input)
+  \return   (va+vb+vc)
+ */
+
+/*! \fn vec16s vaddx(vec16s va, vec16s vb, vbool vc, vbool& vf)
+  \brief Vector Addition with Carry (and Carry Generation)
+  \param    va  Source vector
+  \param    vb  Source vector
+  \param    vc  Vector Carry (Input)
+  \param    vf  Vector Carry (Output)
+  \return   (va+vb+vc)
+ */
+
+/*! \fn vec16u vaddx(vec16u va, vec16u vb, vbool vc, vbool& vf)
+  \brief Vector Addition with Carry (and Carry Generation)
+  \param    va  Source vector
+  \param    vb  Source vector
+  \param    vc  Vector Carry (Input)
+  \param    vf  Vector Carry (Output)
+  \return   (va+vb+vc)
+ */
+
+/*! \fn vec32s vaddx(vec32s va, vec32s vb, vbool vc, vbool& vf)
+  \brief Vector Addition with Carry (and Carry Generation)
+  \param    va  Source vector
+  \param    vb  Source vector
+  \param    vc  Vector Carry (Input)
+  \param    vf  Vector Carry (Output)
+  \return   (va+vb+vc)
+ */
+
+/*! \fn vec32u vaddx(vec32u va, vec32u vb, vbool vc, vbool& vf)
+  \brief Vector Addition with Carry (and Carry Generation)
+  \param    va  Source vector
+  \param    vb  Source vector
+  \param    vc  Vector Carry (Input)
+  \param    vf  Vector Carry (Output)
+  \return   (va+vb+vc)
+ */
+
+/*! \fn vec16s vadd_sat(vec16s va, vec16s vb)
+  \brief Vector Addition with saturation
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va+vb) > (pow(2,n-1)-1) ? (pow(2,n-1)-1) : (((va+vb) < pow(2,n-1))? pow(2,n-1):(va+vb))
+ */
+
+/*! \fn vec16u vadd_sat(vec16u va, vec16u vb)
+  \brief Vector Addition with saturation
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va+vb) > (pow(2,n)-1) ? (pow(2,n)-1) : (va+vb)
+ */
+
+/*! \fn vec16s vsub(vec16s va, vec16s vb)
+  \brief Vector Subtraction
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va-vb)
+ */
+
+/*! \fn vec16u vsub(vec16u va, vec16u vb)
+  \brief Vector Subtraction
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va-vb)
+ */
+
+/*! \fn vec32s vsub(vec32s va, vec32s vb)
+  \brief Vector Subtraction
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va-vb)
+ */
+
+/*! \fn vec32u vsub(vec32u va, vec32u vb)
+  \brief Vector Subtraction
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va-vb)
+ */
+
+/*! \fn vec16s vsub(vec16s va, vec16s vb, vbool& vf)
+  \brief Vector Subtraction (and Carry Generation)
+  \param    va  Source vector
+  \param    vb  Source vector
+  \param    vf  Vector Carry (Output)
+  \return (va-vb)
+ */
+
+/*! \fn vec16u vsub(vec16u va, vec16u vb, vbool& vf)
+  \brief Vector Subtraction (and Carry Generation)
+  \param    va  Source vector
+  \param    vb  Source vector
+  \param    vf  Vector Carry (Output)
+  \return (va-vb)
+ */
+
+/*! \fn vec32s vsub(vec32s va, vec32s vb, vbool& vf)
+  \brief Vector Subtraction (and Carry Generation)
+  \param    va  Source vector
+  \param    vb  Source vector
+  \param    vf  Vector Carry (Output)
+  \return (va-vb)
+ */
+
+/*! \fn vec32u vsub(vec32u va, vec32u vb, vbool& vf)
+  \brief Vector Subtraction (and Carry Generation)
+  \param    va  Source vector
+  \param    vb  Source vector
+  \param    vf  Vector Carry (Output)
+  \return (va-vb)
+ */
+
+/*! \fn vec16s vsubx(vec16s va, vec16s vb, vbool vc)
+  \brief Vector Subtraction with Carry
+  \param    va  Source vector
+  \param    vb  Source vector
+  \param    vc  Vector Carry (Input)
+  \return   (va-vb-vc)
+ */
+
+/*! \fn vec16u vsubx(vec16u va, vec16u vb, vbool vc)
+  \brief Vector Subtraction with Carry
+  \param    va  Source vector
+  \param    vb  Source vector
+  \param    vc  Vector Carry (Input)
+  \return   (va-vb-vc)
+ */
+
+/*! \fn vec32s vsubx(vec32s va, vec32s vb, vbool vc)
+  \brief Vector Subtraction with Carry
+  \param    va  Source vector
+  \param    vb  Source vector
+  \param    vc  Vector Carry (Input)
+  \return   (va-vb-vc)
+ */
+
+/*! \fn vec32u vsubx(vec32u va, vec32u vb, vbool vc)
+  \brief Vector Subtraction with Carry
+  \param    va  Source vector
+  \param    vb  Source vector
+  \param    vc  Vector Carry (Input)
+  \return   (va-vb-vc)
+ */
+
+/*! \fn vec16s vsubx(vec16s va, vec16s vb, vbool vc, vbool& vf)
+  \brief Vector Substraction with Carry (and Carry Generation)
+  \param    va  Source vector
+  \param    vb  Source vector
+  \param    vc  Vector Carry (Input)
+  \param    vf  Vector Carry (Output)
+  \return   (va-vb-vc)
+ */
+
+/*! \fn vec16u vsubx(vec16u va, vec16u vb, vbool vc, vbool& vf)
+  \brief Vector Substraction with Carry (and Carry Generation)
+  \param    va  Source vector
+  \param    vb  Source vector
+  \param    vc  Vector Carry (Input)
+  \param    vf  Vector Carry (Output)
+  \return   (va-vb-vc)
+ */
+
+/*! \fn vec32s vsubx(vec32s va, vec32s vb, vbool vc, vbool& vf)
+  \brief Vector Substraction with Carry (and Carry Generation)
+  \param    va  Source vector
+  \param    vb  Source vector
+  \param    vc  Vector Carry (Input)
+  \param    vf  Vector Carry (Output)
+  \return   (va-vb-vc)
+ */
+
+/*! \fn vec32u vsubx(vec32u va, vec32u vb, vbool vc, vbool& vf)
+  \brief Vector Substraction with Carry (and Carry Generation)
+  \param    va  Source vector
+  \param    vb  Source vector
+  \param    vc  Vector Carry (Input)
+  \param    vf  Vector Carry (Output)
+  \return   (va-vb-vc)
+ */
+
+/*! \fn vec16s vsub_sat(vec16s va, vec16s vb)
+  \brief Vector Substraction with saturation
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va-vb) >  (pow(2,n-1)-1) ? (pow(2,n-1)-1) : (((va-vb) < pow(2,n-1))? pow(2,n-1):(va-vb))
+ */
+
+/*! \fn vec16u vsub_sat(vec16u va, vec16u vb)
+  \brief Vector Substraction with saturation
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va-vb) > (pow(2,n)-1) ? (pow(2,n)-1) : (va-vb)
+ */
+
+/*! \fn vec16s vabs_diff(vec16u va, vec16s vb)
+  \brief Vector Absolute Difference 
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   |va-vb|
+ */
+
+/*! \fn vec16u vabs_diff(vec16u va, vec16u vb)
+  \brief Vector Absolute Difference 
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   |va-vb|
+ */
+
+/*! \fn vec16s vasb(vec16s va, vec16s vb, vbool vc)
+  \brief Vector Add/Subtract based on condition
+  \param    va  Source vector
+  \param    vb  Source vector
+  \param    vc  Source vector for giving condition
+  \return   (vc==true)?(va+vb):(va-vb)
+ */
+
+/*! \fn vec16u vasb(vec16u va, vec16u vb, vbool vc)
+  \brief Vector Add/Subtract based on condition
+  \param    va  Source vector
+  \param    vb  Source vector
+  \param    vc  Source vector for giving condition
+  \return   (vc==true)?(va+vb):(va-vb)
+ */
+
+/*! \fn vec16s vasbs(vec16s va, vec16s vb)
+  \brief Vector Add va with absolute value of vb
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va+|vb|)
+ */
+
+/*! \fn vec16u vasbs(vec16u va, vec16s vb)
+  \brief Vector Add va with absolute value of vb
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va+|vb|)
+ */
+
+/*! \fn vec16s vmul(vec16s va, vec16s vb)
+  \brief Vector Multiplication (16-bit)
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va*vb) 
+ */
+
+/*! \fn vec16u vmul(vec16u va, vec16u vb)
+  \brief Vector Multiplication (16-bit)
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va*vb) 
+ */
+
+/*! \fn vec32s vmul(vec32s va, vec32s vb)
+  \brief Vector Multiplication (16-bit)
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va*vb) 
+ */
+
+/*! \fn vec32u vmul(vec32u va, vec32u vb)
+  \brief Vector Multiplication (16-bit)
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va*vb) 
+ */
+
+/*! \fn void vacl(vec32s& va, vec16s vb)
+  \brief Vector Accumulate Low (32+=16-bit, sign-extending)
+  \param    va  Source vector
+  \param    vb  Source vector
+  Computes  va += (vec32s)sext(vb)
+ */
+
+/*! \fn void vacl(vec32u& va, vec16s vb)
+  \brief Vector Accumulate Low (32+=16-bit, sign-extending)
+  \param    va  Source vector
+  \param    vb  Source vector
+  Computes  va += (vec32s)sext(vb)
+ */
+
+/*! \fn void vacl(vec32s& va, vec16u vb)
+  \brief Vector Accumulate Low (32+=16-bit, zero-extending)
+  \param    va  Source vector
+  \param    vb  Source vector
+  Computes  va += (vec32u)zext(vb)
+ */
+
+/*! \fn void vacl(vec32u& va, vec16u vb)
+  \brief Vector Accumulate Low (32+=16-bit, zero-extending)
+  \param    va  Source vector
+  \param    vb  Source vector
+  Computes  va += (vec32u)zext(vb)
+ */
+
+/*! \fn void vacm(vec32s& va, vec16s vb)
+  \brief Vector Accumulate Middle (32+=16-bit, sign-extending)
+  \param    va  Source vector
+  \param    vb  Source vector
+  Computes  va += (vec32s)sext(vb) << 8
+ */
+
+/*! \fn void vacm(vec32u& va, vec16s vb)
+  \brief Vector Accumulate Middle (32+=16-bit, sign-extending)
+  \param    va  Source vector
+  \param    vb  Source vector
+  Computes  va += (vec32s)sext(vb) << 8
+ */
+
+/*! \fn void vacm(vec32s& va, vec16u vb)
+  \brief Vector Accumulate Middle (32+=16-bit, zero-extending)
+  \param    va  Source vector
+  \param    vb  Source vector
+  Computes  va += (vec32u)zext(vb) << 8
+ */
+
+/*! \fn void vacm(vec32u& va, vec16u vb)
+  \brief Vector Accumulate Middle (32+=16-bit, zero-extending)
+  \param    va  Source vector
+  \param    vb  Source vector
+  Computes  va += (vec32u)zext(vb) << 8
+ */
+
+/*! \fn vec32u vabs(vec32s va) 
+  \brief it returns absolute value (32-bit)
+  \param    va  Source vector
+  \return   abs(va) 
+ */ 
+
+/*! \fn vec16s vsat(vec16s va,vec16s vb,vec16s vc)
+  \brief If the source is greater than the upper bound or smaller than the lower bound, it is set ("clamped") to the upper/lower bound (16-bit)
+  \param    va  Source vector
+  \param    vb  Lower bound
+  \param    vc  Upper bound  
+  \return   if (va >= upper bound) upper bound, else if (va <= upper bound) lower bound, else va
+ */
+
+/*! \fn vec16u vsat(vec16u va,vec16u vb,vec16u vc)
+  \brief If the source is greater than the upper bound or smaller than the lower bound, it is set ("clamped") to the upper/lower bound (16-bit)
+  \param    va  Source vector
+  \param    vb  Lower bound
+  \param    vc  Upper bound  
+  \return   if (va >= upper bound) upper bound, else if (va <= upper bound) lower bound, else va
+ */
+
+/*! \fn vec16s vclz(vec16s va)
+  \brief It returns the number of leading zeros of va (16-bit). If va is negative, then returns zero.
+  \param    va  Source vector
+  \return   clz(va) 
+ */
+
+/*! \fn vec16u vclz(vec16u va) 
+  \brief It returns the number of leading zeros of va (16-bit).
+  \param    va  Source vector
+  \return   clz(va) 
+ */
+
+/*! \fn vec16s vclb(vec16s va)
+  \brief Returns the number of leading sign bits of va (16-bit).
+  \param    va  Source vector
+  \return   clb(va) 
+ */
+
+/*! \fn vec16u vclb(vec16u va) 
+  \brief Returns the number of leading sign bits of va (16-bit).
+  \param    va  Source vector
+  \return   clb(va) 
+ */
+
+/*! \fn vec16s vpcnt(vec16s va)
+  \brief Returns the number of bits set in va.
+  \param    va  Source vector
+  \return   popcount(va)
+ */
+
+/*! \fn vec16s vpcnt(vec16u va)
+  \brief Returns the number of bits set in va.
+  \param    va  Source vector
+  \return   popcount(va)
+ */
+
+/** @}*/ // VectorInstrinsicArithmeticInstructions
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+/** \addtogroup VectorInstrinsicBitwiseInstructions
+ @{
+ */
+
+/*! \fn vec16s vand(vec16s va, vec16s vb)
+  \brief    Vector Bitwise And
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va&vb)
+ */
+
+/*! \fn vec16u vand(vec16u va, vec16u vb)
+  \brief    Vector Bitwise And
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va&vb)
+ */
+
+/*! \fn vec32s vand(vec32s va, vec32s vb)
+  \brief    Vector Bitwise And
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va&vb)
+ */
+
+/*! \fn vec32u vand(vec32u va, vec32u vb)
+  \brief    Vector Bitwise And
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va&vb)
+ */
+
+/*! \fn vec16s vor(vec16s va, vec16s vb)
+  \brief    Vector Bitwise Or
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va|vb)
+ */
+
+/*! \fn vec16u vor(vec16u va, vec16u vb)
+  \brief    Vector Bitwise Or
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va|vb)
+ */
+
+/*! \fn vec32s vor(vec32s va, vec32s vb)
+  \brief    Vector Bitwise Or
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va|vb)
+ */
+
+/*! \fn vec32u vor(vec32u va, vec32u vb)
+  \brief    Vector Bitwise Or
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va|vb)
+ */
+
+/*! \fn vec16s vxor(vec16s va, vec16s vb)
+  \brief    Vector Bitwise eXclusive-Or
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va^vb)
+ */
+
+/*! \fn vec16u vxor(vec16u va, vec16u vb)
+  \brief    Vector Bitwise eXclusive-Or
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va^vb)
+ */
+
+/*! \fn vec32s vxor(vec32s va, vec32s vb)
+  \brief    Vector Bitwise eXclusive-Or
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va^vb)
+ */
+
+/*! \fn vec32u vxor(vec32u va, vec32u vb)
+  \brief    Vector Bitwise eXclusive-Or
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va^vb)
+ */
+
+/*! \fn vec16s vnot(vec16s va)
+  \brief    Vector Bitwise Not (Vector Ones' Complement)
+  \param    va  Source vector
+  \return   (~va)
+ */
+
+/*! \fn vec16u vnot(vec16u va)
+  \brief    Vector Bitwise Not (Vector Ones' Complement)
+  \param    va  Source vector
+  \return   (~va)
+  \todo:    Missing
+ */
+
+/*! \fn vec32s vnot(vec32s va)
+  \brief    Vector Bitwise Not (Vector Ones' Complement)
+  \param    va  Source vector
+  \return   (~va)
+ */
+
+/*! \fn vec32u vnot(vec32u va)
+  \brief    Vector Bitwise Not (Vector Ones' Complement)
+  \param    va  Source vector
+  \return   (~va)
+ */
+
+/*! \fn vec16s vcomplement(vec16s va)
+  \brief    Vector Ones' Complement
+  \param    va  Source vector
+  \return   (~va)
+  \deprecated
+ */
+
+/*! \fn vec16u vcomplement(vec16u va)
+  \brief    Vector Ones' Complement
+  \param    va  Source vector
+  \return   (~va)
+  \deprecated
+ */
+
+/*! \fn vec32s vcomplement(vec32s va)
+  \brief    Vector Ones' Complement
+  \param    va  Source vector
+  \return   (~va)
+  \deprecated
+ */
+
+/*! \fn vec32u vcomplement(vec32u va)
+  \brief    Vector Ones' Complement
+  \param    va  Source vector
+  \return   (~va)
+  \deprecated
+ */
+
+/** @}*/ // VectorInstrinsicBitwiseInstructions
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+/** \addtogroup VectorInstrinsicShiftInstructions
+ @{
+ */
+
+/*! \fn vec16s vsl(vec16s va, vec16s vs)
+  \brief Vector Shift Left (Logical)
+  \param    va  Source vector
+  \param    vs  Shift value
+  \return   (va<<vs)
+ */
+
+/*! \fn vec16u vsl(vec16u va, vec16u vs)
+  \brief Vector Shift Left (Logical)
+  \param    va  Source vector
+  \param    vs  Shift value
+  \return   (va<<vs)
+ */
+
+/*! \fn vec16s vsr(vec16s va, vec16s vs)
+  \brief Vector Shift Right (Arithmetic)
+  \param    va  Source vector
+  \param    vs  Shift value
+  \return   (va>>vs)
+ */
+
+/*! \fn vec16u vsr(vec16u va, vec16u vs)
+  \brief Vector Shift Right (Arithmetic)
+  \param    va  Source vector
+  \param    vs  Shift value
+  \return   (va>>vs)
+ */
+
+/*! \fn vec32s vsr(vec32s va, vec32s vs)
+  \brief Vector Shift Right (Arithmetic)
+  \param    va  Source vector
+  \param    vs  Shift value
+  \return   (va>>vs)
+ */
+
+/*! \fn vec16s vsll(vec16s va, vec16s vs)
+  \brief Vector Shift Left Logical
+  \param    va  Source vector
+  \param    vs  Shift value
+  \return   (va<<vs)
+ */
+
+/*! \fn vec16u vsll(vec16u va, vec16u vs)
+  \brief Vector Shift Left Logical
+  \param    va  Source vector
+  \param    vs  Shift value
+  \return   (va<<vs)
+ */
+
+/*! \fn vec32s vsll(vec32s va, vec32s vs)
+  \brief Vector Shift Left Logical
+  \param    va  Source vector
+  \param    vs  Shift value
+  \return   (va<<vs)
+ */
+
+/*! \fn vec16s vsra(vec16s va, vec16s vs)
+  \brief Vector Shift Right Arithmetic
+  \param    va  Source vector
+  \param    vs  Shift value
+  \return   (va>>vs)
+ */ 
+
+/*! \fn vec16u vsra(vec16u va, vec16u vs)
+  \brief Vector Shift Right Arithmetic
+  \param    va  Source vector
+  \param    vs  Shift value
+  \return   (va>>vs)
+ */ 
+
+/*! \fn vec32s vsra(vec32s va, vec32s vs)
+  \brief Vector Shift Right Arithmetic
+  \param    va  Source vector
+  \param    vs  Shift value
+  \return   (va>>vs)
+ */ 
+
+/*! \fn vec16s vsrl(vec16s va, vec16s vs)
+  \brief Vector Shift Right Logical
+  \param    va  Source vector
+  \param    vs  Shift value
+  \return   (vec16s)((vec16u)(va)>>vs)
+ */ 
+
+/*! \fn vec16u vsrl(vec16u va, vec16u vs)
+  \brief Vector Shift Right Logical
+  \param    va  Source vector
+  \param    vs  Shift value
+  \return   (vec16u)((vec16u)(va)>>vs)
+ */ 
+
+/*! \fn vec32s vsrl(vec32s va, vec32s vs)
+  \brief Vector Shift Right Logical
+  \param    va  Source vector
+  \param    vs  Shift value
+  \return   (vec32s)((vec32s)(va)>>vs)
+ */
+
+/*! \fn vec16s  vslo(vec16s va, vbool vc)
+  \brief Vector Shift Left by 1, pushing in Overflow bit at the LSB.
+  \param    va  Source vector
+  \param    vc  Vector boolean to be inserted into LSB of output.
+  \return   (va<<1) | zext(vc)
+ */
+
+/*! \fn vec16s  vslo(vec16s va, vbool vc, vbool& vd)
+  \brief Vector Shift Left by 1, pushing in Overflow bit at the LSB and pushing out MSB into Overflow bit.
+  \param    va  Source vector
+  \param    vc  Vector boolean to be inserted into LSB of output.
+  \param    vd  Vector boolean to be extracted from MSB of input.
+  \return   (va<<1) | zext(vc)
+ */
+
+/*! \fn vec16s  vslc(vec16s va, vbool vc)
+  \brief Vector Shift Left by 1, pushing in Condition bit at the LSB.
+  
+  This variant may perform better if vc is not the carry-out of an addition or subtraction.
+  
+  \param    va  Source vector
+  \param    vc  Vector boolean to be inserted into LSB of output.
+  \return   (va<<1) | zext(vc)
+ */
+
+/*! \fn vec16s  vsro(vec16s va, vbool vc)
+  \brief Vector Shift Right by 1, pushing in Overflow bit at the MSB.
+  \param    va  Source vector
+  \param    vc  Vector boolean to be inserted into MSB of output.
+  \return   ((vec16u)vc<<15) | ((vec16u)va>>1)
+ */
+
+/*! \fn vec16s  vsro(vec16s va, vbool vc, vbool& vd)
+  \brief Vector Shift Right by 1, pushing in Overflow bit at the MSB and pushing out LSB into Overflow bit.
+  \param    va  Source vector
+  \param    vc  Vector boolean to be inserted into MSB of output.
+  \param    vd  Vector boolean to be extracted from LSB of input.
+  \return   ((vec16u)vc<<15) | ((vec16u)va>>1)
+ */
+
+/*! \fn vec16s  vsrc(vec16s va, vbool vc)
+  \brief Vector Shift Right by 1, pushing in Condition bit at the MSB.
+  
+  This variant may perform better if vc is not the carry-out of an addition or subtraction.
+  
+  \param    va  Source vector
+  \param    vc  Vector boolean to be inserted into MSB of output.
+  \return   ((vec16u)vc<<15) | ((vec16u)va>>1)
+ */
+
+/** @}*/ // VectorInstrinsicShiftInstructions
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+/** \addtogroup VectorInstrinsicComparisonInstructions
+ *  @{
+ */
+
+/*! \fn vbool vseq(vec08s va, vec08s vb)
+  \brief Vector Set Comparison Equal
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va==vs)
+ */
+
+/*! \fn vbool vseq(vec08u va, vec08u vb)
+  \brief Vector Set Comparison Equal
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va==vs)
+ */
+
+/*! \fn vbool vseq(vec16s va, vec16s vb)
+  \brief    Vector Set Comparison Equal
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va==vs)
+ */
+
+/*! \fn vbool vseq(vec32s va, vec32s vb)
+  \brief    Vector Set Comparison Equal
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va==vs)
+ */
+
+/*! \fn vbool vseq(vec32u va, vec32u vb)
+  \brief    Vector Set Comparison Equal
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va==vs)
+ */
+
+/*! \fn vbool vsne(vec08s va, vec08s vb)
+  \brief Vector Set Comparison Not Equal
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va!=vb)
+ */
+
+/*! \fn vbool vsne(vec08u va, vec08u vb)
+  \brief Vector Set Comparison Not Equal
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va!=vb)
+ */
+
+/*! \fn vbool vsne(vec16s va, vec16s vb)
+  \brief    Vector Set Comparison Not Equal
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va!=vb)
+ */
+
+/*! \fn vbool vsne(vec32s va, vec32s vb)
+  \brief    Vector Set Comparison Not Equal
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va!=vb)
+ */
+
+/*! \fn vbool vsne(vec32u va, vec32u vb)
+  \brief    Vector Set Comparison Not Equal
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va!=vb)
+ */
+
+/*! \fn vbool vsge(vec08s va, vec08s vb)
+  \brief Vector Set Greater than or Equal
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va>=vb)
+ */
+
+/*! \fn vbool vsge(vec08u va, vec08u vb)
+  \brief Vector Set Greater than or Equal
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va>=vb)
+ */
+
+/*! \fn vbool vsge(vec16s va, vec16s vb)
+  \brief    Vector Set Greater than or Equal
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va>=vb)
+ */
+
+/*! \fn vbool vsge(vec32s va, vec32s vb)
+  \brief    Vector Set Greater than or Equal
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va>=vb)
+ */
+
+/*! \fn vbool vsge(vec32u va, vec32u vb)
+  \brief    Vector Set Greater than or Equal
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va>=vb)
+ */
+
+/*! \fn vbool vsgt(vec08s va, vec08s vb)
+  \brief Vector Set Greater Than
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va> vb)
+ */
+
+/*! \fn vbool vsgt(vec08u va, vec08u vb)
+  \brief Vector Set Greater Than
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va> vb)
+ */
+
+/*! \fn vbool vsgt(vec16s va, vec16s vb)
+  \brief    Vector Set Greater Than
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va> vb)
+ */
+
+/*! \fn vbool vsgt(vec32s va, vec32s vb)
+  \brief    Vector Set Greater Than
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va> vb)
+ */
+
+/*! \fn vbool vsgt(vec32u va, vec32u vb)
+  \brief    Vector Set Greater Than
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va> vb)
+ */
+
+/*! \fn vbool vsle(vec08s va, vec08s vb)
+  \brief Vector Set Less than or Equal
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va<=vb)
+ */
+
+/*! \fn vbool vsle(vec08u va, vec08u vb)
+  \brief Vector Set Less than or Equal
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va<=vb)
+ */
+
+/*! \fn vbool vsle(vec16s va, vec16s vb)
+  \brief    Vector Set Less than or Equal
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va<=vb)
+ */
+
+/*! \fn vbool vsle(vec32s va, vec32s vb)
+  \brief    Vector Set Less than or Equal
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va<=vb)
+ */
+
+/*! \fn vbool vsle(vec32u va, vec32u vb)
+  \brief    Vector Set Less than or Equal
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va<=vb)
+ */
+
+/*! \fn vbool vslt(vec08s va, vec08s vb)
+  \brief Vector Set Less Than
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va< vb)
+ */
+
+/*! \fn vbool vslt(vec08u va, vec08u vb)
+  \brief Vector Set Less Than
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va< vb)
+ */
+
+/*! \fn vbool vslt(vec16s va, vec16s vb)
+  \brief    Vector Set Less Than
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va< vb)
+ */
+
+/*! \fn vbool vslt(vec32s va, vec32s vb)
+  \brief    Vector Set Less Than
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va< vb)
+ */
+
+/*! \fn vbool vslt(vec32u va, vec32u vb)
+  \brief    Vector Set Less Than
+  \param    va  Source vector
+  \param    vb  Source vector
+  \return   (va< vb)
+ */
+
+/** @}*/ // VectorInstrinsicComparisonInstructions 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+/** \addtogroup VectorInstrinsicElementAccessInstructions
+    \todo   Add method templates to specify vget, vput support as opposed to the current dumped list.
+            Use tag: \\relates
+ @{
+ */
+
+
+/*! \fn bool   vget(vbool va, int i)
+  \brief    Read vector element value at CU<sub>i</sub>.
+  \param    va  Source vector
+  \param    i   CU Index
+  \return   va[i] 
+ */
+
+/*! \fn int08s   vget(vec08s va, int i)
+  \brief    Read vector element value at CU<sub>i</sub>.
+  \param    va  Source vector
+  \param    i   CU Index
+  \return   va[i] 
+ */
+
+/*! \fn int08u   vget(vec08u va, int i)
+  \brief    Read vector element value at CU<sub>i</sub>.
+  \param    va  Source vector
+  \param    i   CU Index
+  \return   va[i] 
+ */
+ 
+/*! \fn int16s   vget(vec16s va, int i)
+  \brief    Read vector element value at CU<sub>i</sub>.
+  \param    va  Source vector
+  \param    i   CU Index
+  \return   va[i] 
+ */
+
+/*! \fn int16u   vget(vec16u va, int i)
+  \brief    Read vector element value at CU<sub>i</sub>.
+  \param    va  Source vector
+  \param    i   CU Index
+  \return   va[i] 
+ */
+ 
+/*! \fn int32s   vget(vec32s va, int i)
+  \brief    Read vector element value at CU<sub>i</sub>.
+  \param    va  Source vector
+  \param    i   CU Index
+  \return   va[i] 
+ */
+ 
+/*! \fn int32u   vget(vec32u va, int i)
+  \brief    Read vector element value at CU<sub>i</sub>.
+  \param    va  Source vector
+  \param    i   CU Index
+  \return   va[i] 
+ */
+
+/*! \fn vec08s   vput(vec08s va, vec08s vb, vec16s i)
+  \brief    Write vector element from vector vb in vector va at CU<sub>i</sub>.
+  \param    va  Source vector
+  \param    vb  Source vector element
+  \param    i   CU Index
+  \return   vector va with element vb[i] in CU<sub>i</sub>
+ */
+
+/*! \fn vec08u   vput(vec08u va, vec08u vb, vec16s i)
+  \brief    Write vector element from vector vb in vector va at CU<sub>i</sub>.
+  \param    va  Source vector
+  \param    vb  Source vector element
+  \param    i   CU Index
+  \return   vector va with element vb[i] in CU<sub>i</sub>
+ */
+
+/*! \fn vec16s   vput(vec16s va, vec16s vb, vec16s i)
+  \brief    Write vector element from vector vb in vector va at CU<sub>i</sub>.
+  \param    va  Source vector
+  \param    vb  Source vector element
+  \param    i   CU Index
+  \return   vector va with element vb[i] in CU<sub>i</sub>
+ */
+
+/*! \fn vec16u   vput(vec16u va, vec16u vb, vec16s i)
+  \brief    Write vector element from vector vb in vector va at CU<sub>i</sub>.
+  \param    va  Source vector
+  \param    vb  Source vector element
+  \param    i   CU Index
+  \return   vector va with element vb[i] in CU<sub>i</sub>
+ */
+
+/*! \fn vec32s   vput(vec32s va, vec32s vb, int i)
+  \brief    Write vector element from vector vb in vector va at CU<sub>i</sub>.
+  \param    va  Source vector
+  \param    vb  Source vector element
+  \param    i   CU Index
+  \return   vector va with element vb[i] in CU<sub>i</sub>
+ */
+
+/*! \fn vec32u   vput(vec32u va, vec32u vb, int i)
+  \brief    Write vector element from vector vb in vector va at CU<sub>i</sub>.
+  \param    va  Source vector
+  \param    vb  Source vector element
+  \param    i   CU Index
+  \return   vector va with element vb[i] in CU<sub>i</sub>
+ */
+
+/** @}*/ // VectorInstrinsicElementAccessInstructions
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+/** \addtogroup VectorInstrinsicSwapInstructions
+ @{
+ */
+
+/*! \fn vec16s  vselect(vec08s va, vec08s vb, vbool vc)
+  \brief    Select vector based on condition
+  \details  Specialized form of vswap
+  \param    va  Source vector
+  \param    vb  Source vector
+  \param    vc  Condition vector
+  \return   For each vector element i: return = (vc[i])?(va[i]):(vb[i])
+ */
+
+/*! \fn vec16u  vselect(vec08u va, vec08u vb, vbool vc)
+  \brief    Select vector based on condition
+  \details  Specialized form of vswap
+  \param    va  Source vector
+  \param    vb  Source vector
+  \param    vc  Condition vector
+  \return   For each vector element i: return = (vc[i])?(va[i]):(vb[i])
+ */
+
+/*! \fn void   vswap(vec16s& va, vec16s& vb, vbool vc)
+  \brief    Swap vector element-wise
+  \param    va  Source vector
+  \param    vb  Source vector
+  \param    vc  Condition vector
+  \return   For each vector element i: element = (vc[i])?(va[i]):(vb[i])
+ */
+
+/*! \fn void   vswap(vec16u& va, vec16u& vb, vbool vc)
+  \brief    Swap vector element-wise
+  \param    va  Source vector
+  \param    vb  Source vector
+  \param    vc  Condition vector
+  \return   For each vector element i: element = (vc[i])?(va[i]):(vb[i])
+ */
+
+/*! \fn void   vswap(vec32s& va, vec32s& vb, vbool vc)
+  \brief    Swap vector element-wise
+  \param    va  Source vector
+  \param    vb  Source vector
+  \param    vc  Condition vector
+  \return   For each vector element i: element = (vc[i])?(va[i]):(vb[i])
+ */
+
+/*! \fn void   vswap(vec32u& va, vec32u& vb, vbool vc)
+  \brief    Swap vector element-wise
+  \param    va  Source vector
+  \param    vb  Source vector
+  \param    vc  Condition vector
+  \return   For each vector element i: element = (vc[i])?(va[i]):(vb[i])
+ */
+
+/*! \fn vec16s  vselect(vec16s va, vec16s vb, vbool vc)
+  \brief    Select vector based on condition
+  \details  Specialized form of vswap
+  \param    va  Source vector
+  \param    vb  Source vector
+  \param    vc  Condition vector
+  \return   For each vector element i: return = (vc[i])?(va[i]):(vb[i])
+ */
+
+/*! \fn vec16u  vselect(vec16u va, vec16u vb, vbool vc)
+  \brief    Select vector based on condition
+  \details  Specialized form of vswap
+  \param    va  Source vector
+  \param    vb  Source vector
+  \param    vc  Condition vector
+  \return   For each vector element i: return = (vc[i])?(va[i]):(vb[i])
+ */
+
+/*! \fn vec32s  vselect(vec32s va, vec32s vb, vbool vc)
+  \brief    Select vector based on condition
+  \details  Specialized form of vswap
+  \param    va  Source vector
+  \param    vb  Source vector
+  \param    vc  Condition vector
+  \return   For each vector element i: return = (vc[i])?(va[i]):(vb[i])
+ */
+
+/*! \fn vec32u  vselect(vec32u va, vec32u vb, vbool vc)
+  \brief    Select vector based on condition
+  \details  Specialized form of vswap
+  \param    va  Source vector
+  \param    vb  Source vector
+  \param    vc  Condition vector
+  \return   For each vector element i: return = (vc[i])?(va[i]):(vb[i])
+ */
+
+/** @}*/ // VectorInstrinsicSwapInstructions
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+/** \addtogroup VectorInstrinsicSpecializedShiftInstructions
+ @{
+ */
+
+/*! \fn void vsllx(vec16s& vc, vec16s& vd, vec16s va, vec16s vb, vec16s vs)
+  \brief    Vector Shift Left Logical Extended (32-bit)
+  \param    vb::va  Source Vectors (High::Low)
+  \param    vs      Shift value
+  \param    vd::vc  Destination Vector
+  \return   vd::vc = (vb::va >> vs)
+ */ 
+
+/*! \fn void vsllx(vec16u& vc, vec16u& vd, vec16u va, vec16u vb, vec16u vs)
+  \brief    Vector Shift Left Logical Extended (32-bit)
+  \param    vb::va  Source Vectors (High::Low)
+  \param    vs      Shift value
+  \param    vd::vc  Destination Vector
+  \return   vd::vc = (vb::va >> vs)
+ */ 
+
+/*! \fn void vsrax(vec16s& vc, vec16s& vd, vec16s va, vec16s vb, vec16s vs)
+  \brief    Vector Shift Right Arithmetic Extended (32-bit)
+  \param    vb::va  Source Vectors (High::Low)
+  \param    vs      Shift value
+  \param    vd::vc  Destination Vector
+  \return   vd::vc = (vb::va >> vs)
+ */ 
+
+/*! \fn void vsrax(vec16u& vc, vec16u& vd, vec16u va, vec16u vb, vec16u vs)
+  \brief    Vector Shift Right Arithmetic Extended (32-bit)
+  \param    vb::va  Source Vectors (High::Low)
+  \param    vs      Shift value
+  \param    vd::vc  Destination Vector
+  \return   vd::vc = (vb::va >> vs)
+ */ 
+
+/*! \fn void vsrlx(vec16s& vc, vec16s& vd, vec16s va, vec16s vb, vec16s vs)
+  \brief    Vector Shift Right Logical Extended (32-bit)
+  \param    vb::va  Source Vectors (High::Low)
+  \param    vs      Shift value
+  \param    vd::vc  Destination Vector
+  \return   vd::vc = (vb::va >> vs)
+ */ 
+
+/*! \fn void vsrlx(vec16u& vc, vec16u& vd, vec16u va, vec16u vb, vec16u vs)
+  \brief    Vector Shift Right Logical Extended (32-bit)
+  \param    vb::va  Source Vectors (High::Low)
+  \param    vs      Shift value
+  \param    vd::vc  Destination Vector
+  \return   vd::vc = (vb::va >> vs)
+ */ 
+
+/** @}*/ //  VectorInstrinsicSpecializedShiftInstructions 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+/** \addtogroup VectorInstrinsicSpecializedMultiplicationInstructions
+ @{
+ */
+ 
+/*! \fn vec16s vmul_ulul(vec16s va, vec16s vb)
+  \brief    Vector Multiplication with (8-bit) extraction
+  \param    va  Source vector (ul, 8-bit Unsigned Low)
+  \param    vb  Source vector (ul, 8-bit Unsigned Low)
+  \return   (va*vb) 
+ */
+
+/*! \fn vec16u vmul_ulul(vec16u va, vec16u vb)
+  \brief    Vector Multiplication with (8-bit) extraction
+  \param    va  Source vector (ul, 8-bit Unsigned Low)
+  \param    vb  Source vector (ul, 8-bit Unsigned Low)
+  \return   (va*vb) 
+ */
+
+/*! \fn vec16s vmul_ulsl(vec16s va, vec16s vb)
+  \brief    Vector Multiplication with (8-bit) extraction
+  \param    va  Source vector (ul, 8-bit Unsigned Low)
+  \param    vb  Source vector (sl, 8-bit Signed   Low)
+  \return   (va*vb) 
+ */
+
+/*! \fn vec16u vmul_ulsl(vec16u va, vec16u vb)
+  \brief    Vector Multiplication with (8-bit) extraction
+  \param    va  Source vector (ul, 8-bit Unsigned Low)
+  \param    vb  Source vector (sl, 8-bit Signed   Low)
+  \return   (va*vb) 
+ */
+
+/*! \fn vec16s vmul_uluh(vec16s va, vec16s vb)
+  \brief    Vector Multiplication with (8-bit) extraction
+  \param    va  Source vector (ul, 8-bit Unsigned Low)
+  \param    vb  Source vector (uh, 8-bit Unsigned High)
+  \return   (va*vb) 
+ */
+
+/*! \fn vec16u vmul_uluh(vec16u va, vec16u vb)
+  \brief    Vector Multiplication with (8-bit) extraction
+  \param    va  Source vector (ul, 8-bit Unsigned Low)
+  \param    vb  Source vector (uh, 8-bit Unsigned High)
+  \return   (va*vb) 
+ */
+
+/*! \fn vec16s vmul_ulsh(vec16s va, vec16s vb)
+  \brief    Vector Multiplication with (8-bit) extraction
+  \param    va  Source vector (ul, 8-bit Unsigned Low)
+  \param    vb  Source vector (sh, 8-bit Signed   High)
+  \return   (va*vb) 
+ */
+
+/*! \fn vec16u vmul_ulsh(vec16u va, vec16u vb)
+  \brief    Vector Multiplication with (8-bit) extraction
+  \param    va  Source vector (ul, 8-bit Unsigned Low)
+  \param    vb  Source vector (sh, 8-bit Signed   High)
+  \return   (va*vb) 
+ */
+
+/*! \fn vec16s vmul_uhul(vec16s va, vec16s vb)
+  \brief    Vector Multiplication with (8-bit) extraction
+  \param    va  Source vector (uh, 8-bit Unsigned High)
+  \param    vb  Source vector (ul, 8-bit Unsigned Low)
+  \return   (va*vb) 
+ */
+
+/*! \fn vec16u vmul_uhul(vec16u va, vec16u vb)
+  \brief    Vector Multiplication with (8-bit) extraction
+  \param    va  Source vector (uh, 8-bit Unsigned High)
+  \param    vb  Source vector (ul, 8-bit Unsigned Low)
+  \return   (va*vb) 
+ */
+
+/*! \fn vec16s vmul_uhuh(vec16s va, vec16s vb)
+  \brief    Vector Multiplication with (8-bit) extraction
+  \param    va  Source vector (uh, 8-bit Unsigned High)
+  \param    vb  Source vector (uh, 8-bit Unsigned High)
+  \return   (va*vb) 
+ */
+
+/*! \fn vec16u vmul_uhuh(vec16u va, vec16u vb)
+  \brief    Vector Multiplication with (8-bit) extraction
+  \param    va  Source vector (uh, 8-bit Unsigned High)
+  \param    vb  Source vector (uh, 8-bit Unsigned High)
+  \return   (va*vb) 
+ */
+
+/*! \fn vec16s vmul_uhsh(vec16s va, vec16s vb)
+  \brief    Vector Multiplication with (8-bit) extraction
+  \param    va  Source vector (uh, 8-bit Unsigned High)
+  \param    vb  Source vector (sh, 8-bit Signed   High)
+  \return   (va*vb) 
+ */
+
+/*! \fn vec16u vmul_uhsh(vec16u va, vec16u vb)
+  \brief    Vector Multiplication with (8-bit) extraction
+  \param    va  Source vector (uh, 8-bit Unsigned High)
+  \param    vb  Source vector (sh, 8-bit Signed   High)
+  \return   (va*vb) 
+ */
+
+/*! \fn vec16s vmul_shul(vec16s va, vec16s vb)
+  \brief    Vector Multiplication with (8-bit) extraction
+  \param    va  Source vector (sh, 8-bit Signed   High)
+  \param    vb  Source vector (ul, 8-bit Unsigned Low)
+  \return   (va*vb) 
+ */
+
+/*! \fn vec16u vmul_shul(vec16u va, vec16u vb)
+  \brief    Vector Multiplication with (8-bit) extraction
+  \param    va  Source vector (sh, 8-bit Signed   High)
+  \param    vb  Source vector (ul, 8-bit Unsigned Low)
+  \return   (va*vb) 
+ */
+
+/*! \fn vec16s vmul_shuh(vec16s va, vec16s vb)
+  \brief    Vector Multiplication with (8-bit) extraction
+  \param    va  Source vector (sh, 8-bit Signed   High)
+  \param    vb  Source vector (uh, 8-bit Unsigned High)
+  \return   (va*vb) 
+ */
+
+/*! \fn vec16u vmul_shuh(vec16u va, vec16u vb)
+  \brief    Vector Multiplication with (8-bit) extraction
+  \param    va  Source vector (sh, 8-bit Signed   High)
+  \param    vb  Source vector (uh, 8-bit Unsigned High)
+  \return   (va*vb) 
+ */
+
+/*! \fn vec16s vmul_shsh(vec16s va, vec16s vb)
+  \brief    Vector Multiplication with (8-bit) extraction
+  \param    va  Source vector (sh, 8-bit Signed   High)
+  \param    vb  Source vector (sh, 8-bit Signed   High)
+  \return   (va*vb) 
+ */
+
+/*! \fn vec16u vmul_shsh(vec16u va, vec16u vb)
+  \brief    Vector Multiplication with (8-bit) extraction
+  \param    va  Source vector (sh, 8-bit Signed   High)
+  \param    vb  Source vector (sh, 8-bit Signed   High)
+  \return   (va*vb) 
+ */
+
+/** @}*/ // VectorInstrinsicSpecializedMultiplicationInstructions
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+/** \internal
+    \addtogroup VectorInstrinsicSpecializedExtensionInstructions
+ @{
+ */
+
+/*! \fn void vsx (vec16s a, vec16s& b, vec16u& c)
+    \brief      Vector Sign Extension (to 32-bit)
+    \param      a [in]
+    \param      b [out] msb
+    \param      c [out] lsb
+    \return     [ b c ] = [ (a>>15) a ]
+ */
+
+/*! \fn void vsx (vec16u a, vec16u& b, vec16u& c)
+    \brief      Vector Sign Extension (to 32-bit)
+    \param      a [in]
+    \param      b [out] msb
+    \param      c [out] lsb
+    \return     [ b c ] = [ (a>>15) a ]
+ */
+ 
+/*! \fn void vssx(vec16s a, vec16s& b, vec16u& c)
+    \brief      Vector Sign Extension and Shift Right bit 8 (to 32-bit)
+    \param      a [in]
+    \param      b [out] msb
+    \param      c [out] lsb
+    \return     [ b c ] = [ (a>>8) (a<<8) ]
+ */
+
+/*! \fn void vssx(vec16u a, vec16u& b, vec16u& c)
+    \brief      Vector Sign Extension and Shift Right bit 8 (to 32-bit)
+    \param      a [in]
+    \param      b [out] msb
+    \param      c [out] lsb
+    \return     [ b c ] = [ (a>>8) (a<<8) ]
+ */
+ 
+/*! \fn void vzx (vec16s a, vec16s& b, vec16u& c)
+    \brief      Vector Zero Extension
+    \param      a [in]
+    \param      b [out] msb
+    \param      c [out] lsb
+    \return     [ b c ] = [ 0 a ]
+ */
+
+/*! \fn void vzx (vec16u a, vec16u& b, vec16u& c)
+    \brief      Vector Zero Extension
+    \param      a [in]
+    \param      b [out] msb
+    \param      c [out] lsb
+    \return     [ b c ] = [ 0 a ]
+*/
+
+/*! \fn void vszx(vec16s a, vec16s& b, vec16u& c)
+    \brief      Vector Zero Extension and Shift Right Bit 8 (to 32-bit)
+    \param      a [in]
+    \param      b [out] msb
+    \param      c [out] lsb
+    \return     [ b c ] = [ ((u)a>>8) (a<<8) ]
+ */
+
+/*! \fn void vszx(vec16u a, vec16u& b, vec16u& c)
+    \brief      Vector Zero Extension and Shift Right Bit 8 (to 32-bit)
+    \param      a [in]
+    \param      b [out] msb
+    \param      c [out] lsb
+    \return     [ b c ] = [ ((u)a>>8) (a<<8) ]
+ */
+
+ /** @}*/ // VectorInstrinsicSpecializedExtensionInstructions
+
+/** \addtogroup VectorInstrinsicMemoryInstructions
+ * @{ 
+ */
+
+/*! \fn         vec08s vload(const vec08s * ptr, vec16s vi)
+    \param      ptr Vector pointer
+    \param      vi  Vector index
+    \return     v = ptr[vi]
+*/
+ 
+/*! \fn         vec08u vload(const vec08u * ptr, vec16s vi)
+    \param      ptr Vector pointer
+    \param      vi  Vector index
+    \return     v = ptr[vi]
+*/
+
+/*! \fn         vec16s vload(const vec16s * ptr, vec16s vi)
+    \param      ptr Vector pointer
+    \param      vi  Vector index
+    \return     v = ptr[vi]
+*/
+
+/*! \fn         vec16s vload(const vec16u * ptr, vec16s vi)
+    \param      ptr Vector pointer
+    \param      vi  Vector index
+    \return     v = ptr[vi]
+*/
+
+/*! \fn         vec32s vload(const vec32s * ptr, vec16s vi)
+    \param      ptr Vector pointer
+    \param      vi  Vector index
+    \return     v = ptr[vi]
+*/
+
+/*! \fn         vec32u vload(const vec32u * ptr, vec16s vi)
+    \param      ptr Vector pointer
+    \param      vi  Vector index
+    \return     v = ptr[vi]
+*/
+
+/*! \fn         void vstore(vec08s * ptr, vec16s vi, vec08s v)
+    \param      ptr Vector pointer (destination)
+    \param      vi  Vector index
+    \param      v   Vector source
+    \return     ptr[vi] = v
+*/
+
+/*! \fn         void vstore(vec08u * ptr, vec16s vi, vec08u v)
+    \param      ptr Vector pointer (destination)
+    \param      vi  Vector index
+    \param      v   Vector source
+    \return     ptr[vi] = v
+*/
+
+/*! \fn         void vstore(vec16s * ptr, vec16s vi, vec16s v)
+    \param      ptr Vector pointer (destination)
+    \param      vi  Vector index
+    \param      v   Vector source
+    \return     ptr[vi] = v
+*/
+
+/*! \fn         void vstore(vec16u * ptr, vec16s vi, vec16s v)
+    \param      ptr Vector pointer (destination)
+    \param      vi  Vector index
+    \param      v   Vector source
+    \return     ptr[vi] = v
+*/
+
+/*! \fn         void vstore(vec32s * ptr, vec16s vi, vec32s v)
+    \param      ptr Vector pointer (destination)
+    \param      vi  Vector index
+    \param      v   Vector source
+    \return     ptr[vi] = v
+*/
+
+/*! \fn         void vstore(vec32u * ptr, vec16s vi, vec32u v)
+    \param      ptr Vector pointer (destination)
+    \param      vi  Vector index
+    \param      v   Vector source
+    \return     ptr[vi] = v
+*/
+
+ /** @}*/ // VectorInstrinsicMemoryInstructions

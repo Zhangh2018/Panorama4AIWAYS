@@ -1,0 +1,662 @@
+/*!*********************************************************************************
+*  \mainpage APEXDNN_SN Library 
+*  The APEXDNN_SN library provides basic functionality for developers to design their own
+*  squeezenet-liked convolution neural network based applications while taking advantage of NXP's massively 
+*  parallel APEX architecture. The library contains the following SqueezeNet style modules 
+*  as well as basic tensor operations.
+* - \ref pagConv3x3MPS1
+* - \ref pagE1E3MPS1
+* - \ref pagE1E3S1
+* - \ref pagE1E3
+*
+***********************************************************************************/
+
+/*!*********************************************************************************
+*
+* \page pagConv3x3MPS1 CONV3X3MPS1 CONV3X3MPS1 Module
+* As following figure shows it includes 3x3 convolution filter, followed by
+* max pooling filter then squeeze 1x1 convolution filter. Following parameters can be configured when the module is created:\n
+* -- 3x3 convolution filter's number of output channels; number of input channels; veritical and horizontal padding, striding.\n
+* -- Max pooling filter's window size; vertical and horizontal padding and striding.\n
+* -- 1x1 convolution filter's number of output channels; vertical and horizontal striding.\n
+*
+* \image html  conv3x3mps1.png
+* \image latex conv3x3mps1.png "" width=10cm
+* <table>
+* <caption id="conv3x3mps1_test">CONV3X3MPS1 Module Configurations</caption>
+* <tr><td rowspan="4">Convlution 3x3  <td>Padding         <td>0, 1
+* <tr>                                <td>Striding        <td>1, 2 
+* <tr>                                <td>Input Channels <td>1, 3,
+* <tr>                                <td>Output Channels <td>Multiple of 4
+* <tr><td rowspan="3">Max Pooling 3x3 <td>Padding         <td>0, 1 
+* <tr>                                <td>Striding        <td>1, 2, 4,...
+* <tr>                                <td>Output Channels <td>Multiple of 4
+* <tr><td rowspan="3">Squeeze 1x1     <td>Padding         <td>0 
+* <tr>                                <td>Striding        <td>1, 2, 4,...
+* <tr>                                <td>Output Channels <td>Any
+* <tr><td>NOTE: <td> Output width time number of output channels cannot be greater than 128 x 64; <td>
+* </table>
+*
+* <table>
+* <caption id="conv3x3mps1_test">CONV3X3MPS1 Module Tested Configurations</caption>
+* <tr><td colspan="2"> Input Resolution <td> <227, 227>, <19, 39>, <29, 61> (Horizontal, Vertical)
+* <tr><td rowspan="4">Expand 3x3      <td>Padding         <td><0, 0>, <1, 1> (Horizontal, Vertical)
+* <tr>                                <td>Striding        <td><1, 1>, <2, 2> (Horizontal, Vertical)
+* <tr>                                <td>Input Channels <td>1, 3
+* <tr>                                <td>Output Channels <td>64
+* <tr><td rowspan="3">Max Pooling 3x3 <td>Padding         <td><0, 0>, <1, 1> (Horizontal, Vertical)
+* <tr>                                <td>Striding        <td><2, 2> (Horizontal, Vertical)
+* <tr>                                <td>Output Channels <td>64
+* <tr><td rowspan="4">Squeeze 1x1     <td>Padding         <td><0, 0> (Horizontal, Vertical)
+* <tr>                                <td>Striding        <td><1, 1> (Horizontal, Vertical)
+* <tr>                                <td>Input Channels <td>64
+* <tr>                                <td>Output Channels <td>16
+* </table>
+*
+* \page pagE1E3MPS1 E1E3MPS1 E1E3MPS1 Module
+* As following figure shows it includes expand 1x1 convolution filter and expand 3x3 convolution filter followed by max pooling filter then 
+* squeeze 1x1 convolution filter. Following parameters can be configured when the module is created:\n
+* -- expand 1x1 convolution filter's number of output channels; number of input channels; veritical and horizontal striding.\n
+* -- expand 3x3 convolution filter's number of output channels; number of input channels; veritical and horizontal padding, striding.\n
+* -- Maxpooling filter's window size; vertical and horizontal padding, striding.\n
+* -- 1x1 convolution filter's number of output channels; vertical and horizontal striding.\n
+*
+* \image html  e1e3mps1.png
+* \image latex e1e3mps1.png "" width=10cm
+* <table>
+* <caption id="e1e3mps1_config">E1E3MPS1 Module Configurations</caption>
+* <tr><td rowspan="4">Expand 1x1      <td>Padding         <td>0 
+* <tr>                                <td>Striding        <td>1, 2, 4, ...
+* <tr>                                <td>Input Channels  <td>Multiple of 4
+* <tr>                                <td>Output Channels <td>Multiple of 4
+* <tr><td rowspan="4">Expand 3x3      <td>Padding         <td>1 
+* <tr>                                <td>Striding        <td>1, 2, 4, ...
+* <tr>                                <td>Input Channels <td>Multiple of 4
+* <tr>                                <td>Output Channels <td>Multiple of 4
+* <tr><td rowspan="3">Max Pooling 3x3 <td>Padding         <td>0, 1 
+* <tr>                                <td>Striding        <td>1, 2, 4,...
+* <tr>                                <td>Output Channels <td>Multiple of 4
+* <tr><td rowspan="3">Squeeze 1x1     <td>Padding         <td>0 
+* <tr>                                <td>Striding        <td>1, 2, 4,...
+* <tr>                                <td>Output Channels <td>Any
+* <tr><td rowspan="3">NOTE: <td>Only support symmetric Expands, i.e. Expand 1x1 and Expand 3x3 must have equal number of output channels <td>
+* <tr>                      <td> Only support zero padding <td>
+* <tr>                      <td> Output width time number of output channels cannot be greater than 128 x 64; <td>
+* </table>
+*
+* <table>
+* <caption id="e1e3mps1_test">E1E3MPS1 Module Tested Configurations</caption>
+* <tr><td colspan="2"> Input Resolution <td> <56, 56> (Horizontal, Vertical)
+* <tr><td rowspan="4">Expand 1x1      <td>Padding         <td><0, 0> (Horizontal, Vertical) 
+* <tr>                                <td>Striding        <td><1, 1> (Horizontal, Vertical)
+* <tr>                                <td>Input Channels <td>16
+* <tr>                                <td>Output Channels <td>64
+* <tr><td rowspan="4">Expand 3x3      <td>Padding         <td><1, 1> (Horizontal, Vertical)
+* <tr>                                <td>Striding        <td><1, 1> (Horizontal, Vertical)
+* <tr>                                <td>Input Channels <td>16
+* <tr>                                <td>Output Channels <td>64
+* <tr><td rowspan="3">Max Pooling 3x3 <td>Padding         <td><0, 0> (Horizontal, Vertical)
+* <tr>                                <td>Striding        <td><2, 2> (Horizontal, Vertical)
+* <tr>                                <td>Output Channels <td>128
+* <tr><td rowspan="4">Squeeze 1x1     <td>Padding         <td><0, 0> (Horizontal, Vertical)
+* <tr>                                <td>Striding        <td><1, 1> (Horizontal, Vertical)
+* <tr>                                <td>Input Channels <td>128
+* <tr>                                <td>Output Channels <td>32
+* </table>
+
+
+* \page pagE1E3S1 E1E3S1 Module
+* As following figure shows it includes expand 1x1 convolution filter and expand 3x3 convolution filter followed by
+* squeeze 1x1 convolution filter. Following parameters can be configured when the module is created:\n
+* -- expand 1x1 convolution filter's number of output channels; number of input channels; veritical and horizontal striding.\n
+* -- expand 3x3 convolution filter's number of output channels; number of input channels; veritical and horizontal padding, striding.\n
+* -- 1x1 convolution filter's number of output channels; vertical and horizontal striding.\n
+*
+* \image html  e1e3s1.png
+* \image latex e1e3s1.png "" width=10cm
+*
+* <table>
+* <caption id="e1e3s1_config">E1E3S1 Module Configurations</caption>
+* <tr><td rowspan="4">Expand 1x1      <td>Padding         <td>0 
+* <tr>                                <td>Striding        <td>1, 2, 4, ...
+* <tr>                                <td>Input Channels <td>Multiple of 4
+* <tr>                                <td>Output Channels <td>Multiple of 4
+* <tr><td rowspan="4">Expand 3x3      <td>Padding         <td>1 
+* <tr>                                <td>Striding        <td>1, 2, 4, ...
+* <tr>                                <td>Input Channels <td>Multiple of 4
+* <tr>                                <td>Output Channels <td>Multiple of 4
+* <tr><td rowspan="4">Squeeze 1x1     <td>Padding         <td>0 
+* <tr>                                <td>Striding        <td>1, 2, 4,...
+* <tr>                                <td>Input Channels <td>Multiple of 4
+* <tr>                                <td>Output Channels <td>Any
+* <tr><td rowspan="3">NOTE: <td>Only support symmetric Expands, i.e. Expand 1x1 and Expand 3x3 must have equal number of output channels <td>
+* <tr>                      <td> Only support zero padding <td>
+* <tr>                      <td> Output width time number of output channels cannot be greater than 128 x 64; <td>
+* </table>
+*
+* <table>
+* <caption id="e1e3s1_test">E1E3S1 Module Tested Configurations</caption>
+* <tr><td colspan="2"> Input Resolution <td> <56, 56> (Horizontal, Vertical)
+* <tr><td colspan="2"> Input Channels   <td>16
+* <tr><td rowspan="4">Expand 1x1      <td>Padding         <td><0, 0> (Horizontal, Vertical) 
+* <tr>                                <td>Striding        <td><1, 1> (Horizontal, Vertical)
+* <tr>                                <td>Input Channels <td>16
+* <tr>                                <td>Output Channels <td>64
+* <tr><td rowspan="4">Expand 3x3      <td>Padding         <td><1, 1> (Horizontal, Vertical)
+* <tr>                                <td>Striding        <td><1, 1> (Horizontal, Vertical)
+* <tr>                                <td>Input Channels <td>16
+* <tr>                                <td>Output Channels <td>64
+* <tr><td rowspan="4">Squeeze 1x1     <td>Padding         <td><0, 0> (Horizontal, Vertical)
+* <tr>                                <td>Striding        <td><1, 1> (Horizontal, Vertical)
+* <tr>                                <td>Input Channels <td>128
+* <tr>                                <td>Output Channels <td>16
+* </table>
+*
+*
+* \page pagE1E3 E1E3 Module
+* As following figure shows it includes expand 1x1 convolution filter and expand 3x3 convolution filter.
+* Following parameters can be configured when the module is created:\n
+* -- expand 1x1 convolution filter's number of output channels; number of input channels; veritical and horizontal striding.\n
+* -- expand 3x3 convolution filter's number of output channels; number of input channels; veritical and horizontal padding, striding.\n
+*
+* \image html  e1e3.png
+* \image latex e1e3.png "" width=10cm
+
+* <table>
+* <caption id="e1e3_config">E1E3 Module Configurations</caption>
+* <tr><td rowspan="4">Expand 1x1      <td>Padding         <td>0 
+* <tr>                                <td>Striding        <td>1, 2, 4, ...
+* <tr>                                <td>Input Channels <td>Multiple of 4
+* <tr>                                <td>Output Channels <td>Any
+* <tr><td rowspan="4">Expand 3x3      <td>Padding         <td>1 
+* <tr>                                <td>Striding        <td>1, 2, 4, ...
+* <tr>                                <td>Input Channels <td>Multiple of 4
+* <tr>                                <td>Output Channels <td>Any
+* <tr><td rowspan="3">NOTE: <td>Only support symmetric Expands, i.e. Expand 1x1 and Expand 3x3 must have equal number of output channels <td>
+* <tr>                      <td> Only support zero padding <td>
+* <tr>                      <td> Output width time number of output channels cannot be greater than 128 x 64; <td>
+* </table>
+*
+* <table>
+* <caption id="e1e3_test">E1E3 Module Tested Configurations</caption>
+* <tr><td colspan="2"> Input Resolution <td><14, 14> (Horizontal, Vertical)
+* <tr><td colspan="2"> Input Channels   <td>64
+* <tr><td rowspan="3">Expand 1x1      <td>Padding         <td><0, 0> (Horizontal, Vertical) 
+* <tr>                                <td>Striding        <td><1, 1> (Horizontal, Vertical)
+* <tr>                                <td>Output Channels <td>256
+* <tr><td rowspan="3">Expand 3x3      <td>Padding         <td><1, 1> (Horizontal, Vertical)
+* <tr>                                <td>Striding        <td><1, 1> (Horizontal, Vertical)
+* <tr>                                <td>Output Channels <td>256
+* </table>
+*
+*
+* \page pagSN11 Implementing SqueezeNet V1.1 using APEX-DNN Modules
+* Following figure shows how to use APEX-DNN modules to build up SqueezeNet V1.1. Left column shows regular layers in the network. For limited space,
+* we ignore all the ReLu layers. Middle columns shows how to merge and map those layers to APEX-DNN optimized modules implementation and right column
+* give the brief summary what filters are included in each module.
+
+* \image html  squeezenet11_example.png
+* \image latex squeezenet11_example.png
+
+
+***********************************************************************************/
+
+/*!*********************************************************************************
+* \page pagCodeSample APEX-DNN Example use case
+* \code
+static void dump_4d_tensor_desc(apexdnnTensorDescriptor* TensorDesc, char* filename, apexdnnTensorFormat_t format)
+{
+#ifndef __STANDALONE__
+   FILE *fp; 
+   fp = fopen(filename, "wb");
+#else
+   int fp = 0;
+   fp = T32_fopen(filename, T32_TERM_O_CREATE_TRUNC | T32_TERM_O_RDWR | T32_TERM_O_BINARY);
+#endif
+   if (format != APEXDNN_TENSOR_NHCW)
+   {
+      printf("ERROR: Unsupported dump format!\n");
+      return;
+   }
+
+   int map[4];
+   int coordinate[4];
+   int N = 0;
+   int H = 0;
+   int C = 0;
+   int W = 0;
+
+   if (apexdnnRetTensorFormat(TensorDesc) && format == APEXDNN_TENSOR_NHCW)
+   {
+      N = apexdnnRetTensorDim(TensorDesc, 0);
+      H = apexdnnRetTensorDim(TensorDesc, 1);
+      C = apexdnnRetTensorDim(TensorDesc, 2);
+      W = apexdnnRetTensorDim(TensorDesc, 3);
+      map[0] = 0;
+      map[1] = 1;
+      map[2] = 2;
+      map[3] = 3;
+   }
+   else if (apexdnnRetTensorFormat(TensorDesc) == APEXDNN_TENSOR_NCHW && format == APEXDNN_TENSOR_NHCW)
+   {
+      N = apexdnnRetTensorDim(TensorDesc, 0);
+      H = apexdnnRetTensorDim(TensorDesc, 2);
+      C = apexdnnRetTensorDim(TensorDesc, 1);
+      W = apexdnnRetTensorDim(TensorDesc, 3);
+      map[0] = 0;
+      map[1] = 2;
+      map[2] = 1;
+      map[3] = 3;
+   }
+   else
+   {
+      printf("ERROR: Unsupported dump format!\n");
+      return;
+   }
+
+   char resstr[512];
+   for (int d0 = 0; d0 < N; d0++)
+   {
+      for (int d1 = 0; d1 < H; d1++)
+      {
+         for (int d2 = 0; d2 < C; d2++)
+         {
+            for (int d3 = 0; d3 < W; d3++)
+            {
+               coordinate[map[0]] = d0;
+               coordinate[map[1]] = d1;
+               coordinate[map[2]] = d2;
+               coordinate[map[3]] = d3;
+               if (apexdnnRetTensorDataType(TensorDesc) == APEXDNN_DATA_8BIT)
+               {
+                  int8_t *p = (int8_t*)apexdnnRetTensorDataPtr(TensorDesc);
+                  sprintf(resstr, "%d, ", *(p + coordinate[0] * apexdnnRetTensorStride(TensorDesc, 0)
+                                          + coordinate[1] * apexdnnRetTensorStride(TensorDesc, 1)
+                                          + coordinate[2] * apexdnnRetTensorStride(TensorDesc, 2)
+                                          + coordinate[3] * apexdnnRetTensorStride(TensorDesc, 3)));
+#ifndef __STANDALONE__
+                  fwrite(resstr, strlen(resstr), 1, fp);
+#else
+                  T32_fwrite(resstr, strlen(resstr), 1, fp);
+#endif
+               }
+               else if (apexdnnRetTensorDataType(TensorDesc) == APEXDNN_DATA_16BIT)
+               {
+                  int16_t *p = (int16_t*)apexdnnRetTensorDataPtr(TensorDesc);
+                  sprintf(resstr, "%d, ", *(p + coordinate[0] * apexdnnRetTensorStride(TensorDesc, 0)
+                                          + coordinate[1] * apexdnnRetTensorStride(TensorDesc, 1)
+                                          + coordinate[2] * apexdnnRetTensorStride(TensorDesc, 2)
+                                          + coordinate[3] * apexdnnRetTensorStride(TensorDesc, 3)));
+#ifndef __STANDALONE__
+                  fwrite(resstr, strlen(resstr), 1, fp);
+#else
+                  T32_fwrite(resstr, strlen(resstr), 1, fp);
+#endif
+               }
+            }
+         }
+         sprintf(resstr, "\n");
+#ifndef __STANDALONE__
+         fwrite(resstr, strlen(resstr), 1, fp);
+#else
+         T32_fwrite(resstr, strlen(resstr), 1, fp);
+#endif
+      }
+   }
+#ifndef __STANDALONE__
+   fclose(fp);
+#else
+   T32_fclose(fp);
+#endif
+   return;
+}
+
+/*!*********************************************************************************
+ * \brief APEX-DNN test case 1. 
+ *
+ * This is building SqueezeNet V1.1 up to FIRE9/CONCAT layer as a feature extractor. 
+ * Network contains following filters:
+ *
+ * CONV1
+ * MAXPOOLING 1
+ * FIRE2/SQUEEZE1X1
+ *
+ * FIRE2/EXPAND1X1 FIRE2/EXPAND3X3
+ * FIRE3/SQUEEZE1X1
+ *
+ * FIRE3/EXPAND1X1 FIRE3/EXPAND3X3
+ * MAXPOOLING 3
+ * FIRE4/SQUEEZE1X1
+ *
+ * FIRE4/EXPAND1X1 FIRE4/EXPAND3X3
+ * FIRE5/SQUEEZE1X1
+ *
+ * FIRE5/EXPAND1X1 FIRE5/EXPAND3X3
+ * MAXPOOLING 5
+ * FIRE6/SQUEEZE1X1
+ *
+ * FIRE6/EXPAND1X1 FIRE6/EXPAND3X3
+ * FIRE7/SQUEEZE1X1
+ *
+ * FIRE7/EXPAND1X1 FIRE7/EXPAND3X3
+ * FIRE8/SUQEEZE1X1
+ *
+ * FIRE8/EXPAND1X1 FIRE8/EXPAND3X3
+ * FIRE9/SQUEEZE1X1
+ *
+ * FIRE9/EXPAND1X1 FIRE9/EXPAND3X3
+ ***********************************************************************************/
+static void build_sn11_fire9(apexdnnNet *Net)
+{
+   void* Layer;
+
+   /*                          0   1   2   3   4    5   6   7    8    9   10   11   12   13   14   15   16   17   18   19   20   21   22   23   24   25   26   27  */                           
+   int INPUT_CHANNELS[28]  = { 3, 64, 64, 16, 16, 128, 16, 16, 128, 128,  32,  32, 256,  32,  32, 256, 256,  48,  48, 384,  48,  48, 384,  64,  64, 512,  64,  64};
+   int OUTPUT_CHANNELS[28] = {64, 64, 16, 64, 64,  16, 64, 64, 128,  32, 128, 128,  32, 128, 128, 256,  48, 192, 192,  48, 192, 192,  64, 256, 256,  64, 256, 256};
+   int H_WINDOW_SIZE[28]   = { 3,  3,  1,  1,  3,  1,   1,  3,   3,   1,   1,   3,   1,   1,   3,   3,   1,   1,   3,   1,   1,   3,   1,   1,   3,   1,   1,   3};
+   int W_WINDOW_SIZE[28]   = { 3,  3,  1,  1,  3,  1,   1,  3,   3,   1,   1,   3,   1,   1,   3,   3,   1,   1,   3,   1,   1,   3,   1,   1,   3,   1,   1,   3};
+   int H_PAD[28]           = { 0,  0,  0,  0,  1,  0,   0,  1,   0,   0,   0,   1,   0,   0,   1,   0,   0,   0,   1,   0,   0,   1,   0,   0,   1,   0,   0,   1};
+   int W_PAD[28]           = { 0,  0,  0,  0,  1,  0,   0,  1,   0,   0,   0,   1,   0,   0,   1,   0,   0,   0,   1,   0,   0,   1,   0,   0,   1,   0,   0,   1};
+   int H_STRIDE[28]        = { 2,  2,  1,  1,  1,  1,   1,  1,   2,   1,   1,   1,   1,   1,   1,   2,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1};
+   int W_STRIDE[28]        = { 2,  2,  1,  1,  1,  1,   1,  1,   2,   1,   1,   1,   1,   1,   1,   2,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1,   1};
+
+   int MODULE_FILTER_START_IDX[9] = {0, 3, 6, 10, 13, 17, 20, 23, 26};
+
+   for (int module = 0; module < 9; module++)
+   {
+      int FilterIdx = MODULE_FILTER_START_IDX[module];
+      if (module == 0)
+      {
+         apexdnnCreateConv3x3MPS1Module(
+               ((apexdnnConv3x3MPS1Module**)&Layer),
+               APEXDNN_DATA_8BIT, 
+               OUTPUT_CHANNELS[FilterIdx], INPUT_CHANNELS[FilterIdx], H_PAD[FilterIdx], W_PAD[FilterIdx], H_STRIDE[FilterIdx], W_STRIDE[FilterIdx],
+               H_WINDOW_SIZE[FilterIdx+1], W_WINDOW_SIZE[FilterIdx+1], H_PAD[FilterIdx+1], W_PAD[FilterIdx+1], H_STRIDE[FilterIdx+1], W_STRIDE[FilterIdx+1],
+               OUTPUT_CHANNELS[FilterIdx+2], H_STRIDE[FilterIdx+2], W_STRIDE[FilterIdx+2]);
+      }
+      else if (module == 1 || module == 3 || module == 5 || module == 6 || module == 7)
+      {
+         apexdnnCreateE1E3S1Module(
+               ((apexdnnE1E3S1Module**)&Layer),
+               APEXDNN_DATA_8BIT, 
+               OUTPUT_CHANNELS[FilterIdx], INPUT_CHANNELS[FilterIdx], H_STRIDE[FilterIdx], W_STRIDE[FilterIdx],
+               OUTPUT_CHANNELS[FilterIdx+1], INPUT_CHANNELS[FilterIdx+1], H_PAD[FilterIdx+1], W_PAD[FilterIdx+1], H_STRIDE[FilterIdx+1], W_STRIDE[FilterIdx+1],
+               OUTPUT_CHANNELS[FilterIdx+2], H_STRIDE[FilterIdx+2], W_STRIDE[FilterIdx+2]);
+      }
+      else if (module == 2 || module == 4)
+      {
+         apexdnnCreateE1E3MPS1Module(
+               ((apexdnnE1E3MPS1Module**)&Layer),
+               APEXDNN_DATA_8BIT, 
+               OUTPUT_CHANNELS[FilterIdx], INPUT_CHANNELS[FilterIdx], H_STRIDE[FilterIdx], W_STRIDE[FilterIdx],
+               OUTPUT_CHANNELS[FilterIdx+1], INPUT_CHANNELS[FilterIdx+1], H_PAD[FilterIdx+1], W_PAD[FilterIdx+1], H_STRIDE[FilterIdx+1], W_STRIDE[FilterIdx+1],
+               H_WINDOW_SIZE[FilterIdx+2], W_WINDOW_SIZE[FilterIdx+2], H_PAD[FilterIdx+2], W_PAD[FilterIdx+2], H_STRIDE[FilterIdx+2], W_STRIDE[FilterIdx+2], 
+               OUTPUT_CHANNELS[FilterIdx+3], H_STRIDE[FilterIdx+3], W_STRIDE[FilterIdx+3]);
+      }
+      else if (module == 8)
+      {
+         apexdnnCreateE1E3Module(
+               ((apexdnnE1E3Module**)&Layer),
+               APEXDNN_DATA_8BIT, 
+               OUTPUT_CHANNELS[FilterIdx], INPUT_CHANNELS[FilterIdx], H_STRIDE[FilterIdx], W_STRIDE[FilterIdx],
+               OUTPUT_CHANNELS[FilterIdx+1], INPUT_CHANNELS[FilterIdx+1], H_PAD[FilterIdx+1], W_PAD[FilterIdx+1], H_STRIDE[FilterIdx+1], W_STRIDE[FilterIdx+1]);
+      }
+      apexdnnNetAppendLayer(Net, (void*)Layer);
+   }
+}
+
+static void build_case1_net(apexdnnNet *Net)
+{
+   void* Layer;
+
+   build_sn11_fire9(Net);
+
+   /* Average pooling is doing sum instead to keep more precision, 
+    * which make the output tensor is signed 16bit */
+   apexdnnCreateE1APModule(
+         ((apexdnnE1APModule**)&Layer),
+         APEXDNN_DATA_8BIT,
+         1000,
+         512,
+         1,
+         1);
+
+   apexdnnNetAppendLayer(Net, (void*)Layer);
+}
+
+int test_apexdnn_sn_case1(const char* src_path, const char* dst_path, const char* image)
+{
+   const int64_t cOalMemoryFreeSize_before = OAL_MemorySizeFree();
+
+   int INPUT_WIDTH   = 227; 
+   int INPUT_HEIGHT  = 227;
+   int INPUT_CHANNEL = 3;
+
+   int reval = 0;
+   char filename[256];
+   FILE *fp;
+
+   /* temporary buffer to read in model file */
+   int8_t *ModelBuf;
+   /* temporary tensor to read in input */
+   apexdnnTensorDescriptor *TempTensor;
+
+   /* workspace */
+   apexdnnWorkSpace* Workspace;
+
+   /* create workspace to:
+    *    -- allocate intermediate buffer to avoid dynamic alloc/dealloc
+    *    -- associate 64 CU of APEX 0 (the only supported case for now)
+    */
+   apexdnnCreateWorkSpace(&Workspace,
+         ACF_APU_CFG__APU_0_CU_0_63_SMEM_0_3,
+         0);
+
+   /* 
+    * Read In Model file and store in temporary buffer
+    */
+#ifndef __STANDALONE__
+   sprintf(filename, "%scase1/SqueezeV11Quant8_ILSVRC12.model", src_path);
+#else
+   sprintf(filename, "%scase1\\SqueezeV11Quant8_ILSVRC12.model", src_path);
+#endif
+   ModelBuf = (int8_t*)malloc(APEXCV_SQUEEZENET_V11_MODEL_BYTES);
+   if (file_read_helper(ModelBuf, APEXCV_SQUEEZENET_V11_MODEL_BYTES, filename))
+   {
+      reval |= 1;
+      return reval;
+   }
+
+   /* 
+    * Read Input and store in temporary compact N-C-H-W tensor 
+    */
+   apexdnnCreate4dTensorDescriptor(
+         &TempTensor,
+         APEXDNN_DATA_8BIT,
+         APEXDNN_TENSOR_NCHW,
+         APEXDNN_TENSOR_MEM_HEAP,
+         1, INPUT_CHANNEL, INPUT_HEIGHT, INPUT_WIDTH);
+#ifndef __STANDALONE__
+   sprintf(filename, "%scase1/case1_input_3x227x227.bin", src_path);
+#else
+   sprintf(filename, "%scase1\\case1_input_3x227x227.bin", src_path);
+#endif
+   if (file_read_helper(apexdnnRetTensorDataPtr(TempTensor), INPUT_CHANNEL * INPUT_HEIGHT * INPUT_WIDTH, filename))
+   {
+      reval |= 1;
+      return reval;
+   }
+
+   /* 
+    * Build and run reference model network which will inference on host CPU 
+    */
+   apexdnnNet*              Ref_Net            = NULL;
+   apexdnnTensorDescriptor* Ref_NetInputTensor = NULL;
+   apexdnnTensorDescriptor* Ref_NetOutputTensor = NULL;
+
+   /* 
+    * Build empty reference model network
+    */
+   apexdnnCreateEmptyNet(&Ref_Net);
+   build_case1_net(Ref_Net);
+
+   /*
+    * Fill reference networks's weight/bias tensors and quant parameters
+    */
+   apexdnnNetFillModel(Ref_Net, ModelBuf);
+
+   /*
+    * Create virtual tensor to represent input size.
+    * Only need virtual tensor without allocating memory. The memory will be allocated
+    * automatically when APEX-DNN verify the net based on which HW computing unit will be used 
+    * to inference the net to handle padding or make HW DMA optimal
+    */
+   apexdnnCreateVirtual4dTensorDescriptor(
+         &Ref_NetInputTensor,
+         APEXDNN_DATA_8BIT,
+         APEXDNN_TENSOR_NCHW,
+         APEXDNN_TENSOR_MEM_HEAP,
+         1, INPUT_CHANNEL, INPUT_HEIGHT, INPUT_WIDTH);
+
+   /* 
+    * Verify the network for host CPU inference. In this routine, 
+    *    -- intermediate tensor will be allocated
+    *    -- Network input tensor will be re-organized and needed buffer, into which the input data needs 
+    *       to be feeded, will be allocated.
+    *    -- Network output tensor will be created and associated memory will be allocated 
+    */
+   apexdnnNetVerifyGraphCpu(Ref_Net, Ref_NetInputTensor, &Ref_NetOutputTensor);
+
+   /*
+    * Display network and input output tensor, if SHOW_NETWORK_STRUCTURE==1 for examination
+    */
+#if SHOW_NETWORK_STRUCTURE
+   display_net(Ref_NetInputTensor, Ref_Net, Ref_NetOutputTensor);
+#endif
+   /* 
+    * Feed input by transforming temp tensor into network input tensor. Internally memory will be copied 
+    */ 
+   apexdnnTransform4dTensorDescriptor(TempTensor, Ref_NetInputTensor);
+
+   /* 
+    * Forware network calculation 
+    */
+   apexdnnNetForwardCpu(Workspace, Ref_Net, Ref_NetInputTensor);
+
+   /*
+    * Dump each layer/module's output tensor into file for examination
+    */ 
+#ifndef __STANDALONE__
+   for (int i = 0; i < apexdnnRetNetNumofLayers(Ref_Net); i++)
+   {
+      sprintf(filename, "%scase1_L%d_output_cmem_cpu.csv", dst_path, i);
+      dump_4d_tensor_desc(apexdnnRetNetLayerOutputTensorDesc(Ref_Net, i), filename, APEXDNN_TENSOR_NHCW);
+   }
+#endif
+
+   /* 
+    * Build and run network which will inference on APEX
+    */
+   apexdnnNet*              Apex_Net            = NULL;
+   apexdnnTensorDescriptor* Apex_NetInputTensor = NULL;
+   apexdnnTensorDescriptor* Apex_NetOutputTensor = NULL;
+
+   /* 
+    * Build empty network
+    */
+   apexdnnCreateEmptyNet(&Apex_Net);
+   build_case1_net(Apex_Net);
+
+   /*
+    * Fill networks's weight/bias tensors and quant parameters
+    */
+   apexdnnNetFillModel(Apex_Net, ModelBuf);
+
+   SWT_ARM_LOG_MODULE_FILENAME_REG("apexdnn_sn_test", "test_apexdnn_sn_case1");
+
+   /*
+    * Create virtual tensor to represent input size.
+    * Only need virtual tensor without allocating memory. The memory will be allocated
+    * automatically when APEX-DNN verify the net based on which HW computing unit will be used 
+    * to inference the net to handle padding or make HW DMA optimal
+    */
+   apexdnnCreateVirtual4dTensorDescriptor(
+         &Apex_NetInputTensor,
+         APEXDNN_DATA_8BIT,
+         APEXDNN_TENSOR_NCHW,
+         APEXDNN_TENSOR_MEM_HEAP,
+         1, INPUT_CHANNEL, INPUT_HEIGHT, INPUT_WIDTH);
+   /* 
+    * Verify the network for host APU inference. In this routine, 
+    *    -- intermediate tensor will be allocated
+    *    -- Network input tensor will be re-organized and needed buffer, into which the input data needs 
+    *       to be feeded, will be allocated.
+    *    -- Network output tensor will be created and associated memory will be allocated 
+    */
+   apexdnnNetVerifyGraphApex(Workspace, Apex_Net, Apex_NetInputTensor, &Apex_NetOutputTensor);
+#if SHOW_NETWORK_STRUCTURE
+   display_net(Apex_NetInputTensor, Apex_Net, Apex_NetOutputTensor);
+#endif
+
+   /* 
+    * Feed input by transforming temp tensor into network input tensor. Internally memory will be copied 
+    */ 
+   apexdnnTransform4dTensorDescriptor(TempTensor, Apex_NetInputTensor);
+
+   /* 
+    * Forware network calculation 
+    */
+   SWT_ARM_LOG_IMAGE_SIZE_FUNCTION_REG(INPUT_WIDTH, INPUT_HEIGHT, 0, 0, 0, 0, 0, 0, 0, 0);
+   reval |= apexdnnNetForwardApex(Workspace, Apex_Net, Apex_NetInputTensor, 0);
+   SWT_ARM_LOG_FUNCTION_RVAL(reval);
+
+   /*
+    * Dump each layer/module's output tensor into file for examination
+    */ 
+#ifndef __STANDALONE__
+   for ( int i = 0; i < apexdnnRetNetNumofLayers(Apex_Net); i++)
+   {
+      sprintf(filename, "%scase1_L%d_output_cmem_apex.csv", dst_path, i);
+      dump_4d_tensor_desc(apexdnnRetNetLayerOutputTensorDesc(Apex_Net, i), filename, APEXDNN_TENSOR_NHCW);
+   }
+#endif
+
+
+   /*
+    * Compare Ref model network output tensor with Apex inference network's output tensor
+    * Beware, Ref model network output tensor should be compact N-C-H-W tensor while Apex network might be
+    * N-H-C-W format and does not have to be compact. The comparsion won't care the format and only compare 
+    * the pixel values at corresponding coordinate.
+    */ 
+   if (apexdnnCompare4dTensorDescriptor(Ref_NetOutputTensor, Apex_NetOutputTensor) != APEXDNN_STATUS_SUCCESS)
+   {
+      reval |= 1;
+   }
+
+   apexdnnDestroyNet(Ref_Net,  Ref_NetInputTensor);
+   apexdnnDestroyNet(Apex_Net, Apex_NetInputTensor);
+   apexdnnDestroyTensorDescriptor(TempTensor);
+   apexdnnDestroyWorkSpace(Workspace);
+   free(ModelBuf);
+
+   const int64_t cOalMemoryFreeSize_after = OAL_MemorySizeFree();
+   printf("%s Before [%d] After[%d], Total[%d]\n", __FILE__, cOalMemoryFreeSize_before, cOalMemoryFreeSize_after, OAL_MemorySizeTotal());
+   if(cOalMemoryFreeSize_after != cOalMemoryFreeSize_before)
+   {
+      printf("%s : Memory Leak Detected[%d], Total[%d]\n", __FILE__, cOalMemoryFreeSize_before - cOalMemoryFreeSize_after, OAL_MemorySizeTotal());
+   }
+
+   if (reval)
+   {
+      SWT_ARM_LOG_FUNCTION_RVAL_UPDATE(reval, "miss-match ref");
+      printf("\t--- Done (***FAIL***)\n");
+   }
+   else
+   {
+      printf("\t--- Done (PASS)\n");
+   }
+
+   return reval;
+}
+* \endcode
+***********************************************************************************/

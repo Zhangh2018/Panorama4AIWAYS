@@ -1,0 +1,316 @@
+
+/******************************************************************************
+ *  (C) Copyright CogniVue Corporation. 2013 All right reserved.
+ *
+ *  Confidential Information
+ *
+ *  All parts of the CogniVue Program Source are protected by copyright law
+ *  and all rights are reserved.
+ *  This documentation may not, in whole or in part, be copied, photocopied,
+ *  reproduced, translated, or reduced to any electronic medium or machine
+ *  readable form without prior consent, in writing, from CogniVue.
+ ******************************************************************************/
+#include <math.h>  		// for floor()
+ 
+#include "icp_data.h"
+
+
+ 
+// all buffers/images are the same size (well float is 2 values per pixel but still)
+int32_t floatMapTo1DOffset(
+      float *lMapRGB, // stride assumed to be width?
+      icp::DataDescriptor &l1DOffset, 
+      icp::DataDescriptor &lDelta,
+      int32_t lSrcStride
+)
+{
+   // NB: dest, map, 1DOffset and delta all have same width/height
+   int32_t imageHeight = l1DOffset.GetHeight();
+   int32_t imageWidth  = l1DOffset.GetWidth();
+   
+   uint32_t *offsetPtr  = (uint32_t*)l1DOffset.GetDataPtr();
+   uint8_t *deltaPtr   = (uint8_t*)lDelta.GetDataPtr();
+   
+   // todo - please confirm type of stride
+   int offsetStride  = l1DOffset.GetStride_ElementDataType();
+   int deltaStride   = lDelta.GetStride_ElementDataType();
+
+   // ---BUILD offset and delta images---
+   // NB: offset is ACF1-style offset, not local offset.  /todo revisit this
+   // Based on 8-bit delta encoding.  Unused for Nearest Neighbour
+   float scl = 256.0; // used to compute 8-bit delta value
+   float rnd = (0.5 / scl);
+
+   for (unsigned int y = 0; y < imageHeight; ++y) {
+      for (unsigned int x = 0; x < imageWidth; ++x) {
+         // If fractional part is > delta value 0xff, round up offset count
+         float sx = lMapRGB[2*(y*imageWidth + x)] + rnd;
+         float sy = lMapRGB[2*(y*imageWidth + x) + 1] + rnd;
+
+         // Padding rules...
+         if (sx < 0.0)
+            sx = 0.0;
+         if (sx > (lSrcStride - 1))
+            sx = (lSrcStride - 1);
+         if (sy < 0.0)
+            sy = 0.0;
+         // source image height is not known
+//         if (sy > (imageHeight - 1))
+//            sy = (imageHeight - 1);
+
+         // bilinear interpolation
+         int32_t xi = (int32_t) floor(sx);
+         int32_t xf = (int32_t) floor(scl * (sx - (float) xi));
+         int32_t yi = (int32_t) floor(sy);
+         int32_t yf = (int32_t) floor(scl * (sy - (float) yi));
+
+         uint32_t offsetVal = (yi * lSrcStride) + xi;
+         offsetPtr[x] = offsetVal;
+         // Resize delta values
+         deltaPtr[2 * x + 0] = xf;
+         deltaPtr[2 * x + 1] = yf;
+      }
+
+      offsetPtr += offsetStride;
+      deltaPtr += deltaStride;    // 2 values per pixel
+   }
+
+   return 0;
+}
+// Determine the source block size required to accommodate the given destination block size, given the 1-d offset table (derived from Q16.16 map)
+int32_t getSourceBlockSize(
+      icp::DataDescriptor &l1DOffset,
+      int32_t destBW,
+      int32_t destBH,
+      int32_t lSrcStride,
+      int32_t &srcBW,
+      int32_t &srcBH)
+{
+   int32_t rVal = 0;
+   
+   uint32_t* pOffsetMap     = (uint32_t*)l1DOffset.GetDataPtr();
+   // Offset and Destination images are the same size
+   int32_t destImageWidth  = l1DOffset.GetWidth();
+   int32_t destImageHeight = l1DOffset.GetHeight();
+
+   // Initialize source block size - largest block seen so far
+   srcBW = 0;
+   srcBH = 0;
+
+   // Areas not processed in the "last" block - right or bottom
+   int excessPixelsRight = destImageWidth % destBW;
+   int excessPixelsBottom = destImageHeight % destBH;
+
+   // For each block
+   for (int i = 0; i < destImageHeight; i += destBH) {
+      unsigned int currentBlockHeight = destBH;
+      if ((i > (destImageHeight - destBH)) && (excessPixelsBottom > 0)) {
+         currentBlockHeight = excessPixelsBottom;
+      }
+      for (int j = 0; j < destImageWidth; j += destBW) {
+         unsigned int currentBlockWidth = destBW;
+         if ((j > (destImageWidth - destBW)) && (excessPixelsRight > 0)) {
+            currentBlockWidth = excessPixelsRight;
+         }
+
+         // Min and max X and Y values observed, in source image offsets
+         unsigned int xMin = 0xffffffff;				// set to very large integer
+         unsigned int xMax = 0;
+         unsigned int yMin = 0xffffffff;				// set to very large integer
+         unsigned int yMax = 0;
+
+         // We are parsing each offset in the destination block
+         int blkIndex = i * destImageWidth + j;
+
+         // For each pixel in the block
+         for (int k = 0; k < currentBlockHeight; k++) {
+            // Offset of first pixel in block row
+            int offsetIndex = blkIndex + k * destImageWidth;
+
+            for (unsigned int l = 0; l < currentBlockWidth; l++) {
+
+               unsigned int xMap = (pOffsetMap[offsetIndex])
+                     % lSrcStride;
+               unsigned int yMap = (pOffsetMap[offsetIndex])
+                     / lSrcStride;
+
+               // Compare with current min/max
+               if (xMap < xMin) {
+                  xMin = xMap;
+               }
+               if (xMap > xMax) {
+                  xMax = xMap;
+               }
+
+               if (yMap < yMin) {
+                  yMin = yMap;
+               }
+               if (yMap > yMax) {
+                  yMax = yMap;
+               }
+
+               offsetIndex++;
+            } // next pixel in row
+         } // next pixel row in block
+
+         // Block size
+         unsigned int blockW = xMax - xMin + 1;
+         unsigned int blockH = yMax - yMin + 1;
+
+         if (blockW > srcBW) {
+            srcBW = blockW;
+         }
+         if (blockH > srcBH) {
+            srcBH = blockH;
+         }
+
+      } // next block in row
+   } // next row of blocks
+
+   return rVal;
+}
+
+
+// Creates the list of source block offsets, given the source block size, source image size, and 1-d offset table
+int32_t getSourceBlockOffsets(
+      icp::DataDescriptor &l1DOffset,
+      int32_t destBW,
+      int32_t destBH,
+      int32_t lSrcStride,
+        icp::DataDescriptor &lBlockOffset)
+{
+   unsigned int rVal = 0;
+
+   // Offset of the top left corner of the block
+   uint32_t offsetTL = 0;
+   
+   // RetIcpDataTypeSizeInBytes(lSrc.GetContigDataDesc(0).GetElementDataType())
+   // todo fix this
+   unsigned int sourceDataSize = 4;
+      
+   uint32_t* pSourceOffsetList = (uint32_t*)lBlockOffset.GetDataPtr();
+   uint32_t* pOffsetMap     = (uint32_t*)l1DOffset.GetDataPtr();
+   // Offset and Destination images are the same size
+   uint32_t destImageWidth  = l1DOffset.GetWidth();
+   uint32_t destImageHeight = l1DOffset.GetHeight();
+
+   // used to parse and populate sourceOffsetList;
+   int srcOffsetIndex = 0;
+
+   // Areas not processed in the "last" block - right or bottom
+   unsigned int excessPixelsRight = destImageWidth % destBW;
+   unsigned int excessPixelsBottom = destImageHeight % destBH;
+
+   // For each block
+   for (unsigned int i = 0; i < destImageHeight; i += destBH) {
+      unsigned int currentBlockHeight = destBH;
+      if ((i > (destImageHeight - destBH)) && (excessPixelsBottom > 0)) {
+         currentBlockHeight = excessPixelsBottom;
+      }
+      for (unsigned int j = 0; j < destImageWidth; j += destBW) {
+         unsigned int currentBlockWidth = destBW;
+         if ((j > (destImageWidth - destBW)) && (excessPixelsRight > 0)) {
+            currentBlockWidth = excessPixelsRight;
+         }
+
+         // Min and max X and Y values observed, in source image offsets
+         unsigned int offsetMinX = 0xffffffff;		// set to very large integer
+         unsigned int offsetMinY = 0xffffffff;		// set to very large integer
+
+         // We are parsing each offset in the destination block
+         int blkIndex = i * destImageWidth + j;
+
+         // For each pixel in the block
+         for (unsigned int k = 0; k < currentBlockHeight; k++) {
+            // Offset of first pixel in block row
+            int offsetIndex = blkIndex + k * destImageWidth;
+
+            for (unsigned int l = 0; l < currentBlockWidth; l++) {
+               unsigned int xMap = (pOffsetMap[offsetIndex])
+                     % lSrcStride;
+               unsigned int yMap = (pOffsetMap[offsetIndex])
+                     / lSrcStride;
+
+               if ((xMap < offsetMinX) || (yMap < offsetMinY)) {
+                  if (xMap < offsetMinX) {offsetMinX = xMap;}
+                  if (yMap < offsetMinY) {offsetMinY = yMap;}
+
+                  // NB: this might not even be one of the offsets in the block
+                  offsetTL = offsetMinY * lSrcStride + offsetMinX;
+               }
+#if 0
+               if (pOffsetMap[offsetIndex] < offsetMin) {
+                  offsetMin = pOffsetMap[offsetIndex];
+               }
+#endif
+               offsetIndex++;
+            } // next pixel in row
+         } // next pixel row in block
+
+         // Determine results of block processing
+         pSourceOffsetList[srcOffsetIndex++] = offsetTL;
+//			pSourceOffsetList[srcOffsetIndex++] = offsetMin * sourceDataSize;
+
+      } // next block in row
+   } // next row of blocks
+
+   return rVal;
+}
+
+int32_t OneDOffsetToLocalOffset(
+      icp::DataDescriptor &l1DOffset,
+      icp::DataDescriptor &lBlockOffset,
+      int32_t lDestBW,
+      int32_t lDestBH,
+      int32_t lSrcBW,
+      int32_t lSrcStride,
+      icp::DataDescriptor &lLocalOffset
+)
+{
+   uint32_t *srcBlockOffsets = (uint32_t*)lBlockOffset.GetDataPtr();
+   uint32_t *offsetPtr       = (uint32_t*)l1DOffset.GetDataPtr();
+   uint16_t *optr            = (uint16_t*)lLocalOffset.GetDataPtr();
+
+   // Takes advantage of the fact that 1DOffset and Dest images are the same size
+   unsigned int numBlocksX = (l1DOffset.GetWidth() + lDestBW - 1) / lDestBW;
+
+   // for each pixel, probably single loop only needed?  but need to know my block number
+   for (unsigned int y = 0; y < l1DOffset.GetHeight(); ++y) {
+      unsigned int by = y / lDestBH;
+
+      for (unsigned int x = 0; x < l1DOffset.GetWidth(); ++x) {
+         // Convert offset to 1-D block offset by:
+         // - determine which source block to use
+         // - subtract the offset of the top left of the current source block
+         // - calucalte x, y offsets to top left of current source block by:
+         //    offX = (offset - TLoffset) % stride   offY = (offset - TLoffset) / stride
+         // - blockoffset = offY * blockstride + offX
+
+         unsigned int bx = x / lDestBW;
+
+         // offset of the top left pixel of the source block
+         unsigned int offsetTL = srcBlockOffsets[by * numBlocksX + bx];
+
+         // Because offsetVal = (yi * srcStride) + xi;
+         unsigned int offBlockX = (*offsetPtr - offsetTL) % lSrcStride;
+         unsigned int offBlockY = (*offsetPtr - offsetTL) / lSrcStride;
+
+         // Traps errors in source block size/allocation
+#if 0
+         if (offBlockX >= lSrcBW) {
+            printf("X error\n");
+         }
+         if (offBlockY >= srcBH) {
+            printf("Y error\n");
+         }
+#endif
+
+         *optr = offBlockY * lSrcBW + offBlockX;
+
+         offsetPtr++;
+         optr++;
+      }
+   }
+
+   return 0;
+}

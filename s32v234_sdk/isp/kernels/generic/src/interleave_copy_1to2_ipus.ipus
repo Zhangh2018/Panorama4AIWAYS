@@ -1,0 +1,18 @@
+# in to LSB
+# out from LSB
+# out0 step0: ina0 (U)
+# out1 step0: ina0 (U)
+# out0 step1: ina3 (V)
+# out1 step1: ina3 (V)
+.global interleave_copy_1to2_ipus_start
+
+interleave_copy_1to2_ipus_start:
+  done interleave_copy_1to2_ipus_loop,i    // load first pixel
+
+interleave_copy_1to2_ipus_loop:
+  add out1,ina0,ina3                              // out1 <- A1 & B1
+  dout out1,interleave_copy_1to2_ipus_loop,ixo    // out0 <- out1; and output
+
+        halt
+.global interleave_copy_1to2_ipus_end
+interleave_copy_1to2_ipus_end:

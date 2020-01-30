@@ -1,0 +1,44 @@
+//
+_entry_point _main_init
+_symbol _main _after _main_init
+_symbol _main_init 0
+
+// MEMORY START SIZE (WORD ADDRESS & SIZE)
+_stack  DMb 0x0000 1536  // (0x600) 8-bit
+_stack  VMb 0x0000 256   //         16-bit
+
+// DMEM: ALWAYS RESERVED
+
+//-------------------------------------------------------------------------------
+//reserved SMEM regions following the stack (stack size = 1536 (0x600) bytes)
+//-------------------------------------------------------------------------------
+_symbol DMEM_SHARED  0x600   32
+_symbol DMEM_CMD_CNT 0x620   32
+_symbol DMEM_CMD_QUE 0x640 3008
+
+//ACF PROGRAM PROFILING STRUCT
+_symbol gPerfInfo           0x1200 32
+//ACF GLOBALS
+_symbol gNumInputIterations 0x1220 4
+_symbol gInputIter          0x1224 4
+_symbol gProcIter           0x1228 4
+_symbol gInputIterMce       0x122C 4
+
+//TOTAL RESERVED SIZE = stack + DMEM_SHARED + DMEM_CMD_CNT + DMEM_CMD_QUE + gPerfInfo + ACF GLOBALS
+//                    = 1536  + 32          + 32           + 3008         + 32        + (4*4)       = 4656 (0x1230) bytes
+//-------------------------------------------------------------------------------
+
+_symbol    DMEM_KERNEL_NUM   0x10800     // 0x10800 - 11000, 2k words, 64 kernels
+_symbol    DMEM_KERNEL_DB    0x10804
+
+//CMEM: ALWAYS RESERVED
+_symbol    CID               256
+_symbol    CMEM_DEBUG        288
+//_symbol    CMEM_RESERVED     4096 _no_init// END OF CMEM
+
+//SWT UTIL (currently not enabled or used)
+//_symbol gSWT_RPT_DBASE_SIZE 0xE00    4
+//_symbol gSWT_RPT_DBASE      0xE04    4
+//_symbol gSWT_RPT_DBASE_BEG  0xE08    4
+//_symbol gSWT_RPT_DBASE_END  0xE0C    4
+//_symbol gSWT_RPT_DBASE_TBL  0xE10 1008

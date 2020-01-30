@@ -1,0 +1,27 @@
+/*!*********************************************************************************
+*  \mainpage APU2_Math_Library
+*  The APU2 Math Library provides basic functionality for developers to design their own
+*  imaging-based applications while taking advantage of NXP's massively parallel APEX
+*  architecture.
+*
+*     - \link vfxp_qmult_scale Fractional multiplication with integer scale\endlink
+*     - \link vfxp_qmult_vscale Fractional multiplication with scale Fixed point value\endlink
+*     - \link vfxp_qmult_scale_round Fractional multiplication with scale and round\endlink
+*     - \link vfxp_sgn Signum\endlink
+*     - \link vfxp_rsqrt Inverse square root\endlink
+*     - \link vfxp_isqrt32 Integer Square Root\endlink
+*     - \link vfxp_sqrt Square root\endlink
+*     - \link vfxp_asin ArcSinus\endlink
+*     - \link vfxp_catan2 Centesimal arctangent\endlink
+*     - \link vfxp_tan Tangent\endlink
+*     - \link vfxp_acos ArcCosinus\endlink
+*     - \link vfxp_atan ArcTangent\endlink
+*     - \link vfxp_atan2 Arctangent function with two parameters\endlink
+*     - \link vfxp_sinh Hyperbolic Sinus\endlink
+*     - \link vfxp_cosh Hyperbolic Cosine\endlink
+*     - \link vfxp_tanh Hyperbolic Tangent\endlink
+*     - \link vfxp_log Natural logarithm\endlink
+*     - \link vfxp_exp Natural exponent\endlink
+*
+*
+***********************************************************************************/

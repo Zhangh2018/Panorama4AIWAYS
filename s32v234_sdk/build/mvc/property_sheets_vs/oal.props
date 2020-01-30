@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="property_sheets_vs" />
+  <PropertyGroup Label="UserMacros">
+    <OAL_PATH>$(S32V234_SDK_ROOT)\libs\utils\oal</OAL_PATH>
+  </PropertyGroup>
+  <PropertyGroup />
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(S32V234_SDK_ROOT)\include;$(S32V234_SDK_ROOT)\libs\utils;$(OAL_PATH)\kernel\include;$(OAL_PATH)\user\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_MBCS;_WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="OAL_PATH">
+      <Value>$(OAL_PATH)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>

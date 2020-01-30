@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="..\..\graphs\apu_fast_apu_process_desc.hpp">
+      <Filter>Graphs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\graphs\apu_fast_graph.hpp">
+      <Filter>Graphs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\graphs\apu_fast_graph_names.h">
+      <Filter>Graphs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\graphs\apu_fast_nms_apu_process_desc.hpp">
+      <Filter>Graphs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\graphs\apu_fast_nms_graph.hpp">
+      <Filter>Graphs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\apex_fast.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{2e90c7ca-0a1c-40a9-808e-cc0a35e6b329}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphs">
+      <UniqueIdentifier>{37ba2cac-3c5a-497a-9cec-3a3403ced5cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{878eb13b-33bd-443a-b276-0e4cdbbf951b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\apex_fast.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

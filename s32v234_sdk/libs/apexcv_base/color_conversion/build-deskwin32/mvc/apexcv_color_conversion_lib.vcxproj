@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{06B5CBEE-981E-4B95-8473-B0D4C2213C66}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>apexcv_color_conversion_lib</RootNamespace>
+    <ProjectName>apexcv_color_conversion_lib</ProjectName>
+    <S32V234_SDK_ROOT>..\..\..\..\..</S32V234_SDK_ROOT>
+    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(S32V234_SDK_ROOT)\build\mvc\property_sheets_vs\common.props" />
+    <Import Project="$(S32V234_SDK_ROOT)\build\mvc\property_sheets_vs\ACF_Lib.props" />
+    <Import Project="$(S32V234_SDK_ROOT)\build\mvc\property_sheets_vs\KernelDirectory.props" />
+    <Import Project="$(S32V234_SDK_ROOT)\build\mvc\property_sheets_vs\apexcv_kernels.props" />
+    <Import Project="$(S32V234_SDK_ROOT)\build\mvc\property_sheets_vs\umat.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(S32V234_SDK_ROOT)\build\mvc\property_sheets_vs\KernelDirectory.props" />
+    <Import Project="$(S32V234_SDK_ROOT)\build\mvc\property_sheets_vs\common.props" />
+    <Import Project="$(S32V234_SDK_ROOT)\build\mvc\property_sheets_vs\ACF_Lib.props" />
+    <Import Project="$(S32V234_SDK_ROOT)\build\mvc\property_sheets_vs\apexcv_kernels.props" />
+    <Import Project="$(S32V234_SDK_ROOT)\build\mvc\property_sheets_vs\apexcv_lib.props" />
+    <Import Project="$(S32V234_SDK_ROOT)\build\mvc\property_sheets_vs\umat.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <TargetExt>.lib</TargetExt>
+    <IntDir>$(SolutionDir)$(ProjectName)_$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <TargetExt>.lib</TargetExt>
+    <IntDir>$(SolutionDir)$(ProjectName)_$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>APEX2_EMULATE;WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(S32V234_SDK_ROOT)\libs\apexcv_base\apexcv_core\include;$(ProjectDir)..\..\include;$(ProjectDir)..\..\graphs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ProgramDataBaseFileName>$(IntDir)_$(ProjectName)vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <ProjectReference>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>APEX2_EMULATE;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <ProgramDataBaseFileName>$(IntDir)vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
+      <AdditionalOptions>/FS %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(S32V234_SDK_ROOT)\libs\apexcv_base\apexcv_core\include;$(ProjectDir)..\..\graphs;$(ProjectDir)..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\color_conversion.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\graphs\all_color_conversion_graph_registrations.h" />
+    <ClInclude Include="..\..\graphs\extract_channel_2ch_apu_process_desc.hpp" />
+    <ClInclude Include="..\..\graphs\extract_channel_2ch_graph.hpp" />
+    <ClInclude Include="..\..\graphs\extract_channel_3ch_apu_process_desc.hpp" />
+    <ClInclude Include="..\..\graphs\extract_channel_3ch_graph.hpp" />
+    <ClInclude Include="..\..\graphs\extract_channel_4ch_apu_process_desc.hpp" />
+    <ClInclude Include="..\..\graphs\extract_channel_4ch_graph.hpp" />
+    <ClInclude Include="..\..\graphs\insert_channel_2ch_apu_process_desc.hpp" />
+    <ClInclude Include="..\..\graphs\insert_channel_2ch_graph.hpp" />
+    <ClInclude Include="..\..\graphs\insert_channel_3ch_apu_process_desc.hpp" />
+    <ClInclude Include="..\..\graphs\insert_channel_3ch_graph.hpp" />
+    <ClInclude Include="..\..\graphs\insert_channel_4ch_apu_process_desc.hpp" />
+    <ClInclude Include="..\..\graphs\insert_channel_4ch_graph.hpp" />
+    <ClInclude Include="..\..\graphs\rgb565_to_rgb888x_apu_process_desc.hpp" />
+    <ClInclude Include="..\..\graphs\rgb565_to_rgb888x_graph.hpp" />
+    <ClInclude Include="..\..\graphs\rgb888x_to_rgb565_apu_process_desc.hpp" />
+    <ClInclude Include="..\..\graphs\rgb888x_to_rgb565_graph.hpp" />
+    <ClInclude Include="..\..\graphs\rgb888x_to_yuv_apu_process_desc.hpp" />
+    <ClInclude Include="..\..\graphs\rgb888x_to_yuv_graph.hpp" />
+    <ClInclude Include="..\..\graphs\rgb888x_to_y_apu_process_desc.hpp" />
+    <ClInclude Include="..\..\graphs\rgb888x_to_y_graph.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(S32V234_SDK_ROOT)\kernels\apu\apexcv_base_color_conversion\build-deskwin32\mvc\apexcv_base_color_conversion.vcxproj">
+      <Project>{9d7791a0-6eee-43e9-9957-66b8d4e14d1e}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\utils\umat\build-deskwin32\mvc\umat.vcxproj">
+      <Project>{89711236-83e7-4d4f-b218-67e7686e3223}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\apexcv_core\build-deskwin32\mvc\apexcv_core_lib.vcxproj">
+      <Project>{40ff2209-f062-47ca-b299-4da00fea6699}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

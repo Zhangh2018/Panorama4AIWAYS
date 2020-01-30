@@ -1,0 +1,299 @@
+Archive member included to satisfy reference by file (symbol)
+
+../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(crt0_start-s.o)
+                              (_reset)
+../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(startup-c.o)
+                              ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(crt0_start-s.o) (_done)
+../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_main-c.o)
+                              ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(crt0_start-s.o) (main)
+../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_static-c.o)
+                              ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_main-c.o) (staticSequenceInit)
+../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(core_regs-s.o)
+                              ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_main-c.o) (getPRIMASK)
+../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_int-c.o)
+                              ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_main-c.o) (gpOTHR)
+
+Allocating common symbols
+Common symbol       size              file
+
+gpIntDevCfg         0x50              ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_int-c.o)
+JPEG_EV_Queue       0x200             ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_main-c.o)
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+m0_0_intvec      0x00000000         0x000000c0
+sram_RAM         0x00000100         0x0000af00
+stack            0x0000b000         0x00001000
+graph            0x0000c000         0x00004000
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+
+.vectable       0x00000000       0x40
+                0x00000000                __CM0_0_VECTOR_TABLE = .
+ *(.vectable)
+ .vectable      0x00000000       0x40 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(startup-c.o)
+                0x00000000                vecTab
+
+.init
+ *(.init)
+
+.text           0x00000100     0x65c8
+ *(.text*)
+ .text          0x00000100        0xc dynamic_max9286_96705_4_uyvy-c.o
+                0x00000100                StaticSequencing
+ .text          0x0000010c       0x3c ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(crt0_start-s.o)
+                0x0000010c                _reset
+                0x0000013c                _exception
+ .text          0x00000148       0x28 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(startup-c.o)
+                0x00000148                _done
+                0x0000014c                _comp_init
+ .text          0x00000170     0x4a38 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_main-c.o)
+                0x00001700                initIPUpara
+                0x000017a0                updateProdStat
+                0x0000181c                updateConsRdy
+                0x00002ea4                processEvent
+                0x000039f0                startDev
+                0x00003e9c                processMessage
+                0x00004534                checkUpdatedDev
+                0x000048b8                checkStartDev
+                0x00004924                checkIpuFree
+                0x00004938                numFreeFdmaQueue
+                0x00004950                dbgPrintNum
+                0x00004ac4                exceptionHL
+                0x00004b7c                fatalError
+ .text.startup  0x00004ba8       0x90 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_main-c.o)
+                0x00004ba8                main
+ .text          0x00004c38      0x650 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_static-c.o)
+                0x00004c44                staticSequenceInit
+                0x00004c58                staticSequence
+                0x00004dfc                staticSequenceWaitFinish
+                0x00004e80                staticSequenceEventIPU
+                0x00004ec4                staticSequenceJpeg4
+                0x00005224                initIPUnode
+                0x00005260                initFDMAnode
+ .text          0x00005288       0x16 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(core_regs-s.o)
+                0x00005288                getSP
+                0x0000528c                getIPSR
+                0x00005292                getPRIMASK
+                0x00005298                getCONTROL
+ *fill*         0x0000529e        0x2 
+ .text          0x000052a0     0x1428 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_int-c.o)
+                0x000052a0                SEQ_IdmaHndl
+                0x000052a4                SEQ_EngineHndl
+                0x000058d4                SEQ_HostEvntDoneHndl
+                0x000058e8                SEQ_HostMsgHndl
+                0x00005904                SEQ_HostOutAckHndl
+                0x00005938                SEQ_FdmaErrHndl
+                0x0000595c                SEQ_ErrHndl
+                0x00005988                SEQ_DfltHndl
+                0x000059b4                SEQ_ExecuteEvents
+                0x000063a4                SEQ_EvntRegIntDev
+                0x00006510                SEQ_EvntInit
+                0x0000660c                procOthrEvent
+                0x00006684                procIpuEvent
+
+.glue_7         0x000066c8        0x0
+ .glue_7        0x000066c8        0x0 linker stubs
+
+.glue_7t        0x000066c8        0x0
+ .glue_7t       0x000066c8        0x0 linker stubs
+
+.vfp11_veneer   0x000066c8        0x0
+ .vfp11_veneer  0x000066c8        0x0 linker stubs
+
+.v4_bx          0x000066c8        0x0
+ .v4_bx         0x000066c8        0x0 linker stubs
+
+.iplt           0x000066c8        0x0
+ .iplt          0x000066c8        0x0 dynamic_max9286_96705_4_uyvy-c.o
+
+.rodata         0x000066c8      0x360
+ *(.rodata*)
+ .rodata        0x000066c8       0xd4 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_main-c.o)
+                0x00006790                gcIntDmaAddr
+                0x00006794                gcClkCtrlAddr
+                0x00006798                gcEvntCtrlAddr
+ .rodata.str1.4
+                0x0000679c      0x132 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_main-c.o)
+                                0x142 (size before relaxing)
+ *fill*         0x000068ce        0x2 
+ .rodata        0x000068d0       0x90 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_int-c.o)
+ .rodata.str1.4
+                0x00006960       0xc8 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_int-c.o)
+
+.rel.dyn        0x00006a28        0x0
+ .rel.iplt      0x00006a28        0x0 dynamic_max9286_96705_4_uyvy-c.o
+
+.sdabase
+ *(.sdabase*)
+
+.sdata
+ *(.sdata*)
+
+.sdata2
+ *(.sdata2*)
+
+.sbss
+ *(.sbss*)
+
+.data           0x00006a30        0x8
+ *(.data*)
+ .data          0x00006a30        0x0 dynamic_max9286_96705_4_uyvy-c.o
+ .data          0x00006a30        0x0 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(crt0_start-s.o)
+ .data          0x00006a30        0x0 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(startup-c.o)
+ .data          0x00006a30        0x8 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_main-c.o)
+                0x00006a30                gOutMsgFree
+ .data          0x00006a38        0x0 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_static-c.o)
+ .data          0x00006a38        0x0 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(core_regs-s.o)
+ .data          0x00006a38        0x0 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_int-c.o)
+
+.igot.plt       0x00006a38        0x0
+ .igot.plt      0x00006a38        0x0 dynamic_max9286_96705_4_uyvy-c.o
+
+.bss            0x00006a40      0x834
+                0x00006a40                __bss_start__ = .
+ *(.bss*)
+ .bss           0x00006a40        0x0 dynamic_max9286_96705_4_uyvy-c.o
+ .bss           0x00006a40        0x0 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(crt0_start-s.o)
+ .bss           0x00006a40        0x0 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(startup-c.o)
+ .bss           0x00006a40      0x374 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_main-c.o)
+                0x00006a40                gpJPEGdecCons
+                0x00006a46                JPEG_EV_Fi
+                0x00006a48                JPEG_EV_Rd
+                0x00006a5a                gFrameErrors
+                0x00006a6c                gIPUSdone
+                0x00006a70                gNumIpusRun
+                0x00006a80                gIPUVdone
+                0x00006a84                gNumIpuvRun
+                0x00006a8c                gNumFdmaRun
+                0x00006ad4                gFDMAdone
+                0x00006ad8                gOTHRdone
+                0x00006adc                gpMIPI0
+                0x00006ae0                gNumCamLines
+                0x00006ae4                gpMIPI1
+                0x00006ae8                gpVIU0
+                0x00006aec                gpVIU1
+                0x00006af0                gpH264enc
+                0x00006af4                gpH264dec
+                0x00006af8                gpJPEGdec
+                0x00006afc                JPEG_EV_Wr
+                0x00006b00                gpDBG
+                0x00006b04                gInputLines
+                0x00006b14                gNumH264EncRun
+                0x00006b1c                gpGraph
+                0x00006b20                gpBuf
+                0x00006db0                gpcDBGend
+ .bss           0x00006db4      0x148 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_static-c.o)
+                0x00006db4                sStaticSeq
+ .bss           0x00006efc        0x0 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(core_regs-s.o)
+ .bss           0x00006efc      0x128 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_int-c.o)
+                0x00006f00                gpIPUS
+                0x00006f40                gpIPUV
+                0x00006f60                gIntDevCnt
+                0x00006f64                gpOTHR
+                0x00007024                __bss_end__ = .
+ COMMON         0x00007024      0x200 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_main-c.o)
+                0x00007024                JPEG_EV_Queue
+ COMMON         0x00007224       0x50 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_int-c.o)
+                0x00007224                gpIntDevCfg
+
+.stack          0x0000b000        0x0
+                0x0000b000                __CM0_0_STACK_BOTTOM = .
+
+.graph          0x0000c000        0x0
+                0x0000bffc                __CM0_0_STACK_ADDRESS = (. - 0x4)
+                0x0000c000                __graph_start = .
+LOAD dynamic_max9286_96705_4_uyvy-c.o
+LOAD ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a
+OUTPUT(sequencer.elf elf32-littlearm)
+
+.debug_info     0x00000000     0xce8a
+ .debug_info    0x00000000      0x914 dynamic_max9286_96705_4_uyvy-c.o
+ .debug_info    0x00000914      0x965 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(startup-c.o)
+ .debug_info    0x00001279     0x7ace ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_main-c.o)
+ .debug_info    0x00008d47     0x18f7 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_static-c.o)
+ .debug_info    0x0000a63e     0x284c ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_int-c.o)
+
+.debug_abbrev   0x00000000     0x10c9
+ .debug_abbrev  0x00000000      0x1c4 dynamic_max9286_96705_4_uyvy-c.o
+ .debug_abbrev  0x000001c4      0x1f3 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(startup-c.o)
+ .debug_abbrev  0x000003b7      0x4db ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_main-c.o)
+ .debug_abbrev  0x00000892      0x3b1 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_static-c.o)
+ .debug_abbrev  0x00000c43      0x486 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_int-c.o)
+
+.debug_aranges  0x00000000       0xa8
+ .debug_aranges
+                0x00000000       0x20 dynamic_max9286_96705_4_uyvy-c.o
+ .debug_aranges
+                0x00000020       0x20 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(startup-c.o)
+ .debug_aranges
+                0x00000040       0x28 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_main-c.o)
+ .debug_aranges
+                0x00000068       0x20 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_static-c.o)
+ .debug_aranges
+                0x00000088       0x20 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_int-c.o)
+
+.debug_line     0x00000000     0x2625
+ .debug_line    0x00000000      0x185 dynamic_max9286_96705_4_uyvy-c.o
+ .debug_line    0x00000185      0x1cc ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(startup-c.o)
+ .debug_line    0x00000351     0x198d ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_main-c.o)
+ .debug_line    0x00001cde      0x3ec ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_static-c.o)
+ .debug_line    0x000020ca      0x55b ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_int-c.o)
+
+.debug_str      0x00000000     0x3a49
+ .debug_str     0x00000000      0x678 dynamic_max9286_96705_4_uyvy-c.o
+                                0x6ca (size before relaxing)
+ .debug_str     0x00000678       0xcd ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(startup-c.o)
+                                0x666 (size before relaxing)
+ .debug_str     0x00000745     0x3089 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_main-c.o)
+                               0x3788 (size before relaxing)
+ .debug_str     0x000037ce      0x13e ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_static-c.o)
+                                0xf3f (size before relaxing)
+ .debug_str     0x0000390c      0x13d ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_int-c.o)
+                               0x127c (size before relaxing)
+
+.comment        0x00000000       0x7e
+ .comment       0x00000000       0x7e dynamic_max9286_96705_4_uyvy-c.o
+                                 0x7f (size before relaxing)
+ .comment       0x0000007e       0x7f ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(startup-c.o)
+ .comment       0x0000007e       0x7f ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_main-c.o)
+ .comment       0x0000007e       0x7f ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_static-c.o)
+ .comment       0x0000007e       0x7f ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_int-c.o)
+
+.ARM.attributes
+                0x00000000       0x31
+ .ARM.attributes
+                0x00000000       0x31 dynamic_max9286_96705_4_uyvy-c.o
+ .ARM.attributes
+                0x00000031       0x23 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(crt0_start-s.o)
+ .ARM.attributes
+                0x00000054       0x31 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(startup-c.o)
+ .ARM.attributes
+                0x00000085       0x31 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_main-c.o)
+ .ARM.attributes
+                0x000000b6       0x31 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_static-c.o)
+ .ARM.attributes
+                0x000000e7       0x23 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(core_regs-s.o)
+ .ARM.attributes
+                0x0000010a       0x31 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_int-c.o)
+
+.debug_frame    0x00000000      0x5e8
+ .debug_frame   0x00000000       0x20 dynamic_max9286_96705_4_uyvy-c.o
+ .debug_frame   0x00000020       0x30 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(startup-c.o)
+ .debug_frame   0x00000050      0x31c ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_main-c.o)
+ .debug_frame   0x0000036c      0x104 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_static-c.o)
+ .debug_frame   0x00000470      0x178 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_int-c.o)
+
+.debug_loc      0x00000000     0xc33b
+ .debug_loc     0x00000000       0x20 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(startup-c.o)
+ .debug_loc     0x00000020     0x9640 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_main-c.o)
+ .debug_loc     0x00009660      0xdc8 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_static-c.o)
+ .debug_loc     0x0000a428     0x1f13 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_int-c.o)
+
+.debug_ranges   0x00000000     0x16f8
+ .debug_ranges  0x00000000     0x1070 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_main-c.o)
+ .debug_ranges  0x00001070       0x58 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_static-c.o)
+ .debug_ranges  0x000010c8      0x630 ../../../../../isp/firmware/build-v234ce-gnu-linux-o/libsequencer.a(seq_int-c.o)

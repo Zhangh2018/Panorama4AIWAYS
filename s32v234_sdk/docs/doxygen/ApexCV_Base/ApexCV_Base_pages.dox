@@ -1,0 +1,78 @@
+/*!*********************************************************************************
+*  \mainpage APEX-CV Base Library
+*  The APEX-CV Base library provides basic functionality for developers to design their own
+*  imaging-based applications while taking advantage of NXP's massively parallel APEX
+*  architecture. Currently various arithmetic operations, color conversions and image filters are provided
+*  as well as image calculations such as histogram and integral image as listed below. 
+*
+*  - Arithmetic Operations:
+*     - \link apexcv::Abs Absolute value \endlink
+*     - \link apexcv::AbsDiff Absolute difference\endlink
+*     - \link apexcv::Accumulate Accumulate\endlink
+*     - \link apexcv::AccumulateSquared Accumulate squared\endlink
+*     - \link apexcv::AccumulateWeighted Accumulate weighted\endlink
+*     - \link apexcv::Add Addition\endlink
+*     - Bitwise \link apexcv::BitwiseAND AND\endlink, \link apexcv::BitwiseNOT NOT\endlink, \link apexcv::BitwiseOR OR\endlink, \link apexcv::BitwiseXOR XOR\endlink
+*     - \link apexcv::Clz Count Leading Zeros\endlink
+*     - \link apexcv::Magnitude Magnitude\endlink
+*     - \link apexcv::Max Max\endlink
+*     - \link apexcv::Min Min\endlink
+*     - \link apexcv::Mul Pixel-wise Multiplication\endlink
+*     - \link apexcv::Phase Gradient Phase Computation\endlink
+*     - \link apexcv::Subtract Subtraction\endlink
+*     - \link apexcv::TableLookup Table Lookup\endlink
+*     - \link apexcv::Threshold Thresholding (binary) \endlink
+*     - \link apexcv::ThresholdRange Thresholding (range) \endlink
+*
+*  - Interpolation Operations:
+*     - \link apexcv::InterpolationLinearGrayscale Linear Grayscale\endlink
+*     - \link apexcv::InterpolationBilinearGrayscale Bilinear Grayscale\endlink
+*     - \link apexcv::InterpolationBicubicGrayscale Bicubic Grayscale\endlink
+*
+*  - Color Conversion and Channel Manipulation Operations:
+*     - \link apexcv::ColorConverter Color conversion and color rotation \endlink
+*     - \link apexcv::ColorConverterHT Color conversion and color rotation (optimized) \endlink
+*     - \link apexcv::ConvertDepth Convert bit depth \endlink
+*     - \link apexcv::ExtractChannel Extract Channel\endlink
+*     - \link apexcv::InsertChannel Insert Channel\endlink
+*     - \link apexcv::SplitChannel Split Channel\endlink
+*     - \link apexcv::MergeChannel Merge Channel\endlink
+*
+*  - Image Filters Operations:
+*     - \link apexcv::BilateralFilter Bilateral filter\endlink
+*     - \link apexcv::BoxFilter Box filter\endlink
+*     - \link apexcv::BoxFilterHT Box filter (optimized) \endlink
+*     - \link apexcv::CensusFilter Census filter\endlink
+*     - \link apexcv::ConvolveFilter Convolve filter\endlink
+*     - \link apexcv::ConvolveFilterHT Convolve filter (optimized)\endlink
+*     - \link apexcv::DerivativeXFilterHT Derivative X filter (optimized)\endlink
+*     - \link apexcv::DerivativeYFilterHT Derivative Y filter (optimized)\endlink
+*     - \link apexcv::DilateFilter Dilate filter\endlink
+*     - \link apexcv::ErodeFilter Erode filter\endlink
+*     - \link apexcv::GaussianFilter Gaussian filter\endlink
+*     - \link apexcv::MedianFilter Median filter\endlink
+*     - \link apexcv::PrewittXFilter Prewitt X filter\endlink
+*     - \link apexcv::PrewittYFilter Prewitt Y filter\endlink
+*     - \link apexcv::SaturateFilterHT Saturate filter (optimized)\endlink
+*     - \link apexcv::ScharrFilter Scharr Filter \endlink
+*     - \link apexcv::ScharrXFilter Scharr Filter X \endlink
+*     - \link apexcv::ScharrXYFilter Scharr Filter XY \endlink
+*     - \link apexcv::ScharrYFilter Scharr Filter Y \endlink
+*     - \link apexcv::SeparableFilterHT Separable filter (optimized)\endlink
+*     - \link apexcv::SobelFilter Sobel filter\endlink
+*     - \link apexcv::SobelFilterHT Sobel filter (optimized)\endlink
+*     - \link apexcv::SobelXFilter Sobel X filter\endlink
+*     - \link apexcv::SobelXFilterHT Sobel X filter (optimized)\endlink
+*     - \link apexcv::SobelYFilter Sobel Y filter\endlink
+*     - \link apexcv::SobelYFilterHT Sobel Y filter (optimized)\endlink
+*     - \link apexcv::SobelXYFilter Sobel XY filter\endlink
+*
+*  - Histogram Operations:
+*     - \link apexcv::Histogram Histogram\endlink
+*     - \link apexcv::Mean Mean\endlink
+*     - \link apexcv::MeanStddev Standard deviation\endlink
+*
+*  - \link apexcv::IntegralImage Integral Image\endlink
+*
+*
+***********************************************************************************/

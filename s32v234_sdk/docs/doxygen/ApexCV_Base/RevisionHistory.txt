@@ -1,0 +1,16 @@
+Document UG-10328-01-04 revision history
+Version Date 		Comment 							Author
+01  	July 4, 2014  	Initial Revision      						Doxygen
+02  	Aug. 1, 2014  	Update to add Median, Convolve, Sobel, Prewitt filters, 	Doxygen
+		  	RGB2Y and RGB2YUV color conversion, Histogram and
+		  	Integral Image
+03   	Oct. 1, 2014  	Update to add Bilinear/Linear Interpolation, Accumulate, and Accumulate Squared	Doxygen
+04   	Oct. 31, 2014  	Update supported box, dilate, and sobel data types	Doxygen
+05    Jan. 29, 2015    APEX-CV base update: abs, clz Doxygen
+06    Oct. 30, 2015    APEX-CV base update: added optimized filters under OPT namespace Doxygen
+07    May 13, 2016     APEX-CV base update: added Histogram Equalization Doxygen
+08    Feb 10, 2017     APEX-CV base update: added VX Thresholding, Table Lookup and Channel Extract Doxygen
+09    July 10, 2017    APEX-CV base update: update documentation to RTM 1.0 content
+10    March 06, 2018   APEX-CV base update: update documentation to RTM 1.1 content
+11    Aug. 11, 2018    APEX-CV base add: Scharr filter, Convert bit depth, Min, Max, Pixel-wise Multiplication, APEX-CV base update: AbsDiff, Accumulate, Accumulate Squared, Acummulate Weighted, Addition, Subtract, Box Filter, Gaussian Filter
+12    Dec 06, 2018    Umat replace by SUmat, APEX-CV base add: Mean, MeanStddev, Phase, APEX-CV base update: Median Filter

@@ -1,0 +1,6 @@
+0x00000000	gSRAM_V2pOffset	/home/intesight/sourcecode/s32v_bsp19_vsdk1.3/s32v_sdk1.3/VisionSDK_S32V2_RTM_1_3_0/s32v234_sdk/libs/isp/sram/kernel/build-v234ce-gnu-linux-d/sram	EXPORT_SYMBOL
+0x00000000	SRAM_p2v	/home/intesight/sourcecode/s32v_bsp19_vsdk1.3/s32v_sdk1.3/VisionSDK_S32V2_RTM_1_3_0/s32v234_sdk/libs/isp/sram/kernel/build-v234ce-gnu-linux-d/sram	EXPORT_SYMBOL
+0x00000000	SRAM_SingleMalloc	/home/intesight/sourcecode/s32v_bsp19_vsdk1.3/s32v_sdk1.3/VisionSDK_S32V2_RTM_1_3_0/s32v234_sdk/libs/isp/sram/kernel/build-v234ce-gnu-linux-d/sram	EXPORT_SYMBOL
+0x00000000	SRAM_v2p	/home/intesight/sourcecode/s32v_bsp19_vsdk1.3/s32v_sdk1.3/VisionSDK_S32V2_RTM_1_3_0/s32v234_sdk/libs/isp/sram/kernel/build-v234ce-gnu-linux-d/sram	EXPORT_SYMBOL
+0x00000000	SRAM_Free	/home/intesight/sourcecode/s32v_bsp19_vsdk1.3/s32v_sdk1.3/VisionSDK_S32V2_RTM_1_3_0/s32v234_sdk/libs/isp/sram/kernel/build-v234ce-gnu-linux-d/sram	EXPORT_SYMBOL
+0x00000000	SRAM_MultiMalloc	/home/intesight/sourcecode/s32v_bsp19_vsdk1.3/s32v_sdk1.3/VisionSDK_S32V2_RTM_1_3_0/s32v234_sdk/libs/isp/sram/kernel/build-v234ce-gnu-linux-d/sram	EXPORT_SYMBOL

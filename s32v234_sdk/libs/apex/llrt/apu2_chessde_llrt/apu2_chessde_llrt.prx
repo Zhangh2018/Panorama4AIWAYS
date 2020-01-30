@@ -1,0 +1,20 @@
+<project name="Project" processor="APU2">
+    <file type="c" name="buf_desc.cpp" path="../src"/>
+    <file type="c" name="circ_tile_buf.cpp" path="../src"/>
+    <file type="c" name="circ_tile_smart_buf.cpp" path="../src"/>
+    <file type="c" name="data_desc.cpp" path="../src"/>
+    <file type="c" name="data_transfer.cpp" path="../src"/>
+    <file type="c" name="data_transfer__iss_native.cpp" path="../src"/>
+    <file type="c" name="example.cpp" path="../src"/>
+    <file type="c" name="kernel_io_desc.cpp" path="../src"/>
+    <file type="c" name="tile_vectorization_desc.cpp" path="../src"/>
+    <file type="c" name="tiling_desc.cpp" path="../src"/>
+    <file type="c" name="transfer_desc.cpp" path="../src"/>
+    <file type="c" name="utilities_desc.cpp" path="../src"/>
+    <file type="c" name="vector_map_desc.cpp" path="../src"/>
+    <file type="c" name="icp_datatype.cpp" path="../../icp/src"/>
+    <file type="c" name="apu_mem_mgmt__iss.cpp" path="../../common/src"/>
+    <option id="cpp.include" value="../inc ../../../../include ../../common/include ../../acf_target/include ../../utils/inc" inherit="1"/>
+    <option id="project.name" value="apu2_chessde_llrt"/>
+    <option id="project.type" value="exe"/>
+</project>

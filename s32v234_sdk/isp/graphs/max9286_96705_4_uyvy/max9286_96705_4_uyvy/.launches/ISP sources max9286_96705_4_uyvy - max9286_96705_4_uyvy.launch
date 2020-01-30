@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="com.nxp.s32ds.mdt.vpt.isp.core.ispEmit">
+<booleanAttribute key="com.nxp.s32ds.mdt.vpt.isp.core.emit_host" value="false"/>
+<stringAttribute key="com.nxp.s32ds.mdt.vpt.isp.core.graph_path" value="/max9286_96705_4_uyvy/model/max9286_96705_4_uyvy.isp"/>
+<booleanAttribute key="com.nxp.s32ds.mdt.vpt.isp.core.ignoreValidationResult" value="false"/>
+<booleanAttribute key="com.nxp.s32ds.mdt.vpt.isp.core.ignoreValidationReult" value="true"/>
+<stringAttribute key="com.nxp.s32ds.mdt.vpt.isp.core.output_path" value="C:\NXP\VisionSDK_S32V2_RTM_1_2_0_Exchange\s32v234_sdk\nra_isp\mbox\isp\graphs\max9286_96705_4_uyvy"/>
+<stringAttribute key="com.nxp.s32ds.mdt.vpt.isp.core.source_folder" value=""/>
+<booleanAttribute key="com.nxp.s32ds.mdt.vpt.isp.core.staticSequencer" value="false"/>
+<stringAttribute key="com.nxp.s32ds.mdt.vpt.isp.core.static_source_folder" value=""/>
+<booleanAttribute key="com.nxp.s32ds.mdt.vpt.isp.core.validate" value="false"/>
+</launchConfiguration>

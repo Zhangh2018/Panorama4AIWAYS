@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<com.nxp.s32ds.isp:IspGraph xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:com.nxp.s32ds.isp="http://s32ds.nxp.com/isp/1.0.0" name="mipi_simple" kernelsRootDirectory="${S32DS_VSDK_DIR}/isp/kernels/generic/src" nrImageLines="729" variablesSuffix="mipi_simple">
+  <engines xsi:type="com.nxp.s32ds.isp:IspIpuEngine" name="Debayer_RGB" nrProcessingSteps="720" parameters="    { D_IPUS_SYN_HOST_INACFG_OFF, 0x00000300 },&#xD;&#xA;    { D_IPUS_SYN_HOST_XCFG_OFF, (1280 &lt;&lt; 16) | 0x1 },&#xD;&#xA;    { D_IPUS_SYN_HOST_OUTCFG_OFF, 0x00000100 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_INA_OFF, 0x00058000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH1_CFG_INA_OFF, 0x00058000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_OUT_OFF, 0x10000000 }," kernel="debayer_rgb_simple_interleaved">
+    <portIn dataType="GENERIC_16" nrLinesStartProcessing="2" nrReadPixels="1288" source="//@buffers.2/@channels.0"/>
+    <portIn dataType="GENERIC_16" index="1" nrLinesStartProcessing="2" nrReadPixels="1288" nrFirstLine="1" source="//@buffers.2/@channels.1"/>
+    <portOut nrPixelsToTransfer="3840" buffer="//@buffers.0"/>
+  </engines>
+  <engines xsi:type="com.nxp.s32ds.isp:IspMipiEngine" name="MIPI" cameraType="CSI_SONY224" nrInputLineImages="729">
+    <portOut dataType="GENERIC_16" nrPixelsToTransfer="1288" buffer="//@buffers.2"/>
+  </engines>
+  <buffers name="Debayer_RGBBuffer0" stride="3840" xSize="3840" ySize="16" PortOut="//@engines.0/@portOut.0">
+    <channels fdma="//@fdmas.0"/>
+  </buffers>
+  <buffers xsi:type="com.nxp.s32ds.isp:IspDdrBuffer" name="FastDMA_OutBuffer" stride="5760" xSize="3840" ySize="720" fdma="//@fdmas.0"/>
+  <buffers name="MIPIBuffer0" stride="2576" dataType="GENERIC_16" xSize="1288" ySize="32" PortOut="//@engines.1/@portOut.0">
+    <channels bufferToNode="//@engines.0/@portIn.0"/>
+    <channels number="1" bufferToNode="//@engines.0/@portIn.1"/>
+  </buffers>
+  <fdmas name="FastDMA_Out" source="//@buffers.0/@channels.0" target="//@buffers.1" nrPixelsToTransfer="3840"/>
+  <headers path="${S32DS_VSDK_DIR}/isp/graphs/mipi_simple/inc/iofiles_mipi_simple.h" fileName="iofiles_mipi_simple.h"/>
+</com.nxp.s32ds.isp:IspGraph>

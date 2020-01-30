@@ -1,0 +1,66 @@
+# for IPUS
+#.org    0x00
+# interleaves 2 input channels for quad cameras
+# ina0: values A
+# ina1: values B
+# out0 cycle 0 : B
+# out0 cycle 1 : A
+# out0 cycle 2 : B
+# out0 cycle 3 : A
+
+.global interleave0_quad_start
+interleave0_quad_start:
+        done interleave0_quad,i  // load first 2 pixels A and B
+
+interleave0_quad:
+        add out0,ina0,ina3        // output A & B
+        done interleave0_quad,ixo
+
+//        halt
+//.global interleave0_quad_end
+//interleave0_quad_end:
+
+###############################################################################
+
+.global interleave1_quad_start
+interleave1_quad_start:
+         done interleave1_quad,i  // load first 2 pixels A and B
+
+interleave1_quad:
+        add out1,ina0,ina3        // output A & B
+        done interleave1_quad,ixo
+
+//        halt
+//.global interleave1_quad_end
+//interleave1_quad_end:
+
+###############################################################################
+
+.global interleave2_quad_start
+interleave2_quad_start:
+        done interleave2_quad,i  // load first 2 pixels A and B
+
+interleave2_quad:
+        add out2,ina0,ina3        // output A & B
+        done interleave2_quad,ixo
+
+//        halt
+//.global interleave2_quad_end
+//interleave2_quad_end:
+
+###############################################################################
+
+.global interleave3_quad_start
+interleave3_quad_start:
+        done interleave3_quad,i  // load first 2 pixels A and B
+
+interleave3_quad:
+        add out3,ina0,ina3        // output A & B
+        done interleave3_quad,ixo
+
+//        halt
+//.global interleave3_quad_end
+//interleave3_quad_end:
+
+.global interleave0_quad_end
+interleave0_quad_end:

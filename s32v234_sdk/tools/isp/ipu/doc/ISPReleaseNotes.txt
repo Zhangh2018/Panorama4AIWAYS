@@ -1,0 +1,49 @@
+=======================
+ISP Tools Release Notes
+=======================
+
+This document contains the usage details and known issues of ISP Tools.
+ISP Tools contain IPUV assembler, disassmbler and IPUS assembler, 
+disassembler
+
+Invocation
+==========
+
+ISP assemblers supports 32 and 64 bits ARM ABIs:
+  - -a32 generates an ARM object file
+  - -a64 generates an AARch64 object file
+  - -misp2 accepts new v2 instructions
+  - -misp1 (default) accepts v1
+  - --version displays the binutils and the ISP Tools versions
+  
+The GNU assembler reference manual describes other options.
+
+
+ISP Tools Release 23-Februrary-2018
+===================================
+Build #0, based on ADL 3.17.4 and BFD 2018.5.21 
+
+**Assembler**
+  - Added syntax support for ldon1, ldot1 and loop1, part of ISP v2
+  
+
+Fixed issues
+------------
+
+  - Registers sortmax, sortmin, sortmedian are defined in IPUS.
+  - Fixed syntax for ASRW min1,min2 -> ASR w,min1,min2 in IPUS.
+
+
+ISP Tools Release 12-June-2018
+===================================
+Build #17, based on ADL 3.17.4 and BFD 2018.5.21 
+
+**Assembler** and **Disassembler**
+  - Renamed mnemonic absdiff to abd for all absolute difference instructions
+
+
+Known Issues
+============
+
+  - for disassembler the command line option '-mppc -z' should be specified
+    to correctly disassemble code

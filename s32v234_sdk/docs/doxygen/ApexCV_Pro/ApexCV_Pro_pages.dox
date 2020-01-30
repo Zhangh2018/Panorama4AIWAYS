@@ -1,0 +1,663 @@
+/*!*********************************************************************************
+*  \mainpage APEX-CV Pro Library
+*
+*  The APEX-CV Pro library provides high-level functionality for developers to
+*  design their own computer vision applications while taking advantage of NXP's 
+*  massively parallel APEX-CV architecture. The library contains the following modules:
+*
+*  -# \ref pagBase - Basic image processing functionality.
+*  -# APEX-CV Feature Detection Library
+*     - \ref pagBlockMatching
+*     - \ref pagBrief
+*     - \ref pagOrb
+*     - \ref pagCanny
+*     - \ref pagGFTTCornerDetector
+*     - \ref pagHOG
+*     - \ref pagAggCF
+*     - \ref pagHough
+*     - \ref pagFAST
+*  -# APEX-CV Image Pyramid Library
+*     - \ref pagPyramid
+*     - \ref pagPyramidMulti
+*     - \ref pagLaplacian
+*  -# APEX-CV Image Transform Library
+*     - \ref pagAffine
+*     - \ref pagHistEqual
+*     - \ref pagRemap
+*     - \ref pagResize
+*	  - \ref pagTMO
+*  -# APEX-CV Feature Tracking Library
+*     - \ref pagLKTracker
+*     - \ref pagLKPyramid
+*
+***********************************************************************************/
+
+/*!*********************************************************************************
+*  \page pagBase APEX-CV Base Library
+*
+*  The APEX-CV Base library provides basic functionality for developers to design their own
+*  imaging-based applications while taking advantage of NXP's massively parallel APEX
+*  architecture. Currently various arithmetic operations, color conversions and image filters are provided
+*  as well as image calculations such as histogram and integral image as listed below.
+*
+*  - Arithmetic Operations:
+*     - \link apexcv::Abs Absolute value \endlink
+*     - \link apexcv::AbsDiff Absolute difference\endlink
+*     - \link apexcv::Accumulate Accumulate\endlink
+*     - \link apexcv::AccumulateSquared Accumulate squared\endlink
+*     - \link apexcv::AccumulateWeighted Accumulate weighted\endlink
+*     - \link apexcv::Add Addition\endlink
+*     - Bitwise \link apexcv::BitwiseAND AND\endlink, \link apexcv::BitwiseNOT NOT\endlink, \link apexcv::BitwiseOR OR\endlink, \link apexcv::BitwiseXOR XOR\endlink
+*     - \link apexcv::Clz Count Leading Zeros\endlink
+*     - \link apexcv::Magnitude Magnitude\endlink
+*     - \link apexcv::Max Max\endlink
+*     - \link apexcv::Min Min\endlink
+*     - \link apexcv::Mul Pixel-wise Multiplication\endlink
+*     - \link apexcv::Phase Gradient Phase Computation\endlink
+*     - \link apexcv::Subtract Subtraction\endlink
+*     - \link apexcv::TableLookup Table Lookup\endlink
+*     - \link apexcv::Threshold Thresholding (binary) \endlink
+*     - \link apexcv::ThresholdRange Thresholding (range) \endlink
+*
+*  - Interpolation Operations:
+*     - \link apexcv::InterpolationLinearGrayscale Linear Grayscale\endlink
+*     - \link apexcv::InterpolationBilinearGrayscale Bilinear Grayscale\endlink
+*     - \link apexcv::InterpolationBicubicGrayscale Bicubic Grayscale\endlink
+*
+*  - Color Conversion and Channel Manipulation Operations:
+*     - \link apexcv::ColorConverter Color conversion and color rotation \endlink
+*     - \link apexcv::ColorConverterHT Color conversion and color rotation (optimized) \endlink
+*     - \link apexcv::ConvertDepth Convert bit depth \endlink
+*     - \link apexcv::ExtractChannel Extract Channel\endlink
+*     - \link apexcv::InsertChannel Insert Channel\endlink
+*     - \link apexcv::SplitChannel Split Channel\endlink
+*     - \link apexcv::MergeChannel Merge Channel\endlink
+*
+*  - Image Filters Operations:
+*     - \link apexcv::BilateralFilter Bilateral filter\endlink
+*     - \link apexcv::BoxFilter Box filter\endlink
+*     - \link apexcv::BoxFilterHT Box filter (optimized) \endlink
+*     - \link apexcv::CensusFilter Census filter\endlink
+*     - \link apexcv::ConvolveFilter Convolve filter\endlink
+*     - \link apexcv::ConvolveFilterHT Convolve filter (optimized)\endlink
+*     - \link apexcv::DerivativeXFilterHT Derivative X filter (optimized)\endlink
+*     - \link apexcv::DerivativeYFilterHT Derivative Y filter (optimized)\endlink
+*     - \link apexcv::DilateFilter Dilate filter\endlink
+*     - \link apexcv::ErodeFilter Erode filter\endlink
+*     - \link apexcv::GaussianFilter Gaussian filter\endlink
+*     - \link apexcv::MedianFilter Median filter\endlink
+*     - \link apexcv::PrewittXFilter Prewitt X filter\endlink
+*     - \link apexcv::PrewittYFilter Prewitt Y filter\endlink
+*     - \link apexcv::SaturateFilterHT Saturate filter (optimized)\endlink
+*     - \link apexcv::ScharrFilter Scharr Filter \endlink
+*     - \link apexcv::ScharrXFilter Scharr Filter X \endlink
+*     - \link apexcv::ScharrXYFilter Scharr Filter XY \endlink
+*     - \link apexcv::ScharrYFilter Scharr Filter Y \endlink
+*     - \link apexcv::SeparableFilterHT Separable filter (optimized)\endlink
+*     - \link apexcv::SobelFilter Sobel filter\endlink
+*     - \link apexcv::SobelFilterHT Sobel filter (optimized)\endlink
+*     - \link apexcv::SobelXFilter Sobel X filter\endlink
+*     - \link apexcv::SobelXFilterHT Sobel X filter (optimized)\endlink
+*     - \link apexcv::SobelYFilter Sobel Y filter\endlink
+*     - \link apexcv::SobelYFilterHT Sobel Y filter (optimized)\endlink
+*     - \link apexcv::SobelXYFilter Sobel XY filter\endlink
+*
+*  - Histogram Operations:
+*     - \link apexcv::Histogram Histogram\endlink
+*     - \link apexcv::Mean Mean\endlink
+*     - \link apexcv::MeanStddev Standard deviation\endlink
+*
+*  - \link apexcv::IntegralImage Integral Image\endlink
+*
+*
+***********************************************************************************/
+
+
+/*!*********************************************************************************
+*  \page pagBlockMatching Block Matching
+*
+*  The Block Matching algorithm is used to locate matching macroblocks between two images.
+*  This is done in APEX-CV by using the Sum of Absolute Differences approach.
+*  See \ref apexcv::Blockmatching "apexcv::Blockmatching".
+*
+*  To perform the search, a number of search points and locations need to be specified. The
+*  the algorithm will then search within a 28x28 region of pixels, the search window, around those
+*  points for a matching macroblock. This is done by calculating the Sum of Absolute Differences (SAD) score for all 16x16 region
+*  of pixels within the search window. A block is considered to be matching if the SAD score is
+*  below a user specified maximum SAD threshold.
+*  
+***********************************************************************************/
+
+/*!*********************************************************************************
+*  \page pagBrief Binary Robust Independent Elementary Features
+*
+*  BRIEF is a fast method for the feature descriptor calculation.
+*  It finds the binary strings directly without calculating descriptors in floating
+*  point numbers.
+*  BRIEF takes smoothed image patch and selects a set of nd(x,y) location pairs in
+*  Gaussian distribution pattern. Then pixel intensity comparisons are done for each pair, and
+*  the results are stored in binary. This is applied for all the nd location pairs to get a
+*  nd-dimensional bitstring.
+*
+*  \ref apexcv::Brief "APEX-CV BRIEF" is implemented based on OpenCV BRIEF implementation.
+*  First, the sum of 9x9 pixel patch is calculated. To reduce the computational cost,
+*  integral image is used. Then, the comparison of pixel intensity between selected pair is performed.
+*  This comparison pairs are selected from 48x48 regions around a keypoint, with Gaussian distribution pattern.
+*  The result of comparison is stored as binary string. For example, let one location pair be p and q.
+*  If I(p) < I(q), then its result is 1, else it is 0.
+*  The size of descriptor is either 16 (default), 32, or 64 bytes.
+*
+*  \image html brief.svg "APEX-CV BRIEF"
+*  \image latex brief.pdf "APEX-CV BRIEF"
+***********************************************************************************/
+
+/*!*********************************************************************************
+*  \page pagOrb Oriented Fast and Rotated BRIEF
+*
+*  \section secOrbOverview Overview
+*
+*  Orb is basically a feature matching algorithm that is very similar to SIFT/SURF but
+*  much more simple to compute. Descriptors are in a binary form and an Hamming distance
+*  can be used to find the differences between two descriptors. The output length
+*  of a descriptor can be 16, 32 or 64 Bytes. The added value of this implementation is 
+*  the fact that the pattern used to generate the descriptors needs to be given by the user.
+*
+*  \section secOrbImplementation Implementation details
+*
+*  The processing is split into 3 stages: 
+*
+*  1st stage: FAST9 + HARRIS CORNER SCORE + ARM sorting + ICO \n
+*             Orb algorithm uses corners as the center of a rectangular region of an image and the applies a BRIEF over this region. 
+*             The first part of the processing finds the corners using FAST9 then runs a Harris Coners Score to calculate the cornerness of each feature.
+*             The top N most powerfull corners are selected based on the harris score and for each region of interest the ICO calculates the patch orientation.
+*             ICO outputs a value from [0, 255] that is mapped to [0, 360] degrees. The function that implements stage 1 is called: detect()
+*
+*  2nd stage: User defined smoothing, this step is very important to have a decent detection rate. The usual filters used to blur the image prior to brief are:
+*             box 7x7, gaussian blur 5x5, 7x7 and 9x9. The demo uses a 5x5 gaussian blur.
+*
+*  3rd stage: rBRIEF - to make BRIEF invariant to rotations we steer the image patch according to the information
+*             calculated at step 1. BRIEF works by comparing pairs of points in a greyscale image, the points are randomly select from a pattern buffer, here rBRIEF
+*             applies a rotation matrix on the pattern buffer to have a rotation of the coordinate pairs not the image. The angle is calculated at step 1. 
+*             The function that implements stage 3 is called: compute()
+*
+*  The most time consuming stages are the 1st and 3rd because they are directly dependent on the image size,
+*  the rest are closely related to the number of keypoints that the user needs.
+* \ref apexcv::Orb "APEX-CV ORB" is implemented based on OpenCV BRIEF implementation.
+*  A full description of the algorithm can be found by searching for "ORB: an efficient alternative to SIFT or SURF"
+*  \image html orb_detect.svg
+*  \image latex orb_detect.pdf "Keypoint detection process"
+*  \image html orb_compute.svg
+*  \image latex orb_compute.pdf "Steered BRIEF"
+***********************************************************************************/
+
+/*!*********************************************************************************
+*  \page pagCanny Canny Edge Detector
+*
+*  \section secCannyOverview Overview
+*
+*  The \ref apexcv::Canny "APEX-CV Canny Edge Detector" follows the standard Canny edge detection
+*  algorithm. It calculates the X and Y gradients using 3x3 Sobel filters, computes the magnitudes,
+*  and performs non-maxima suppression, and double thresholding to determine good edge points.
+*
+*  \section secCannyImplementation Implementation details
+*
+*  With the Canny edge detection algorithm, it promotes potential edge points into edge points if they
+*  are a neighbour with a definite edge point. This causes some problems when parallelizing the 
+*  algorithm due to the processing methodology of breaking the image into smaller macro blocks. The
+*  information from one processing block must be propagated to other processing blocks. This means
+*  that in order to get a complete edge mapping of the image, the information from all blocks must
+*  be propagated to every single block, which is just not feasible. Therefore, the approach taken
+*  with the APEX-CV Canny detector is to propogate the information to neighbouring blocks only.
+*  The amount of times this progation occurs can be controlled by the user. More propagation iterations
+*  will allow increase the range in which a definite edge point has an affect on the edge mapping.
+*
+***********************************************************************************/
+
+/*!*********************************************************************************
+*  \page pagGFTTCornerDetector GFTT/HARRIS Corner Detector
+*  \section secCornerDetectorOverView Overview
+*
+*  The algorithm is a fixed point implementation of 
+*  Harris Corner \cite HARRIS_CORNER and GFTT corner \cite GFTT_CORNER and is similar to the function
+*  <a href="http://docs.opencv.org/2.4/modules/imgproc/doc/feature_detection.html#goodfeaturestotrack">goodFeaturesToTrack</a>
+*  in OpenCV. \n
+*
+*  Please refer to \ref apexcv::GFTTCorners interface for API information.\n\n
+*  apexcv::GFTTCorners interface combines Harris and GFTT into the same interface.
+*  Toggle between Harris and GFTT can be done using \b useHarrisDetector parameter.
+*
+*  The corner detector produces a list of corners of an image.
+*  It is done by:\n
+*  1. Computes a 16-bit corner response image from an 8-bit
+*  grayscale image using Harris Score Formula \cite HARRIS_CORNER or Minimum Eigen Value (GFTT) \cite GFTT_CORNER. \n
+*  2. Performs non-maxima supression in a 3x3 neighborhood.\n
+*  3. Removes any corners that are below threshold. GFTT Threshold = QualityLevel * MaxEigenValue. 
+*     Harris Threshold is specified by users.\n
+*  4. The remaining corners are sorted by the strength in the descending order.\n
+*  5. Minimum distance filtering will be applied. A strongest corners within minimum
+*  distance radius will be kept. Other corners will be discarded.\n
+*
+*  \section secHarrisCorner Harris Corner Detector
+*
+*  For each pixel I(x,y), the Harris corner response is calculated:
+*
+*  1. Find gradient in x and y direction using Sobel in a 3x3 window: \n\n
+*  		\f$ G_x = Sobel_x(3x3, I(x,y)) \f$ \n
+* 		\f$ G_y = Sobel_y(3x3, I(x,y)) \f$ \n\n
+*  2. Calculate Trace and Det: \n\n
+*		\f$ trace = G_x^{2} + G_y^{2} \f$ \n
+*		\f$ det = G_x^{2} * G_y^{2} - (G_x*G_y)^{2} \f$ \n\n
+*  3. The Harris corner response is then calculated from Trace and Det: \n\n
+*		\f$ dst(x, y) = det(x,y) - k * trace(x,y)^{2} \f$ 
+*						where k is Harris Corner Coefficient\n\n
+*
+*  \section secGFTT Good Features To Track
+*  For each pixel I(x,y), the Minimum Eigen Value is calculated as corner response:
+*
+*  1. Find gradient in x and y direction using Sobel in a 3x3 window: \n\n
+*  		\f$ G_x = Sobel_x(3x3, I(x,y)) \f$ \n
+* 		\f$ G_y = Sobel_y(3x3, I(x,y)) \f$ \n\n
+*  3. The Minimum Eigen Value can be approximated using: \n\n
+*		\f$ dst(x, y) = Min(\lambda_1, \lambda_2) \approx \frac{G_x^{2}}{2} \frac{G_y^{2}}{2} - \sqrt{(\frac{G_x^{2}}{2} - \frac{G_y^{2}}{2})^{2} + (G_xG_y)^{2}} \f$
+*  
+*  \section Current Limitation in this release
+*  
+*  1. Maximum Image Width is 1280 pixel. \n\n
+* 
+*  2. Sobel size is fixed to 3x3, NMS size is fixed to 5x5, Box Size default value is 7x7.
+*     Only the box size can be changed with \ref apexcv::GFTTCorners::SetShiftValue, acceptable box size dimesions are 3x3, 5x5 or 7x7.\n\n
+*
+*  3. Maximum corners before sorting and extraction is 4096 in total: \n\n
+*  	  APEX only keeps the first 4096 corners and discards
+*     all corners after 4096 limitation is reached. Hence, some of the strong corners 
+*     might be discarded. To limit the impact, a good threshold value can be applied
+*     to filter out weak corners and save space for strong corners. \n\n
+*
+*  4. Maximum corners per chunk is 20:\n\n
+*	  Similar to (3), each chunk can only keeps the first 20 corners and discards the rest.
+*	  To avoid or limit having strong corners discarded a good threshold should be applied
+*	  to keep the number of corners low per chunk. \n\n
+*
+*  5. Covariance Scale factor is set by default at 6.
+*     To change the value of the covariance scale factor use \ref apexcv::GFTTCorners::SetShiftValue.
+*     A good scale value balances saturation (value too low) and precision loss (value too high).\n\n
+*
+***********************************************************************************/
+
+/*!*********************************************************************************
+*  \page pagHOG HOG Object Detector
+*
+*  The \ref apexcv::Hog "APEX-CV HOG Object Detector" detects objects using 
+*  <a href="http://en.wikipedia.org/wiki/Histogram_of_oriented_gradients">Histograms of Oriented Gradients</a>
+*  (HOGs).  The algorithm is a fixed point implementation of \cite DALAL_HOG using
+*  a simpler HOG feature.  It is similar to the function
+*  <a href="http://docs.opencv.org/modules/gpu/doc/object_detection.html#gpu-hogdescriptor-hogdescriptor">HOGDescriptor::detect</a>
+*  in OpenCV.
+*
+*  The detector takes an 8-bit grayscale image and detects objects every 4x4 pixels.
+*  That is, for each pixel on a 4x4 lattice of the image, the HOG descriptor is
+*  computed. The hog descriptor parameters are as follows: 8x8 cell, 8x8 block, 64x128 window and 8 bins. 
+*  The trained linear SVM classifier is applied to each descriptor to 
+*  produce a 16-bit \em SVM \em score.  So for an input image of size \f$w \times h\f$,
+*  the detector returns a 16-bit score image of size \f$w/4 \times h/4\f$.
+***********************************************************************************/
+
+
+/*!*********************************************************************************
+*  \page pagAggCF Aggregated Channel Feature Based Pedestrian Detector
+* The \ref apexcv::AggCFDetector detects pedestrian using
+* <a href="https://pdollar.github.io/files/papers/DollarPAMI14pyramids.pdf">aggregated channel feature</a> 
+* (ACF). It is a fixed point implementation.  
+* 
+* The aggCF detector takes a 24 bit RGB image and calculate aggregated channel feature
+* pyramid which is divided into octaves. Each octave includes real scale and approximation
+* scales with different scale sizes. Each scale includes  L, U, V, magnitude and 
+* histogram of gradients (HOG) as channel features. HOG includes 6 gradient 
+* bins and can be calculated using both bi-linear and tri-linear interpolation based 
+* on pre-trained detector model parameter. The structure of pyramid including
+* number of octaves/scales are determined by pre-trained detector model. 
+*
+* Once feature pyramid is calculated, aggCF detector perform pedestrian detection based
+* on decision trees in pre-trained detector model, apply non maximal suppression (NMS)
+* on bounding boxes of detected pedestrian. The detection is performed using sliding window
+* approach, the size/stride of search window is also defined in pre-trained detector model.
+***********************************************************************************/
+
+
+/*!*********************************************************************************
+*  \page pagHough Hough Line Detector
+*
+*  \section secHoughOverview Overview
+*  
+*  The \ref apexcv::HoughLineDetector "APEX-CV Hough Line Detector" detects lines 
+*  from an 8-bit grayscale image.  The algorithm is based on \cite DUDA_HOUGH_LINE 
+*  and is similar to the function 
+*  <a href="http://docs.opencv.org/doc/tutorials/imgproc/imgtrans/hough_lines/hough_lines.html">HoughLines</a>
+*  in OpenCV.  A good overview of the Hough transform can be found on 
+*  <a href="http://en.wikipedia.org/wiki/Hough_transform">Wikepedia</a>
+*
+*  \section secLineRepresentation Line Representation
+*
+*  The detected lines are 
+*  expressed in polar coordinates \f$ ( \rho, \theta ) \f$, where \f$ \rho \f$ 
+*  is the nearest distance of the line to the image center \f$ ( c_x, c_y ) \f$
+*  and \f$ \theta \f$ is angle of the normal to the line.  This is shown below.
+*
+*  \image html  hough_line.svg "The geometric interpretation of the Hough line coordinates (rho, theta)."
+*  \image latex hough_line.pdf "The geometric interpretation of the Hough line coordinates (rho, theta)." width = 6cm
+*
+*  \section secSupportedSizes Supported Image Sizes
+*
+*  Currently four image widths are supported.  Images passed to the detector must be exactly one of those widths.
+*  The image height must be a multiple of four.  The maximum image height is determined by the image width and 
+*  the available APU memory for the Hough accumulator.  The supported widths and the corresponding maximum height
+*  are shown in the following table.
+*
+*  \htmlonly
+ <table border="1" align="center">
+ <tr align="center"><th> Supported Width </th><th> Maximum Height </th></tr>
+ <tr align="center"><td> 192             </td><td> 1588           </td></tr>
+ <tr align="center"><td> 320             </td><td> 1568           </td></tr>
+ <tr align="center"><td> 640             </td><td> 1468           </td></tr>
+ <tr align="center"><td> 1280            </td><td> 960            </td></tr>
+ </table>
+*  \endhtmlonly
+*
+*  \image latex supported_sizes_table.pdf "Supported image sizes for the Hough Line Detector." width = 6cm
+*
+*  \section secSpecifyingAngles Specifying Angles for Detection
+*
+*  The \ref apexcv::HoughLineDetector "APEX-CV Hough Line Detector" is designed for maximum
+*  flexibility.  The simplest way to specify the detection angles is by specifying the
+*  number of angles only.  In this case the detector divides the range of angles 
+*  \f$ [0, \pi[ \f$  evenly by the number of angles specified.  A maximum of 256 angles
+*  can be specified. For example, calling
+*
+*  \code{.cpp}
+*     apexcv::HoughLineDetector hough;
+*     vsdk::UMat image;
+*     // ...setup image
+*     hough.initialize(image);
+*     hough.setTheta(180);
+*  \endcode
+*
+*  gives a detector with a line resolution of \f$1^\circ\f$ (since \f$1^\circ = pi / 180 \f$ radians).
+*
+*  For more flexibility, the angle starting value and angle resolution can be specified.
+*  Angles must be expressed in radians.  For those more familiar with degrees, the conversion
+*  factors apexcv::HoughLineDetector::rad2deg and apexcv::HoughLineDetector::deg2rad are supplied
+*  to convert from radians to degrees and degrees to radians, respectively.
+*  For example
+*  \code{.cpp}
+*     using namespace apex;
+*     HoughLineDetector hough;
+*     vsdk::UMat image;
+*     // ...setup image
+*     hough.initialize(image);
+*     hough.setTheta(32, 15*HoughLineDetector::deg2rad, 5*HoughLineDetector::deg2rad);
+*  \endcode
+*  gives a detector sensitive to 32 lines with angles starting from \f$15^\circ\f$ and each separated
+*  by \f$5^\circ\f$.
+*  
+*  For the most flexibility, an arbitrary set of up to 256 angles my be specified.  These angles are 
+*  expressed in radians and are passed to the detector as an array of floats. For example,
+*  \code{.cpp}
+*     const int thetaCount = 10;
+*     float theta[thetaCount] = {-0.02f, -0.01f, 0.f, 0.01f, 0.02f, 1.55f, 1.56f, 1.57f, 1.58f, 1.59f};
+*     apexcv::HoughLineDetector hough;
+*     vsdk::UMat image;
+*     // ...setup image
+*     hough.initialize(image);
+*     hough.setTheta(thetaCount, theta);
+*  \endcode 
+*  gives a detector sensitive only to vertical and horizontal lines (lines about 0 and \f$ pi/2 \f$ radians). 
+*
+*  \section secNonMaxSup Non-Maxima Suppression
+*
+*  By default, non-maxima suppression (NMS) is performed on the Hough accumulator.  NMS is simply
+*  a comparison of neighbouring accumulator values in both the rho and theta directions;  If the 
+*  accumulator value is greater than the previous value and greater or equal to the next value 
+*  (in both directions), then that line is considered for detection (the remaining condition being 
+*  that the accumulator value be above the specified threshold).
+*  
+*  Control over NMS is provided by the flag \ref apexcv::HoughLineDetector::NonMaxSupFlag.  The possible
+*  states are
+*  -# NMS_NONE:  No NMS is performed.
+*  -# NMS_RHO:  NMS is performed in rho direction only.
+*  -# NMS_THETA:  NMS is performed in theta direction only.
+*  -# NMS_RHO|NMS_THETA: NMS is performed in both directions (default state).
+*
+*  It is recommended to always use NMS in the rho direction (as the rho resolution is only 1 pixel).
+*  However, if a coarse angle resolution is used (i.e. the angle step is large), then NMS between
+*  angles should be turned off.  For example
+*
+*  \code{.cpp}
+*     using namespace apex;
+*     HoughLineDetector hough;
+*     vsdk::UMat image;
+*     // ...setup image
+*     hough.initialize(image);
+*     hough.setTheta(32, 15*HoughLineDetector::deg2rad, 5*HoughLineDetector::deg2rad, HoughLineDetector::NMS_RHO);
+*  \endcode
+*
+*  disables NMS between angles, which is appropriate since the angle resolution 
+*  (\f$5^\circ\f$) is coarse.
+***********************************************************************************/
+
+/*!*********************************************************************************
+*  \page pagFAST FAST9 corner detection
+*
+*  \section secFAST FAST (Features from accelerated segment test) 
+*  \ref apexcv::Fast "APEX-CV FAST" algorithm implements 
+*  <a href="http://www.edwardrosten.com/work/fast.html">FAST corner detection</a> \cite FAST_CORNER to extract feature points from
+*  8-bit grayscale source image. When "nms" flag is enabled, FAST corner score will be computed to perform non-maxima suppresion post processing step.
+*
+***********************************************************************************/
+
+/*!*********************************************************************************
+*  \page pagPyramid Gaussian Image Pyramid
+*
+*  There are two common kinds of image pyramids: Gaussian pyramids and Laplacian pyramids.
+*  Here, we present the \ref apexcv::PyramidCreation "APEX-CV Image Pyramid", an implementation 
+*  of Gaussian image pyramid creation.
+*
+*  To upsample an image, the source image is upsized 2x in each dimension, with the new 
+*  even-numbered rows and columns filled with zeros. Then, the expanded image is convolved
+*  with the 5x5 Gaussian kernel below. As a result, the area is increased to exactly four
+*  times the area of the source image.
+*
+*  \image html  pyramid_matrix.svg "The Gaussian Matrix"
+*  \image latex pyramid_matrix.pdf "The Gaussian Matrix" width=3cm
+*  To downsample an image, first the source image is convolved with the above 5x5 Gaussian
+*  kernel (divided by 4), then every even-numbered row and column is removed, 2x downsampling
+*  in each dimension. As a result, the area is reduced to exactly one-quarter the area of the
+*  source image.
+***********************************************************************************/
+
+/*!*********************************************************************************
+*  \page pagPyramidMulti Multi-scale Gaussian Image Pyramid
+*
+*
+*  \ref apexcv::PyramidMultiCreation "APEX-CV Pyramid Multi" supports 4 scales downsampling of an source image through one APEXCV call. 
+
+*  The source image is convolved with the Gaussian filter in the same way as image pyramid kernel then
+*  down sampled. Each APEXCV call will produce [1/2, 1/4, 1/8, 1/16] 4 scales pyramids. 
+
+* Current version only support down sampling.
+***********************************************************************************/
+
+/*!*********************************************************************************
+*  \page pagLaplacian Laplacian Image Pyramid
+*
+*  The \ref apexcv::LaplacianPyramid "APEX-CV Laplacian Image Pyramid" is an implementation 
+*  of the Laplacian image pyramid creation.
+*
+*  The Laplacian Image Pyramid is generated with the help of a Gaussian Image Pyramid. For 
+*  each of the pyramid levels, the laplacian image is obtained by convoluting the Gaussian 
+*  Image Pyramid level with a 5x5 Gaussian kernel and subtracting it from the input image. 
+*  There is also an final output image whis can be used together with the Laplacian Image 
+*  Pyramid to reconstruct the original image. This image is the convolution result of the 
+*  last pyramid level.
+***********************************************************************************/
+
+/*!*********************************************************************************
+*  \page pagAffine Affine Transformation
+*
+*  The \ref apexcv::Affine "APEX-CV Affine Transform" performs an affine transformation
+*  on an 8-bit image. The algorithm is similar to the function
+*  <a href="http://docs.opencv.org/trunk/da/d6e/tutorial_py_geometric_transformations.html">warpAffine in OpenCV</a>.
+*
+*  The usual way to represent affine transformation is by using a 3x3 matrix.
+*
+*  \image html  affine0.svg
+*  \image latex affine0.pdf "" width=5cm
+*
+*  An inverse matrix for a given matrix is first calculated. Then, for each
+*  destination pixel, corresponding x and y coordinates in source image are
+*  determined using formulas below.
+*
+*  Given a transform matrix:
+*
+*  \image html  affine1.svg 
+*  \image latex affine1.pdf "" width=2.5cm
+*
+*  Inverse matrix of M is calculated as:
+*
+*  \image html  affine3.svg
+*  \image latex affine3.pdf "" width=6.5cm
+*
+*  where
+*  \image html  affine2.svg
+*  \image latex affine2.pdf "" width=2cm
+*
+*  Therefore, source coordinates Sx and Sy are calculated as:
+*
+*  \image html  affine4.svg
+*  \image latex affine4.pdf "" width=8cm
+*
+*  Each pixel value is then calculated by bilinear interpolation of neighboring 2x2
+*  pixels at the coordinate determined above.
+*
+***********************************************************************************/
+
+/*!*********************************************************************************
+*  \page pagRemap Image Remap
+*  
+*  The \ref apexcv::Remap "APEX-CV Remap" maps one image to another from a floating
+*  point lookup table.  The algorithm is similar to the function
+*  <a href="http://docs.opencv.org/trunk/modules/imgproc/doc/geometric_transformations.html?highlight=remap#cv2.remap">remap in OpenCV</a>.
+*
+*  The current implementation of apexcv::Remap supports image sizes that are an even multiple
+*  of the number of CUs (64). So supported images are 128, 256, 384, 512, ... , 2048.
+*
+*  The current version of remap supports bilinear interpolation only.
+*
+***********************************************************************************/
+
+
+/*!*********************************************************************************
+*  \page pagHistEqual Histogram Equalization
+*  
+*  The \ref apexcv::HistogramEqualization "APEX-CV Histogram Equalization" transforms the pixel values of an image so that the resulting histogram uses the full range of grey values equally.  The algorithm is similar to the function
+*  <a href="http://docs.opencv.org/trunk/d5/daf/tutorial_py_histogram_equalization.html">Histogram Equalization</a>
+*  in OpenCV.
+*
+*  The current implementation of apexcv::HistogramEqualization supports image sizes which have a width multiple of 4.
+*
+***********************************************************************************/
+
+
+
+/*!*********************************************************************************
+*  \page pagResize Image Resize
+*
+*  The \ref apexcv::Resize "Image Resize" performs a vertical and
+* horizontal resize on the input image, according to the required size of the output image. 
+* Note that vertical and horizontal scale factors (and directions) are independent.  It is 
+* similar to the function
+*  <a href="http://docs.opencv.org/modules/imgproc/doc/geometric_transformations.html#resize">resize()</a>
+*  in OpenCV.
+*
+*  Currently, all even image dimensions are supported from 64 to 1024 for both input and output.
+*
+*  The current version of resize supports bicubic interpolation only.
+*
+***********************************************************************************/
+
+/*!*********************************************************************************
+* \page pagTMO Tone Mapping Operation
+*
+* The \ref apexcv::Tmo "Tone Mapping Operation" generates an LDR image from an HDR image
+* by compressing the HDR's dynamic range. The APEX implemetation of TMO is a fixed-point 
+* implementation of tone mapping operation as described in \cite DOBASHI_FIXED_TMO. The implementation
+* uses integer data and fixed-point arithmetic for all calculations in TMO to reduce
+* computational and memory cost.\n
+*
+* Please refer to the apexcv::tmo API for more detail.
+***********************************************************************************/
+
+/*!*********************************************************************************
+*  \page pagLKTracker Single-Scale Lucas-Kanade Optical Flow
+* 
+* The \ref apexcv::LKTrackerOpticalFlow "APEX-CV LKTracker Optical Flow" implements single scale Lucas-Kanade Sparse Optical Flow \cite LUCAS_KANADE_OPTICAL_FLOW. 
+* The algorithm is similar with <a href="http://docs.opencv.org/trunk/d7/d8b/tutorial_py_lucas_kanade.html">OpenCV.</a>
+* 
+* Currently, the size of the window of the box filter can only be 7x7. The 'iteration' parameter, has a default value of 10, and it 
+* can be changed to adjust the trade-off between tracking accuracy and processing time. 
+* Maximum motion vector support up to +/-6. Points with out of range displacement will be marked as untracked as stated in
+* next paragraph
+*
+* Algorithm will take in previous frame, frame[t-1], in 8 bits greyscale format; previous points 
+* which are X/Y coordinates in signed Q23.8 format and next frame, frame[t] in 8 bits greyscale format. It outputs next
+* points as X/Y coordinates in signed Q23.8 format along with strength and reserve fields. Strength field represents the sum of absolute greyscale difference between
+* input 7x7 window and output tracked 7x7 window. Reserve field represents whether displacement vector is out of range 
+* (1: within range, valid tracking; 0: out of range, invalid tracking)
+*
+* Image gradient Dx and Dy is calculated by Scharr filter:
+
+*  \image html  scharr.svg
+*  \image latex scharr.pdf "" width=7cm
+*
+* Input and output X/Y coordinates have 8 bits sub-pixel accuracy. Bilinear interpolation will be applied when handling sub-pixel greyscale or gradient.
+
+***********************************************************************************/
+
+/*!*********************************************************************************
+*  \page pagLKPyramid Multi-Scale Lucas-Kanade Optical Flow
+* 
+* The \ref apexcv::LKPyramidOpticalFlow "APEX-CV LKPyramid Optical Flow" implements multiple scale Lucas-Kanade Sparse Optical Flow. The algorithm is similar with
+* <a href="http://docs.opencv.org/trunk/d7/d8b/tutorial_py_lucas_kanade.html">OpenCV.</a>
+* 
+* Currently, the size of the window of the box filter can only be 7x7. The 'iteration' parameter, has a default value of 10, and it can be changed to adjust the trade-off between 
+* tracking accuracy and processing time.
+* Maximum motion vector support up to +/-6. Points with out of range displacement will be marked as untracked as stated in
+* next paragraph
+*
+* Algorithm will take in previous frame, frame[t-1], in 8 bits greyscale format; previous points 
+* which are X/Y coordinates in signed Q23.8 format and next frame, frame[t] in 8 bits greyscale format. It outputs next
+* points as X/Y coordinates in signed Q23.8 format along with strength and reserve fields. Strength field represents the sum of absolute greyscale difference between
+* input 7x7 window and output tracked 7x7 window. Reserve field represents whether displacement vector is out of range 
+* (1: within range, valid tracking; 0: out of range, invalid tracking). Algorithm will create and loop through all pyramid levels which can be up to 5:
+* [1/16, 1/8, 1/4, 1/2] plus the original scale. Number of pyramid levels can be configurable.
+*
+* Image gradient Dx and Dy is calculated by Scharr filter:
+
+*  \image html  scharr.svg
+*  \image latex scharr.pdf "" width=7cm
+*
+* Input and output X/Y coordinates have 8 bits sub-pixel accuracy. Bilinear interpolation will be applied when handling sub-pixel greyscale or gradient.
+
+***********************************************************************************/
+
+/*!*********************************************************************************
+*  \page pagLBP LBP Face Recognition
+*
+*  The \ref apexcv::Lbp "APEX LBP" face recognition is similar to 
+*  <a href="http://docs.opencv.org/2.4/modules/contrib/doc/facerec/facerec_tutorial.html#local-binary-patterns-histograms">Local Binary Patterns Histograms</a>
+*  in OpenCV.
+*
+*  The algorithm will run APEX-LBP train process to extract an LBP descriptor for each grid cell. The process will take as input an unsigned 8 bit 
+*  image and output an 8 bit descriptor for each grid cell. Then the APEX-LBP predict process will be executed to compare the test descriptors with the model descriptors in order to find the closest descriptor. 
+*  This predict process will output an unsigned 16 bit value representing the closest ID and a set of signed 32 bit distances.
+* 
+***********************************************************************************/

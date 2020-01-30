@@ -1,0 +1,114 @@
+##############################################################################
+#
+# Copyright 2018 NXP 
+# All Rights Reserved
+#
+##############################################################################
+#
+#  CONTENT
+#    APU Emulator makefiles
+#
+#  AUTHOR
+#    Dmitry Kudryavtsev
+#    Mihail Marian Nistor
+#
+#  DATE
+#    2018-11-27
+#
+##############################################################################
+LIB = libapexcv_base_lib.a
+
+OBJDIR = obj_apexcv_base
+
+SRC_DIR = $(VISION_DIR)/libs/apexcv_base/apexcv_core/src \
+  $(VISION_DIR)/libs/apexcv_base/arithmetic/src \
+  $(VISION_DIR)/libs/apexcv_base/color_conversion/src \
+  $(VISION_DIR)/libs/apexcv_base/histogram/src \
+  $(VISION_DIR)/libs/apexcv_base/image_filters/src \
+  $(VISION_DIR)/libs/apexcv_base/integral_image/src \
+  $(VISION_DIR)/libs/apexcv_base/interpolation/src \
+  $(VISION_DIR)/libs/apexcv_ref/apexcv_base/base/src \
+
+CXXINCLUDES = -I"$(OPENCV_DIR)" \
+  -I"$(VISION_DIR)" \
+  -I"$(EMULATOR_DIR)/apu/src" \
+  -I"$(EMULATOR_DIR)/acf/src" \
+  -I"$(VISION_DIR)/libs/apex/acf/include" \
+  -I"$(VISION_DIR)/libs/apex/icp/include" \
+  -I"$(VISION_DIR)/libs/utils/umat/include" \
+  -I"$(VISION_DIR)/libs/utils/common/include" \
+  -I"$(VISION_DIR)/libs/apex/drivers/user/include" \
+  -I"$(VISION_DIR)/libs/utils/oal/user/include" \
+  -I"$(VISION_DIR)/libs/utils/oal/kernel/include" \
+  -I"$(VISION_DIR)/kernels/apu/apexcv_base_arithmetic/src" \
+  -I"$(VISION_DIR)/kernels/apu/apexcv_base_color_conversion/src" \
+  -I"$(VISION_DIR)/kernels/apu/apexcv_base_filter/src" \
+  -I"$(VISION_DIR)/kernels/apu/apexcv_base_histogram/src" \
+  -I"$(VISION_DIR)/kernels/apu/apexcv_base_image_filters/src" \
+  -I"$(VISION_DIR)/kernels/apu/apexcv_base_interpolation/src" \
+  -I"$(VISION_DIR)/kernels/apu/apexcv_base_integral_image/src" \
+  -I"$(VISION_DIR)/libs/apexcv_ref/apexcv_base/base/include" \
+  -I"$(VISION_DIR)/libs/apexcv_base/apexcv_core/src" \
+  -I"$(VISION_DIR)/libs/apexcv_base/apexcv_core/include" \
+  -I"$(VISION_DIR)/libs/apexcv_base/arithmetic/include" \
+  -I"$(VISION_DIR)/libs/apexcv_base/arithmetic/graphs" \
+  -I"$(VISION_DIR)/libs/apexcv_base/interpolation/include" \
+  -I"$(VISION_DIR)/libs/apexcv_base/interpolation/graphs" \
+  -I"$(VISION_DIR)/libs/apexcv_base/color_conversion/include" \
+  -I"$(VISION_DIR)/libs/apexcv_base/color_conversion/graphs" \
+  -I"$(VISION_DIR)/libs/apexcv_base/histogram/include" \
+  -I"$(VISION_DIR)/libs/apexcv_base/histogram/graphs" \
+  -I"$(VISION_DIR)/libs/apexcv_base/image_filters/include" \
+  -I"$(VISION_DIR)/libs/apexcv_base/image_filters/graphs" \
+  -I"$(VISION_DIR)/libs/apexcv_base/integral_image/include" \
+  -I"$(VISION_DIR)/libs/apexcv_base/integral_image/graphs" \
+  -I"$(VISION_DIR)/include"
+
+SRCEXCLUSION = apexcv_color_int.cpp
+
+CXXDEFINES = -DACF_KERNEL_IMPLEMENTATION -DACF_KERNEL_METADATA -DAPEX2_EMULATE -D__NO_INLINE__ -DOSDIR=linux -DVSDK_UMAT_USE_OPENCV
+CXXFLAGS = $(CXXINCLUDES) \
+  $(CXXDEFINES) \
+  $(CXXOPTS)
+
+SRC = $(foreach sdir,$(SRC_DIR),$(wildcard $(sdir)/*.cpp))
+
+LIBSRC_ALL = $(notdir $(SRC))
+LIBSRC = $(filter-out $(SRCEXCLUSION),$(LIBSRC_ALL))
+LIBOBJ = $(addprefix $(OBJDIR)/, $(notdir $(LIBSRC:.cpp=.o)))
+
+define make-goal
+$(OBJDIR)/%.o: $1/%.cpp
+	@$(CXX) $(CXXFLAGS) -c $$< -o $$@
+endef
+
+.PHONY: all checkdirs clean install uninstall
+
+test:
+	@echo $(SRC_DIR)
+
+all: checkdirs $(LIB)
+
+$(LIB): $(LIBOBJ)
+	@ar $(ARFLAGS) $@ $^
+
+checkdirs: $(OBJDIR)
+
+$(OBJDIR):
+	@mkdir -p $@
+
+clean:
+	@$(RM) $(LIB) $(OBJDIR)
+
+install:
+	@mkdir -p $(INSTALLDIR)
+	@cp $(LIB) ./$(INSTALLDIR)
+
+uninstall:
+	@$(RM) ./$(INSTALLDIR)/$(LIB)
+
+ifneq "$(MAKECMDGOALS)" "clean"
+-include $(LIBOBJ:.o=.d)
+endif
+
+$(foreach sdir,$(SRC_DIR),$(eval $(call make-goal,$(sdir))))

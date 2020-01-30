@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<com.nxp.s32ds.isp:IspGraph xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:com.nxp.s32ds.isp="http://s32ds.nxp.com/isp/1.0.0" name="static_simple">
+  <engines xsi:type="com.nxp.s32ds.isp:IspIpuEngine" name="copy_1to1_ipus" nrProcessingSteps="1080" parameters="    { D_IPUS_SYN_HOST_INACFG_OFF, 0x10000100 },&#xD;&#xA;    { D_IPUS_SYN_HOST_XCFG_OFF, (2880 &lt;&lt; 16) | 0x1 },&#xD;&#xA;    { D_IPUS_SYN_HOST_OUTCFG_OFF, 0x10000100 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_INA_OFF, 0x00058000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH1_CFG_INA_OFF, 0x00058000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_OUT_OFF, 0x00000000 }," kernel="copy_1to1_ipus">
+    <portIn nrReadPixels="2880" source="//@buffers.2/@channels.0"/>
+    <portOut nrPixelsToTransfer="2880" buffer="//@buffers.3"/>
+  </engines>
+  <buffers xsi:type="com.nxp.s32ds.isp:IspDdrBuffer" name="DDRBuffer_0" stride="5760" xSize="5760" ySize="1080">
+    <channels fdma="//@fdmas.0"/>
+  </buffers>
+  <buffers xsi:type="com.nxp.s32ds.isp:IspDdrBuffer" name="DDRBuffer_1" stride="5760" xSize="5760" ySize="1080" fdma="//@fdmas.1"/>
+  <buffers name="SRAMBuffer_0" stride="5760" xSize="5760" ySize="8" fdma="//@fdmas.0">
+    <channels bufferToNode="//@engines.0/@portIn.0"/>
+  </buffers>
+  <buffers name="SRAMBuffer_1" stride="5760" xSize="5760" ySize="8" PortOut="//@engines.0/@portOut.0">
+    <channels fdma="//@fdmas.1"/>
+  </buffers>
+  <fdmas name="FDMA_0" source="//@buffers.0/@channels.0" target="//@buffers.2" nrPixelsToTransfer="5760"/>
+  <fdmas name="FDMA_1" source="//@buffers.3/@channels.0" target="//@buffers.1" nrPixelsToTransfer="5760"/>
+</com.nxp.s32ds.isp:IspGraph>

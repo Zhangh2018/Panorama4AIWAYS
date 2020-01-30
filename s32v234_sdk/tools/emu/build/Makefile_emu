@@ -1,0 +1,110 @@
+##############################################################################
+#
+# Copyright 2018 NXP 
+# All Rights Reserved
+#
+##############################################################################
+#
+#  CONTENT
+#    APU Emulator makefiles
+#
+#  AUTHOR
+#    Dmitry Kudryavtsev
+#    Mihail Marian Nistor
+#
+#  DATE
+#    2018-11-27
+#
+##############################################################################
+LIB_ACF = libACF_lib.a
+LIB_APU = libAPU_lib.a
+
+OBJDIR_ACF = obj_emu_acf
+OBJDIR_APU = obj_emu_apu
+
+SRCDIR_ACF = $(EMULATOR_DIR)/acf/src $(VISION_DIR)/libs/apex/icp/src $(VISION_DIR)/libs/apex/acf/src
+SRCDIR_APU = $(EMULATOR_DIR)/apu/src
+
+CXXINCLUDES_ACF = -I"$(EMULATOR_DIR)/apu/src" \
+  -I"$(VISION_DIR)/libs/apex/acf/include" \
+  -I"$(VISION_DIR)/libs/apex/icp/include" \
+  -I"$(OPENCV_DIR)" \
+  -I"$(VISION_DIR)/libs/utils/umat/include" \
+  -I"$(VISION_DIR)/libs/utils/oal/user/include" \
+  -I"$(VISION_DIR)/libs/utils/oal/kernel/include" \
+  -I"$(VISION_DIR)/libs/utils/common/include" \
+  -I"$(VISION_DIR)/include"
+
+CXXDEFINES = -DVSDK_UMAT_USE_OPENCV \
+  -DACF_KERNEL_IMPLEMENTATION -DAPEX2_EMULATE -D__NO_INLINE__
+CXXFLAGS_ACF = $(CXXINCLUDES_ACF) \
+  $(CXXDEFINES) \
+  $(CXXOPTS)
+CXXFLAGS_APU = $(CXXINCLUDES) \
+  $(CXXDEFINES) \
+  $(CXXOPTS)
+
+SRCEXCLUSION_ACF = acf_apu_program_params.cpp \
+  acf_process.cpp \
+  acf_process_apu.cpp \
+  kernel_manager_host.cpp \
+  resource_manager_apex.cpp \
+  resource_manager_private.cpp \
+  resource_manager_public.cpp \
+  resource_manager_types.cpp \
+  icp_data.cpp \
+  icp_feature.cpp \
+  icp_feature_32s.cpp
+
+SRC_ACF = $(foreach sdir,$(SRCDIR_ACF),$(wildcard $(sdir)/*.cpp))
+LIBSRC_ALL_ACF  = $(notdir $(SRC_ACF))
+LIBSRC_ACF = $(filter-out $(SRCEXCLUSION_ACF),$(LIBSRC_ALL_ACF))
+LIBOBJ_ACF = $(addprefix $(OBJDIR_ACF)/, $(notdir $(LIBSRC_ACF:.cpp=.o)))
+
+LIBSRC_APU = $(wildcard $(SRCDIR_APU)/*.cpp)
+LIBOBJ_APU = $(patsubst $(SRCDIR_APU)/%.cpp, $(OBJDIR_APU)/%.o, $(LIBSRC_APU))
+
+define make-goal-acf
+$(OBJDIR_ACF)/%.o: $1/%.cpp
+	@$(CXX) $(CXXFLAGS_ACF) -c $$< -o $$@
+endef
+
+define make-goal-apu
+$(OBJDIR_APU)/%.o: $1/%.cpp
+	@$(CXX) $(CXXFLAGS_APU) -c $$< -o $$@
+endef
+
+.PHONY: all checkdirs clean install uninstall
+
+all: checkdirs $(LIB_ACF) $(LIB_APU)
+
+$(LIB_ACF): $(LIBOBJ_ACF)
+	@ar $(ARFLAGS) $@ $^
+
+$(LIB_APU): $(LIBOBJ_APU)
+	@ar $(ARFLAGS) $@ $^
+
+checkdirs: $(OBJDIR_ACF) $(OBJDIR_APU)
+
+$(OBJDIR_ACF):
+	@mkdir -p $@
+
+$(OBJDIR_APU):
+	@mkdir -p $@
+
+clean:
+	@$(RM) $(LIB_ACF) $(LIB_APU) $(OBJDIR_ACF) $(OBJDIR_APU)
+
+install:
+	@mkdir -p $(INSTALLDIR)
+	@cp $(LIB_ACF) $(LIB_APU) ./$(INSTALLDIR)
+
+uninstall:
+	@$(RM) ./$(INSTALLDIR)/$(LIB_ACF) ./$(INSTALLDIR)/$(LIB_APU)
+
+ifneq "$(MAKECMDGOALS)" "clean"
+-include $(LIBOBJ_ACF:.o=.d) $(LIBOBJ_APU:.o=.d)
+endif
+
+$(foreach sdir,$(SRCDIR_ACF),$(eval $(call make-goal-acf,$(sdir))))
+$(foreach sdir,$(SRCDIR_APU),$(eval $(call make-goal-apu,$(sdir))))

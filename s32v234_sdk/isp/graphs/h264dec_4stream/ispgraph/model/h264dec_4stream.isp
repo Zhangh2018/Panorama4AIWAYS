@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<com.nxp.s32ds.isp:IspGraph xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:com.nxp.s32ds.isp="http://s32ds.nxp.com/isp/1.0.0" name="h264dec_4stream" kernelsRootDirectory="${S32DS_VSDK_DIR}/isp/kernels/generic/src" nrImageLines="">
+  <engines xsi:type="com.nxp.s32ds.isp:IspIpuEngine" name="Yuv420planarToYuv422_q0" engineIndex="7" nrProcessingSteps="480" parameters="    { D_IPUS_SYN_HOST_INACFG_OFF, 0x00000700 },&#xD;&#xA;    { D_IPUS_SYN_HOST_XCFG_OFF, (320 &lt;&lt; 16) | 0x1 },&#xD;&#xA;    { D_IPUS_SYN_HOST_OUTCFG_OFF, 0x00000100 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_INA_OFF, 0x10000000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH1_CFG_INA_OFF, 0x10020000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH2_CFG_INA_OFF, 0x10020000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_OUT_OFF, 0x10000000 }," kernel="yuv420planar2yuv422interleaved_scale2to1">
+    <portIn nrLinesStartProcessing="2" nrReadPixels="1280" lineIncrement="2" source="//@buffers.2/@channels.0"/>
+    <portIn index="1" nrReadPixels="640" source="//@buffers.3/@channels.0"/>
+    <portIn index="2" nrReadPixels="640" source="//@buffers.4/@channels.0"/>
+    <portOut nrPixelsToTransfer="1280" buffer="//@buffers.0"/>
+  </engines>
+  <engines xsi:type="com.nxp.s32ds.isp:IspOtherEngine" name="H264_Decoder" engineType="H264Dec" nrImage="960">
+    <portOut nrPixelsToTransfer="1280" buffer="//@buffers.2"/>
+    <portOut index="1" nrPixelsToTransfer="640" buffer="//@buffers.3"/>
+    <portOut index="2" nrPixelsToTransfer="640" buffer="//@buffers.4"/>
+    <portOut index="3" nrPixelsToTransfer="1280" buffer="//@buffers.5"/>
+    <portOut index="4" nrPixelsToTransfer="640" buffer="//@buffers.6"/>
+    <portOut index="5" nrPixelsToTransfer="640" buffer="//@buffers.7"/>
+    <portOut index="6" nrPixelsToTransfer="1280" buffer="//@buffers.10"/>
+    <portOut index="7" nrPixelsToTransfer="640" buffer="//@buffers.11"/>
+    <portOut index="8" nrPixelsToTransfer="640" buffer="//@buffers.12"/>
+    <portOut index="9" nrPixelsToTransfer="1280" buffer="//@buffers.13"/>
+    <portOut index="10" nrPixelsToTransfer="640" buffer="//@buffers.14"/>
+    <portOut index="11" nrPixelsToTransfer="640" buffer="//@buffers.15"/>
+  </engines>
+  <engines xsi:type="com.nxp.s32ds.isp:IspIpuEngine" name="Yuv420planarToYuv422_q1" engineIndex="6" nrProcessingSteps="480" parameters="    { D_IPUS_SYN_HOST_INACFG_OFF, 0x00000700 },&#xD;&#xA;    { D_IPUS_SYN_HOST_XCFG_OFF, (320 &lt;&lt; 16) | 0x1 },&#xD;&#xA;    { D_IPUS_SYN_HOST_OUTCFG_OFF, 0x00000100 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_INA_OFF, 0x10000000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH1_CFG_INA_OFF, 0x10020000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH2_CFG_INA_OFF, 0x10020000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_OUT_OFF, 0x10000000 }," kernel="yuv420planar2yuv422interleaved_scale2to1">
+    <portIn nrLinesStartProcessing="2" nrReadPixels="1280" lineIncrement="2" source="//@buffers.5/@channels.0"/>
+    <portIn index="1" nrReadPixels="640" source="//@buffers.6/@channels.0"/>
+    <portIn index="2" nrReadPixels="640" source="//@buffers.7/@channels.0"/>
+    <portOut nrPixelsToTransfer="1280" buffer="//@buffers.8"/>
+  </engines>
+  <engines xsi:type="com.nxp.s32ds.isp:IspIpuEngine" name="Yuv420planarToYuv422_q2" nrProcessingSteps="480" parameters="    { D_IPUS_SYN_HOST_INACFG_OFF, 0x00000700 },&#xD;&#xA;    { D_IPUS_SYN_HOST_XCFG_OFF, (320 &lt;&lt; 16) | 0x1 },&#xD;&#xA;    { D_IPUS_SYN_HOST_OUTCFG_OFF, 0x00000100 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_INA_OFF, 0x10000000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH1_CFG_INA_OFF, 0x10020000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH2_CFG_INA_OFF, 0x10020000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_OUT_OFF, 0x10000000 }," kernel="yuv420planar2yuv422interleaved_scale2to1">
+    <portIn nrLinesStartProcessing="2" nrReadPixels="1280" lineIncrement="2" source="//@buffers.10/@channels.0"/>
+    <portIn index="1" nrReadPixels="640" source="//@buffers.11/@channels.0"/>
+    <portIn index="2" nrReadPixels="640" source="//@buffers.12/@channels.0"/>
+    <portOut nrPixelsToTransfer="1280" buffer="//@buffers.17"/>
+  </engines>
+  <engines xsi:type="com.nxp.s32ds.isp:IspIpuEngine" name="Yuv420planarToYuv422_q3" engineIndex="1" nrProcessingSteps="480" parameters="    { D_IPUS_SYN_HOST_INACFG_OFF, 0x00000700 },&#xD;&#xA;    { D_IPUS_SYN_HOST_XCFG_OFF, (320 &lt;&lt; 16) | 0x1 },&#xD;&#xA;    { D_IPUS_SYN_HOST_OUTCFG_OFF, 0x00000100 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_INA_OFF, 0x10000000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH1_CFG_INA_OFF, 0x10020000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH2_CFG_INA_OFF, 0x10020000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_OUT_OFF, 0x10000000 }," kernel="yuv420planar2yuv422interleaved_scale2to1">
+    <portIn nrLinesStartProcessing="2" nrReadPixels="1280" lineIncrement="2" source="//@buffers.13/@channels.0"/>
+    <portIn index="1" nrReadPixels="640" source="//@buffers.14/@channels.0"/>
+    <portIn index="2" nrReadPixels="640" source="//@buffers.15/@channels.0"/>
+    <portOut nrPixelsToTransfer="1280" buffer="//@buffers.16"/>
+  </engines>
+  <buffers name="Yuv420planarToYuv422_q0Buffer0" stride="1280" xSize="1280" ySize="32" PortOut="//@engines.0/@portOut.0">
+    <channels fdma="//@fdmas.0"/>
+  </buffers>
+  <buffers xsi:type="com.nxp.s32ds.isp:IspDdrBuffer" name="UYVY_0Buffer" stride="1280" xSize="1280" ySize="480" fdma="//@fdmas.0"/>
+  <buffers name="H264_DecoderBuffer0" lineIncrement="16" stride="1280" xSize="1280" ySize="64" PortOut="//@engines.1/@portOut.0">
+    <channels bufferToNode="//@engines.0/@portIn.0"/>
+  </buffers>
+  <buffers name="H264_DecoderBuffer1" lineIncrement="8" stride="640" xSize="640" ySize="32" PortOut="//@engines.1/@portOut.1">
+    <channels bufferToNode="//@engines.0/@portIn.1"/>
+  </buffers>
+  <buffers name="H264_DecoderBuffer2" lineIncrement="8" stride="640" xSize="640" ySize="32" PortOut="//@engines.1/@portOut.2">
+    <channels bufferToNode="//@engines.0/@portIn.2"/>
+  </buffers>
+  <buffers name="H264_DecoderBuffer3" lineIncrement="16" stride="1280" xSize="1280" ySize="64" PortOut="//@engines.1/@portOut.3">
+    <channels bufferToNode="//@engines.2/@portIn.0"/>
+  </buffers>
+  <buffers name="H264_DecoderBuffer4" lineIncrement="8" stride="640" xSize="640" ySize="32" PortOut="//@engines.1/@portOut.4">
+    <channels bufferToNode="//@engines.2/@portIn.1"/>
+  </buffers>
+  <buffers name="H264_DecoderBuffer5" lineIncrement="8" stride="640" xSize="640" ySize="32" PortOut="//@engines.1/@portOut.5">
+    <channels bufferToNode="//@engines.2/@portIn.2"/>
+  </buffers>
+  <buffers name="Yuv420planarToYuv422_q1Buffer0" stride="1280" xSize="1280" ySize="32" PortOut="//@engines.2/@portOut.0">
+    <channels fdma="//@fdmas.1"/>
+  </buffers>
+  <buffers xsi:type="com.nxp.s32ds.isp:IspDdrBuffer" name="UYVY_1Buffer" stride="1280" xSize="1280" ySize="480" fdma="//@fdmas.1"/>
+  <buffers name="H264_DecoderBuffer6" lineIncrement="16" stride="1280" xSize="1280" ySize="64" PortOut="//@engines.1/@portOut.6">
+    <channels bufferToNode="//@engines.3/@portIn.0"/>
+  </buffers>
+  <buffers name="H264_DecoderBuffer7" lineIncrement="8" stride="640" xSize="640" ySize="32" PortOut="//@engines.1/@portOut.7">
+    <channels bufferToNode="//@engines.3/@portIn.1"/>
+  </buffers>
+  <buffers name="H264_DecoderBuffer8" lineIncrement="8" stride="640" xSize="640" ySize="32" PortOut="//@engines.1/@portOut.8">
+    <channels bufferToNode="//@engines.3/@portIn.2"/>
+  </buffers>
+  <buffers name="H264_DecoderBuffer9" lineIncrement="16" stride="1280" xSize="1280" ySize="64" PortOut="//@engines.1/@portOut.9">
+    <channels bufferToNode="//@engines.4/@portIn.0"/>
+  </buffers>
+  <buffers name="H264_DecoderBuffer10" lineIncrement="8" stride="640" xSize="640" ySize="32" PortOut="//@engines.1/@portOut.10">
+    <channels bufferToNode="//@engines.4/@portIn.1"/>
+  </buffers>
+  <buffers name="H264_DecoderBuffer11" lineIncrement="8" stride="640" xSize="640" ySize="32" PortOut="//@engines.1/@portOut.11">
+    <channels bufferToNode="//@engines.4/@portIn.2"/>
+  </buffers>
+  <buffers name="Yuv420planarToYuv422_q3Buffer0" stride="1280" xSize="1280" ySize="32" PortOut="//@engines.4/@portOut.0">
+    <channels fdma="//@fdmas.3"/>
+  </buffers>
+  <buffers name="Yuv420planarToYuv422_q2Buffer0" stride="1280" xSize="1280" ySize="32" PortOut="//@engines.3/@portOut.0">
+    <channels fdma="//@fdmas.2"/>
+  </buffers>
+  <buffers xsi:type="com.nxp.s32ds.isp:IspDdrBuffer" name="UYVY_2Buffer" stride="1280" xSize="1280" ySize="480" fdma="//@fdmas.2"/>
+  <buffers xsi:type="com.nxp.s32ds.isp:IspDdrBuffer" name="UYVY_3Buffer" stride="1280" xSize="1280" ySize="480" fdma="//@fdmas.3"/>
+  <fdmas name="UYVY_0" source="//@buffers.0/@channels.0" target="//@buffers.1"/>
+  <fdmas name="UYVY_1" source="//@buffers.8/@channels.0" target="//@buffers.9"/>
+  <fdmas name="UYVY_2" source="//@buffers.17/@channels.0" target="//@buffers.18"/>
+  <fdmas name="UYVY_3" source="//@buffers.16/@channels.0" target="//@buffers.19"/>
+  <headers path="${S32DS_VSDK_DIR}/isp/graphs/h264dec_4stream/inc/iofiles.h" fileName="iofiles.h"/>
+</com.nxp.s32ds.isp:IspGraph>

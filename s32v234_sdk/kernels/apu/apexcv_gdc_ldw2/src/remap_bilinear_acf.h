@@ -1,0 +1,40 @@
+/*****************************************************************************
+* 
+* NXP Confidential Proprietary
+*
+* Copyright 2017-2018 NXP 
+* All Rights Reserved
+*
+******************************************************************************
+*
+* THIS SOFTWARE IS PROVIDED BY NXP "AS IS" AND ANY EXPRESSED OR
+* IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+* OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+* IN NO EVENT SHALL NXP OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+* INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+* HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+* STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+* IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+* THE POSSIBILITY OF SUCH DAMAGE.
+*
+****************************************************************************/
+
+#ifndef GDCLDW2REMAPBILINEAR_H
+#define GDCLDW2REMAPBILINEAR_H
+
+#ifdef ACF_KERNEL_METADATA
+#include "common_stringify_macros.h"
+#define CGVLDW2_REMAP_BILINEAR_GRAYSCALE_K             CgvLdw2_remap_bilinear_grayscale
+#define CGVLDW2_REMAP_BILINEAR_GRAYSCALE_KN            XSTR(CGVLDW2_REMAP_BILINEAR_GRAYSCALE_K)
+#define DST                             "DST"
+#define SRC                             "SRC"
+#define OFFSET                          "OFFSET"
+#define DELTA                           "DELTA"
+
+extKernelInfoDecl(CGVLDW2_REMAP_BILINEAR_GRAYSCALE_K);
+
+#endif //#ifdef ACF_KERNEL_METADATA
+
+#endif /* GDCLDW2REMAPBILINEAR_H */

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<com.nxp.s32ds.isp:IspGraph xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:com.nxp.s32ds.isp="http://s32ds.nxp.com/isp/1.0.0" name="ov10640_12bcomb_surround" kernelsRootDirectory="${S32DS_VSDK_DIR}/isp/kernels/ov10640_isp_multi/src" nrImageLines="800">
+  <engines xsi:type="com.nxp.s32ds.isp:IspIpuEngine" name="Debayer0" engineIndex="1" nrProcessingSteps="DEBAYER_LINES2_0" parameters="    { D_IPUS_SYN_HOST_XCFG_OFF, (DEBAYER_OUTPIX &lt;&lt; 16) | 0x1 },&#xD;&#xA;    { D_IPUS_SYN_HOST_INACFG_OFF, 0x00000700 },&#xD;&#xA;    { D_IPUS_SYN_HOST_OUTCFG_OFF, 0x00000700 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_INA_OFF, 0x00150000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH1_CFG_INA_OFF, 0x00150000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH2_CFG_INA_OFF, 0x00150000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_OUT_OFF, 0x00000000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH1_CFG_OUT_OFF, 0x00000000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH2_CFG_OUT_OFF, 0x00000000 }," kernel="debayer_even">
+    <portIn dataType="GENERIC_16" nrReadPixels="DEBAYER_INPIX" nrPixelsSkipped="3" lineIncrement="2" source="//@buffers.1/@channels.0"/>
+    <portIn dataType="GENERIC_16" index="1" nrLinesStartProcessing="2" nrReadPixels="DEBAYER_INPIX" nrFirstLine="1" nrPixelsSkipped="3" lineIncrement="2" source="//@buffers.1/@channels.1"/>
+    <portIn dataType="GENERIC_16" index="2" nrLinesStartProcessing="3" nrReadPixels="DEBAYER_INPIX" nrFirstLine="2" nrPixelsSkipped="3" lineIncrement="2" source="//@buffers.1/@channels.2"/>
+    <portOut dataType="GENERIC_16" nrPixelsToTransfer="DEBAYER_OUTPIX" buffer="//@buffers.3"/>
+    <portOut dataType="GENERIC_16" index="1" nrPixelsToTransfer="DEBAYER_OUTPIX" buffer="//@buffers.5"/>
+    <portOut dataType="GENERIC_16" index="2" nrPixelsToTransfer="DEBAYER_OUTPIX" buffer="//@buffers.4"/>
+  </engines>
+  <engines xsi:type="com.nxp.s32ds.isp:IspMipiEngine" name="OV_QUAD" cameraType="CSI_MAX_OV10640" attachedCameras="4" nrInputLineImages="CAM_LINES">
+    <portOut dataType="GENERIC_16" nrPixelsToTransfer="5152" buffer="//@buffers.1"/>
+  </engines>
+  <engines xsi:type="com.nxp.s32ds.isp:IspIpuEngine" name="RGB2Y0" engineType="VECTOR" nrProcessingSteps="OUT_LINES2_0" parameters="    { D_IPUV_SYN_HOST_XCFG_OFF, (RGB2YUV_PIX &lt;&lt; 16) | 0x0 },&#xD;&#xA;    { D_IPUV_SYN_HOST_INACFG_OFF, 0x00000700 },&#xD;&#xA;    { D_IPUV_SYN_HOST_OUTCFG_OFF, 0x00000100 },&#xD;&#xA;    { D_IPUV_SYN_S_CH0_CFG_INA_OFF, 0x00158000 },&#xD;&#xA;    { D_IPUV_SYN_S_CH1_CFG_INA_OFF, 0x00158000 },&#xD;&#xA;    { D_IPUV_SYN_S_CH2_CFG_INA_OFF, 0x00158000 },&#xD;&#xA;    { D_IPUV_SYN_S_CH0_CFG_OUT_OFF, 0x00000000 }," kernel="rgb2y">
+    <portIn dataType="GENERIC_16" nrReadPixels="DEBAYER_OUTPIX" source="//@buffers.5/@channels.0"/>
+    <portIn dataType="GENERIC_16" index="1" nrReadPixels="DEBAYER_OUTPIX" source="//@buffers.3/@channels.0"/>
+    <portIn dataType="GENERIC_16" index="2" nrReadPixels="DEBAYER_OUTPIX" source="//@buffers.4/@channels.0"/>
+    <portOut dataType="GENERIC_16" nrPixelsToTransfer="RGB2YUV_PIX" buffer="//@buffers.11"/>
+  </engines>
+  <engines xsi:type="com.nxp.s32ds.isp:IspIpuEngine" name="Debayer1" engineIndex="4" nrProcessingSteps="DEBAYER_LINES2_1" parameters="    { D_IPUS_SYN_HOST_XCFG_OFF, (DEBAYER_OUTPIX &lt;&lt; 16) | 0x1 },&#xD;&#xA;    { D_IPUS_SYN_HOST_INACFG_OFF, 0x00000700 },&#xD;&#xA;    { D_IPUS_SYN_HOST_OUTCFG_OFF, 0x00000700 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_INA_OFF, 0x00150000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH1_CFG_INA_OFF, 0x00150000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH2_CFG_INA_OFF, 0x00150000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_OUT_OFF, 0x00000000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH1_CFG_OUT_OFF, 0x00000000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH2_CFG_OUT_OFF, 0x00000000 }," kernel="debayer_odd">
+    <portIn dataType="GENERIC_16" nrLinesStartProcessing="2" nrReadPixels="DEBAYER_INPIX" nrFirstLine="1" nrPixelsSkipped="3" lineIncrement="2" source="//@buffers.1/@channels.3"/>
+    <portIn dataType="GENERIC_16" index="1" nrLinesStartProcessing="3" nrReadPixels="DEBAYER_INPIX" nrFirstLine="2" nrPixelsSkipped="3" lineIncrement="2" source="//@buffers.1/@channels.4"/>
+    <portIn dataType="GENERIC_16" index="2" nrLinesStartProcessing="4" nrReadPixels="DEBAYER_INPIX" nrFirstLine="3" nrPixelsSkipped="3" lineIncrement="2" source="//@buffers.1/@channels.5"/>
+    <portOut dataType="GENERIC_16" nrPixelsToTransfer="DEBAYER_OUTPIX" buffer="//@buffers.6"/>
+    <portOut dataType="GENERIC_16" index="1" nrPixelsToTransfer="DEBAYER_OUTPIX" buffer="//@buffers.8"/>
+    <portOut dataType="GENERIC_16" index="2" nrPixelsToTransfer="DEBAYER_OUTPIX" buffer="//@buffers.7"/>
+  </engines>
+  <engines xsi:type="com.nxp.s32ds.isp:IspIpuEngine" name="RGB2Y1" engineIndex="2" engineType="VECTOR" nrProcessingSteps="OUT_LINES2_1" parameters="    { D_IPUV_SYN_HOST_XCFG_OFF, (RGB2YUV_PIX &lt;&lt; 16) | 0x0 },&#xD;&#xA;    { D_IPUV_SYN_HOST_INACFG_OFF, 0x00000700 },&#xD;&#xA;    { D_IPUV_SYN_HOST_OUTCFG_OFF, 0x00000100 },&#xD;&#xA;    { D_IPUV_SYN_S_CH0_CFG_INA_OFF, 0x00158000 },&#xD;&#xA;    { D_IPUV_SYN_S_CH1_CFG_INA_OFF, 0x00158000 },&#xD;&#xA;    { D_IPUV_SYN_S_CH2_CFG_INA_OFF, 0x00158000 },&#xD;&#xA;    { D_IPUV_SYN_S_CH0_CFG_OUT_OFF, 0x00000000 }," kernel="rgb2y">
+    <portIn dataType="GENERIC_16" nrReadPixels="DEBAYER_OUTPIX" source="//@buffers.8/@channels.0"/>
+    <portIn dataType="GENERIC_16" index="1" nrReadPixels="DEBAYER_OUTPIX" source="//@buffers.6/@channels.0"/>
+    <portIn dataType="GENERIC_16" index="2" nrReadPixels="DEBAYER_OUTPIX" source="//@buffers.7/@channels.0"/>
+    <portOut dataType="GENERIC_16" nrPixelsToTransfer="RGB2YUV_PIX" buffer="//@buffers.13"/>
+  </engines>
+  <engines xsi:type="com.nxp.s32ds.isp:IspIpuEngine" name="LUT4K0" engineIndex="2" nrProcessingSteps="OUT_LINES2_0" parameters="    { D_IPUS_SYN_HOST_XCFG_OFF, (RGB2YUV_PIX &lt;&lt; 16) | 0x1 },&#xD;&#xA;    { D_IPUS_SYN_HOST_INACFG_OFF, 0x00000100 },&#xD;&#xA;    { D_IPUS_SYN_HOST_OUTCFG_OFF, 0x00000100 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_INA_OFF, 0x00058000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_OUT_OFF, 0x00000000 }," kernel="lut4k">
+    <portIn dataType="GENERIC_16" nrReadPixels="RGB2YUV_PIX" source="//@buffers.11/@channels.0"/>
+    <portOut dataType="GENERIC_16" nrPixelsToTransfer="RGB2YUV_PIX" buffer="//@buffers.12"/>
+  </engines>
+  <engines xsi:type="com.nxp.s32ds.isp:IspIpuEngine" name="COMPRESS0" engineIndex="1" engineType="VECTOR" nrProcessingSteps="OUT_LINES2_0" parameters="    { D_IPUV_SYN_HOST_XCFG_OFF, (OUT_PIXELS &lt;&lt; 16) | 0x0 },&#xD;&#xA;    { D_IPUV_SYN_HOST_INACFG_OFF, 0x00000F00 },&#xD;&#xA;    { D_IPUV_SYN_HOST_OUTCFG_OFF, 0x00000103 },&#xD;&#xA;    { D_IPUV_SYN_S_CH0_CFG_INA_OFF, 0x00051000 },&#xD;&#xA;    { D_IPUV_SYN_S_CH1_CFG_INA_OFF, 0x00058000 },&#xD;&#xA;    { D_IPUV_SYN_S_CH2_CFG_INA_OFF, 0x0005e000 },&#xD;&#xA;    { D_IPUV_SYN_S_CH3_CFG_INA_OFF, 0x00050100 },&#xD;&#xA;    { D_IPUV_SYN_S_CH0_CFG_OUT_OFF, 0x10000000 }," kernel="rgb_compress">
+    <portIn dataType="GENERIC_16" nrReadPixels="DEBAYER_OUTPIX" source="//@buffers.5/@channels.1"/>
+    <portIn dataType="GENERIC_16" index="1" nrReadPixels="DEBAYER_OUTPIX" source="//@buffers.3/@channels.1"/>
+    <portIn dataType="GENERIC_16" index="2" nrReadPixels="DEBAYER_OUTPIX" source="//@buffers.4/@channels.1"/>
+    <portIn dataType="GENERIC_16" index="3" nrReadPixels="RGB2YUV_PIX" source="//@buffers.12/@channels.0"/>
+    <portOut nrPixelsToTransfer="OUT_PIXELS_RGB" buffer="//@buffers.2"/>
+  </engines>
+  <engines xsi:type="com.nxp.s32ds.isp:IspIpuEngine" name="LUT4K1" engineIndex="3" nrProcessingSteps="OUT_LINES2_1" parameters="    { D_IPUS_SYN_HOST_XCFG_OFF, (RGB2YUV_PIX &lt;&lt; 16) | 0x1 },&#xD;&#xA;    { D_IPUS_SYN_HOST_INACFG_OFF, 0x00000100 },&#xD;&#xA;    { D_IPUS_SYN_HOST_OUTCFG_OFF, 0x00000100 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_INA_OFF, 0x00058000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_OUT_OFF, 0x00000000 }," kernel="lut4k">
+    <portIn dataType="GENERIC_16" nrReadPixels="RGB2YUV_PIX" source="//@buffers.13/@channels.0"/>
+    <portOut dataType="GENERIC_16" nrPixelsToTransfer="RGB2YUV_PIX" buffer="//@buffers.14"/>
+  </engines>
+  <engines xsi:type="com.nxp.s32ds.isp:IspIpuEngine" name="COMPRESS1" engineIndex="3" engineType="VECTOR" nrProcessingSteps="OUT_LINES2_1" parameters="    { D_IPUV_SYN_HOST_XCFG_OFF, (OUT_PIXELS &lt;&lt; 16) | 0x0 },&#xD;&#xA;    { D_IPUV_SYN_HOST_INACFG_OFF, 0x00000F00 },&#xD;&#xA;    { D_IPUV_SYN_HOST_OUTCFG_OFF, 0x00000103 },&#xD;&#xA;    { D_IPUV_SYN_S_CH0_CFG_INA_OFF, 0x00051000 },&#xD;&#xA;    { D_IPUV_SYN_S_CH1_CFG_INA_OFF, 0x00058000 },&#xD;&#xA;    { D_IPUV_SYN_S_CH2_CFG_INA_OFF, 0x0005e000 },&#xD;&#xA;    { D_IPUV_SYN_S_CH3_CFG_INA_OFF, 0x00050100 },&#xD;&#xA;    { D_IPUV_SYN_S_CH0_CFG_OUT_OFF, 0x10000000 }," kernel="rgb_compress">
+    <portIn dataType="GENERIC_16" nrReadPixels="DEBAYER_OUTPIX" source="//@buffers.8/@channels.1"/>
+    <portIn dataType="GENERIC_16" index="1" nrReadPixels="DEBAYER_OUTPIX" source="//@buffers.6/@channels.1"/>
+    <portIn dataType="GENERIC_16" index="2" nrReadPixels="DEBAYER_OUTPIX" source="//@buffers.7/@channels.1"/>
+    <portIn dataType="GENERIC_16" index="3" nrReadPixels="RGB2YUV_PIX" source="//@buffers.14/@channels.0"/>
+    <portOut nrPixelsToTransfer="OUT_PIXELS_RGB" buffer="//@buffers.9"/>
+  </engines>
+  <buffers xsi:type="com.nxp.s32ds.isp:IspDdrBuffer" name="ISP_OUTPUT0Buffer" stride="OUT_STRIDE8_RGB" xSize="OUT_PIXELS_RGB" ySize="OUT_LINES2_0" fdma="//@fdmas.0"/>
+  <buffers name="OV_QUADBuffer0" stride="IN_STRIDE16" dataType="GENERIC_16" xSize="IN_PIXELS" ySize="16" PortOut="//@engines.1/@portOut.0">
+    <channels bufferToNode="//@engines.0/@portIn.0"/>
+    <channels number="1" bufferToNode="//@engines.0/@portIn.1"/>
+    <channels number="2" bufferToNode="//@engines.0/@portIn.2"/>
+    <channels number="3" bufferToNode="//@engines.3/@portIn.0"/>
+    <channels number="4" bufferToNode="//@engines.3/@portIn.1"/>
+    <channels number="5" bufferToNode="//@engines.3/@portIn.2"/>
+  </buffers>
+  <buffers name="COMPRESS0Buffer0" stride="OUT_STRIDE8_RGB" xSize="OUT_PIXELS_RGB" ySize="12" PortOut="//@engines.6/@portOut.0">
+    <channels fdma="//@fdmas.0"/>
+  </buffers>
+  <buffers name="Debayer0Buffer0" stride="DEBAYER_STRIDE16" dataType="GENERIC_16" xSize="DEBAYER_OUTPIX" ySize="6" PortOut="//@engines.0/@portOut.0">
+    <channels bufferToNode="//@engines.2/@portIn.1"/>
+    <channels number="1" bufferToNode="//@engines.6/@portIn.1"/>
+  </buffers>
+  <buffers name="Debayer0Buffer2" stride="DEBAYER_STRIDE16" dataType="GENERIC_16" xSize="DEBAYER_OUTPIX" ySize="6" PortOut="//@engines.0/@portOut.2">
+    <channels bufferToNode="//@engines.2/@portIn.2"/>
+    <channels number="1" bufferToNode="//@engines.6/@portIn.2"/>
+  </buffers>
+  <buffers name="Debayer0Buffer1" stride="DEBAYER_STRIDE16" dataType="GENERIC_16" xSize="DEBAYER_OUTPIX" ySize="6" PortOut="//@engines.0/@portOut.1">
+    <channels bufferToNode="//@engines.2/@portIn.0"/>
+    <channels number="1" bufferToNode="//@engines.6/@portIn.0"/>
+  </buffers>
+  <buffers name="Debayer1Buffer0" stride="DEBAYER_STRIDE16" dataType="GENERIC_16" xSize="DEBAYER_OUTPIX" ySize="6" PortOut="//@engines.3/@portOut.0">
+    <channels bufferToNode="//@engines.4/@portIn.1"/>
+    <channels number="1" bufferToNode="//@engines.8/@portIn.1"/>
+  </buffers>
+  <buffers name="Debayer1Buffer2" stride="DEBAYER_STRIDE16" dataType="GENERIC_16" xSize="DEBAYER_OUTPIX" ySize="6" PortOut="//@engines.3/@portOut.2">
+    <channels bufferToNode="//@engines.4/@portIn.2"/>
+    <channels number="1" bufferToNode="//@engines.8/@portIn.2"/>
+  </buffers>
+  <buffers name="Debayer1Buffer1" stride="DEBAYER_STRIDE16" dataType="GENERIC_16" xSize="DEBAYER_OUTPIX" ySize="6" PortOut="//@engines.3/@portOut.1">
+    <channels bufferToNode="//@engines.4/@portIn.0"/>
+    <channels number="1" bufferToNode="//@engines.8/@portIn.0"/>
+  </buffers>
+  <buffers name="COMPRESS1Buffer0" stride="OUT_STRIDE8_RGB" xSize="OUT_PIXELS_RGB" ySize="12" PortOut="//@engines.8/@portOut.0">
+    <channels fdma="//@fdmas.1"/>
+  </buffers>
+  <buffers xsi:type="com.nxp.s32ds.isp:IspDdrBuffer" name="ISP_OUTPUT1Buffer" stride="OUT_STRIDE8_RGB" xSize="OUT_PIXELS_RGB" ySize="OUT_LINES2_1" fdma="//@fdmas.1"/>
+  <buffers name="RGB2Y0Buffer0" stride="OUT_STRIDE8_YUV" dataType="GENERIC_16" xSize="RGB2YUV_PIX" ySize="4" PortOut="//@engines.2/@portOut.0">
+    <channels bufferToNode="//@engines.5/@portIn.0"/>
+  </buffers>
+  <buffers name="LUT4K0Buffer0" stride="RGB2YUV_STRIDE16" dataType="GENERIC_16" xSize="RGB2YUV_PIX" ySize="4" PortOut="//@engines.5/@portOut.0">
+    <channels bufferToNode="//@engines.6/@portIn.3"/>
+  </buffers>
+  <buffers name="RGB2Y1Buffer0" stride="RGB2YUV_STRIDE16" dataType="GENERIC_16" xSize="RGB2YUV_PIX" ySize="4" PortOut="//@engines.4/@portOut.0">
+    <channels bufferToNode="//@engines.7/@portIn.0"/>
+  </buffers>
+  <buffers name="LUT4K1Buffer0" stride="RGB2YUV_STRIDE16" dataType="GENERIC_16" xSize="RGB2YUV_PIX" ySize="4" PortOut="//@engines.7/@portOut.0">
+    <channels bufferToNode="//@engines.8/@portIn.3"/>
+  </buffers>
+  <fdmas name="ISP_OUTPUT0" source="//@buffers.2/@channels.0" target="//@buffers.0" nrPixelsToTransfer="5120"/>
+  <fdmas name="ISP_OUTPUT1" source="//@buffers.9/@channels.0" target="//@buffers.10"/>
+  <headers path="${S32DS_VSDK_DIR}/isp/graphs/ov10640_12bcomb_surround/inc/iofiles.h" fileName="iofiles.h"/>
+</com.nxp.s32ds.isp:IspGraph>

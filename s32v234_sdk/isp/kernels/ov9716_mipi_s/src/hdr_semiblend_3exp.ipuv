@@ -1,0 +1,96 @@
+// IPUV
+// Function:
+// HDR bending of 3 epxposers. Blend in shorter over longer, longer does not fade out.
+// Channel settings
+// set shift_in/x/out to 4 pixels
+// in0  :  L
+// in0  :  S
+// in1  :  VS
+// out0 :  HDR combined
+
+// sum = 16
+
+// Parameters:
+// gpr0 : threshold for L
+// gpr4,5,6: used by alternative kernel
+// gpr8 : threshold s exposure
+// gpr12: maximum ypos (debugging)
+// gpr13: maximum ypos by alternative kernel (debugging)
+// gpr14: factor for L exposure in 0.16
+// gpr15: factor for s exposure in 4.12
+// gpr16: factor for s exposure in 8.8
+// gpr17: LSBs from L to add to HDR
+// gpr18: slope at min threhold (S->L)  (in 8.8)
+// gpr19: slope at max threhold (S->VS) (in 8.8)
+
+//Variables:
+// vgpr0: gpr1 - 3: threshold for L (vectorized)
+// vgpr2: gpr9 -11: threshold for S (vectorized)
+// vh4   : 
+// vh9   : alpha for S       and alpha blended S+VS
+// vh14  : alpha for VS 0.16 and alpha blended VS
+// vh15  : scaled L
+// vgpr5 : scaled VS
+// vgpr6 : scaled L LSBs
+// vacc0 : scaled S + alpha VS * scaled VS
+// vacc1 : scaled L + alpha  S * vacc0
+
+// instruction format
+// instr dest,op0,op1
+// instr dest,im16
+
+.global hdr_semiblend_3exp_start
+hdr_semiblend_3exp_start:
+
+  max gpr12,gpr12,ypos             // check for last line (debugging)
+  mov vgpr0,gpr0                   // vectoring L threshold
+  mov vgpr2,gpr8                   // vectoring S threshold
+
+  // load first pixel
+  done hdr_semiblend_3exp_loop, i  // first input 4 pixels
+
+hdr_semiblend_3exp_loop:
+  // compute alpha
+  mov  confalu,(0 /* unsigned*/ | (1 << 1) /* saturate*/ | (0<<4) /* 16.0 multiplication*/ )
+  // compute alpha for VS
+  sub  vh9,vgpr2,vh5               // (threshold_S-S)
+  mulh vh9,vh9,gpr19               // alpha_S=(threshold_S-S)*slope_S
+  sub  vh14,vone,vh9               // alpha_VS=1-alpha_S
+
+  // compute alpha for S+VS
+  sub  vh9,vgpr0,vh0               // (threshold_L-L)
+  mulh vh9,vh9,gpr18               // alpha_L=(threshold_L-L)*slope_L
+  sub  vh9,vone,vh9                // alpha_S=1-alpha_L
+
+  // scale inputs  ******
+  // scale VS
+  mov  confalu,(0 /* unsigned*/ | (1 << 1) /* saturate*/ | (8<<4)  /* 8.8 multiplication*/ )
+  mulh vgpr5,vh10,gpr16            // scale VS with ~1/1.0
+
+  // scale S
+  mov  confalu,(0 /* unsigned*/ | (1 << 1) /* saturate*/ | (12<<4) /* 4.12 multiplication*/ )
+  mulh vsacc0,vh5,gpr15            // scale S with ~1/16.0
+
+  //get LSBs from L
+  mulh vgpr6,vh0,gpr14             // scale L with ~16/256.0
+  
+  mov  confalu,(0 /* unsigned*/ | (1 << 1) /* saturate*/ | (16<<4) /* 0.16 multiplication*/ )
+  mulh vsacc1,vh0,gpr14            // scale L with ~1/256.0
+
+
+  // multiply with alpha ******
+  //mov  confalu,(0 /* unsigned*/ | (1 << 1) /* saturate*/ | (16<<4) /* 0.16 multiplication*/ )
+  mulh vacc0,vh14,vgpr5            // scaled S += alpha_VS * scaled VS
+  // nop   // stall between mulh -> acc to using acc0 as operand
+  // nop   // 2nd stall between mulh -> acc to using acc0 as operand
+  mulh vacc1,vacc0,vh9             // scaled_L  = alpha_L  * L
+
+  mov  vout1,vacc1                 // save 16 bit linear for histogram
+
+  // add LSBs into HDR
+  min vacc1,vgpr6,gpr17            //  add in clipped LSBs to the hdr
+  dvot vacc1,hdr_semiblend_3exp_loop,ixo
+  //halt
+
+.global hdr_semiblend_3exp_end
+hdr_semiblend_3exp_end:

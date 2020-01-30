@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:com.nxp.s32ds.isp="http://s32ds.nxp.com/isp/1.0.0" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:description_1="http://www.eclipse.org/sirius/diagram/description/1.1.0" xmlns:diagram="http://www.eclipse.org/sirius/diagram/1.1.0" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:style="http://www.eclipse.org/sirius/diagram/description/style/1.1.0" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" xsi:schemaLocation="http://www.eclipse.org/sirius/description/1.1.0 http://www.eclipse.org/sirius/1.1.0#//description http://www.eclipse.org/sirius/diagram/description/1.1.0 http://www.eclipse.org/sirius/diagram/1.1.0#//description http://www.eclipse.org/sirius/diagram/description/style/1.1.0 http://www.eclipse.org/sirius/diagram/1.1.0#//description/style">
+  <viewpoint:DAnalysis xmi:id="_lOUEcCVIEei5qZZL07t9lA" selectedViews="_lqrQUCVIEei5qZZL07t9lA" version="12.1.0.201708031200">
+    <semanticResources>platform:/resource/static_simple/model//static_simple.isp</semanticResources>
+    <semanticResources>platform:/resource/static_simple/model//static_simple.ispgen</semanticResources>
+    <semanticResources>static_simple.isp</semanticResources>
+    <semanticResources>static_simple.ispgen</semanticResources>
+    <ownedViews xmi:type="viewpoint:DView" xmi:id="_lqrQUCVIEei5qZZL07t9lA">
+      <viewpoint xmi:type="description:Viewpoint" href="platform:/plugin/com.nxp.s32ds.gte.isp.design/description/isp.odesign#//@ownedViewpoints[name='isp_design']"/>
+      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" xmi:id="_lq3dkCVIEei5qZZL07t9lA" name="ISP data flow" repPath="#_yENPEU6YEei09aW7eNfeog">
+        <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/com.nxp.s32ds.gte.isp.design/description/isp.odesign#//@ownedViewpoints[name='isp_design']/@ownedRepresentations[name='ispprogram_flow']"/>
+        <target xmi:type="com.nxp.s32ds.isp:IspGraph" href="static_simple.isp#/"/>
+      </ownedRepresentationDescriptors>
+    </ownedViews>
+  </viewpoint:DAnalysis>
+  <diagram:DSemanticDiagram xmi:id="_lq3dkSVIEei5qZZL07t9lA" name="ISP data flow : static_simple" uid="_yENPEU6YEei09aW7eNfeog">
+    <ownedAnnotationEntries xmi:type="description:AnnotationEntry" xmi:id="_lq3dkiVIEei5qZZL07t9lA" source="DANNOTATION_CUSTOMIZATION_KEY">
+      <data xmi:type="diagram:ComputedStyleDescriptionRegistry" xmi:id="_lq3dkyVIEei5qZZL07t9lA">
+        <computedStyleDescriptions xmi:type="style:SquareDescription" xmi:id="_lq3dlCVIEei5qZZL07t9lA" borderSizeComputationExpression="1" labelSize="10" showIcon="false" labelExpression="service:getLabelObject()" labelPosition="node" resizeKind="NSEW" width="9" height="5">
+          <borderColor xmi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+          <labelColor xmi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+          <color xmi:type="description:UserFixedColor" href="platform:/plugin/com.nxp.s32ds.gte.isp.design/description/isp.odesign#//@userColorsPalettes[name='ISPColors']/@entries[name='Fdma']"/>
+        </computedStyleDescriptions>
+        <computedStyleDescriptions xmi:type="style:SquareDescription" xmi:id="_lq3dliVIEei5qZZL07t9lA" borderSizeComputationExpression="1" labelSize="10" labelExpression="service:getLabelObject()" labelPosition="node" resizeKind="NSEW" width="15" height="8">
+          <borderColor xmi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+          <labelColor xmi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+          <color xmi:type="description:UserFixedColor" href="platform:/plugin/com.nxp.s32ds.gte.isp.design/description/isp.odesign#//@userColorsPalettes[name='ISPColors']/@entries[name='DDRBuffer']"/>
+        </computedStyleDescriptions>
+        <computedStyleDescriptions xmi:type="style:SquareDescription" xmi:id="_lq3dlyVIEei5qZZL07t9lA" borderSizeComputationExpression="1" labelSize="10" labelExpression="service:getLabelObject()" labelPosition="node" resizeKind="NSEW" width="15" height="8">
+          <borderColor xmi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+          <labelColor xmi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+          <color xmi:type="description:UserFixedColor" href="platform:/plugin/com.nxp.s32ds.gte.isp.design/description/isp.odesign#//@userColorsPalettes[name='ISPColors']/@entries[name='SRAMBuffer']"/>
+        </computedStyleDescriptions>
+        <computedStyleDescriptions xmi:type="style:SquareDescription" xmi:id="_lq3dmCVIEei5qZZL07t9lA" borderSizeComputationExpression="1" labelSize="10" showIcon="false" labelExpression="service:getLabelObject()" sizeComputationExpression="2" labelPosition="node" resizeKind="NSEW" width="6" height="3">
+          <borderColor xmi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+          <labelColor xmi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+          <color xmi:type="description:UserFixedColor" href="platform:/plugin/com.nxp.s32ds.gte.isp.design/description/isp.odesign#//@userColorsPalettes[name='ISPColors']/@entries[name='Channel']"/>
+        </computedStyleDescriptions>
+        <computedStyleDescriptions xmi:type="style:SquareDescription" xmi:id="_AGfKIE6xEei09aW7eNfeog" borderSizeComputationExpression="1" labelSize="10" labelExpression="service:getLabelObject()" labelPosition="node" resizeKind="NSEW" width="15" height="9">
+          <borderColor xmi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+          <labelFormat>bold</labelFormat>
+          <labelColor xmi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+          <color xmi:type="description:UserFixedColor" href="platform:/plugin/com.nxp.s32ds.gte.isp.design/description/isp.odesign#//@userColorsPalettes[name='ISPColors']/@entries[name='IPUSEngine']"/>
+        </computedStyleDescriptions>
+      </data>
+    </ownedAnnotationEntries>
+    <ownedAnnotationEntries xmi:type="description:AnnotationEntry" xmi:id="_lq3dxCVIEei5qZZL07t9lA" source="GMF_DIAGRAMS">
+      <data xmi:type="notation:Diagram" xmi:id="_lq3dxSVIEei5qZZL07t9lA" type="Sirius" element="_lq3dkSVIEei5qZZL07t9lA" measurementUnit="Pixel">
+        <children xmi:type="notation:Node" xmi:id="_lq3dxyVIEei5qZZL07t9lA" type="2001" element="_lq3dmSVIEei5qZZL07t9lA">
+          <children xmi:type="notation:Node" xmi:id="_lq3dyiVIEei5qZZL07t9lA" type="5002">
+            <layoutConstraint xmi:type="notation:Location" xmi:id="_lq3dyyVIEei5qZZL07t9lA" y="5"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_lq9kMCVIEei5qZZL07t9lA" type="3003" element="_lq3dmiVIEei5qZZL07t9lA">
+            <styles xmi:type="notation:ShapeStyle" xmi:id="_lq9kMSVIEei5qZZL07t9lA" fontName="Segoe UI"/>
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_lq9kMiVIEei5qZZL07t9lA"/>
+          </children>
+          <styles xmi:type="notation:ShapeStyle" xmi:id="_lq3dyCVIEei5qZZL07t9lA" fontName="Segoe UI" fontHeight="10"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_lq3dySVIEei5qZZL07t9lA" x="30" y="135" width="90" height="50"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_lq3dzCVIEei5qZZL07t9lA" type="2001" element="_lq3dmyVIEei5qZZL07t9lA">
+          <children xmi:type="notation:Node" xmi:id="_lq3dzyVIEei5qZZL07t9lA" type="5002">
+            <layoutConstraint xmi:type="notation:Location" xmi:id="_lq3d0CVIEei5qZZL07t9lA" y="5"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_lq9kMyVIEei5qZZL07t9lA" type="3003" element="_lq3dnCVIEei5qZZL07t9lA">
+            <styles xmi:type="notation:ShapeStyle" xmi:id="_lq9kNCVIEei5qZZL07t9lA" fontName="Segoe UI"/>
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_lq9kNSVIEei5qZZL07t9lA"/>
+          </children>
+          <styles xmi:type="notation:ShapeStyle" xmi:id="_lq3dzSVIEei5qZZL07t9lA" fontName="Segoe UI" fontHeight="10"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_lq3dziVIEei5qZZL07t9lA" x="30" y="675" width="90" height="50"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_lq3d0SVIEei5qZZL07t9lA" type="2001" element="_lq3dnSVIEei5qZZL07t9lA">
+          <children xmi:type="notation:Node" xmi:id="_lq3d1CVIEei5qZZL07t9lA" type="5002">
+            <layoutConstraint xmi:type="notation:Location" xmi:id="_lq3d1SVIEei5qZZL07t9lA" y="5"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_lq9kNiVIEei5qZZL07t9lA" type="3001" element="_lq3dniVIEei5qZZL07t9lA">
+            <children xmi:type="notation:Node" xmi:id="_lq9kOSVIEei5qZZL07t9lA" type="5001">
+              <layoutConstraint xmi:type="notation:Location" xmi:id="_lq9kOiVIEei5qZZL07t9lA" y="5"/>
+            </children>
+            <children xmi:type="notation:Node" xmi:id="_AGw2806xEei09aW7eNfeog" type="3003" element="_AGg_UE6xEei09aW7eNfeog">
+              <styles xmi:type="notation:ShapeStyle" xmi:id="_AGw29E6xEei09aW7eNfeog" fontName="Segoe UI"/>
+              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_AGw29U6xEei09aW7eNfeog"/>
+            </children>
+            <styles xmi:type="notation:ShapeStyle" xmi:id="_lq9kNyVIEei5qZZL07t9lA" fontName="Segoe UI" fontHeight="10"/>
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_lq9kOCVIEei5qZZL07t9lA" y="-22" width="60" height="30"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_lq9kOyVIEei5qZZL07t9lA" type="3001" element="_lq3doCVIEei5qZZL07t9lA">
+            <children xmi:type="notation:Node" xmi:id="_lq9kPiVIEei5qZZL07t9lA" type="5001">
+              <layoutConstraint xmi:type="notation:Location" xmi:id="_lq9kPyVIEei5qZZL07t9lA" y="5"/>
+            </children>
+            <children xmi:type="notation:Node" xmi:id="_lq9kRiVIEei5qZZL07t9lA" type="3003" element="_lq3doSVIEei5qZZL07t9lA">
+              <styles xmi:type="notation:ShapeStyle" xmi:id="_lq9kRyVIEei5qZZL07t9lA" fontName="Segoe UI"/>
+              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_lq9kSCVIEei5qZZL07t9lA"/>
+            </children>
+            <styles xmi:type="notation:ShapeStyle" xmi:id="_lq9kPCVIEei5qZZL07t9lA" fontName="Segoe UI" fontHeight="10"/>
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_lq9kPSVIEei5qZZL07t9lA" x="61" y="-22" width="60" height="30"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_AGw28E6xEei09aW7eNfeog" type="3003" element="_AGfxME6xEei09aW7eNfeog">
+            <styles xmi:type="notation:ShapeStyle" xmi:id="_AGw28U6xEei09aW7eNfeog" fontName="Segoe UI"/>
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_AGw28k6xEei09aW7eNfeog"/>
+          </children>
+          <styles xmi:type="notation:ShapeStyle" xmi:id="_lq3d0iVIEei5qZZL07t9lA" fontName="Segoe UI" fontHeight="10" bold="true"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_lq3d0yVIEei5qZZL07t9lA" y="390" width="150" height="90"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_lq3d1iVIEei5qZZL07t9lA" type="2001" element="_lq3doyVIEei5qZZL07t9lA">
+          <children xmi:type="notation:Node" xmi:id="_lq3d2SVIEei5qZZL07t9lA" type="5002">
+            <layoutConstraint xmi:type="notation:Location" xmi:id="_lq3d2iVIEei5qZZL07t9lA" y="5"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_lq9kSSVIEei5qZZL07t9lA" type="3001" element="_lq3dpCVIEei5qZZL07t9lA">
+            <children xmi:type="notation:Node" xmi:id="_lq9kTCVIEei5qZZL07t9lA" type="5001">
+              <layoutConstraint xmi:type="notation:Location" xmi:id="_lq9kTSVIEei5qZZL07t9lA" y="5"/>
+            </children>
+            <children xmi:type="notation:Node" xmi:id="_lq9kUSVIEei5qZZL07t9lA" type="3003" element="_lq3dpSVIEei5qZZL07t9lA">
+              <styles xmi:type="notation:ShapeStyle" xmi:id="_lq9kUiVIEei5qZZL07t9lA" fontName="Segoe UI"/>
+              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_lq9kUyVIEei5qZZL07t9lA"/>
+            </children>
+            <styles xmi:type="notation:ShapeStyle" xmi:id="_lq9kSiVIEei5qZZL07t9lA" fontName="Segoe UI" fontHeight="10"/>
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_lq9kSyVIEei5qZZL07t9lA" y="-22" width="60" height="30"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_lq9kTiVIEei5qZZL07t9lA" type="3003" element="_lq3dpiVIEei5qZZL07t9lA">
+            <styles xmi:type="notation:ShapeStyle" xmi:id="_lq9kTyVIEei5qZZL07t9lA" fontName="Segoe UI"/>
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_lq9kUCVIEei5qZZL07t9lA"/>
+          </children>
+          <styles xmi:type="notation:ShapeStyle" xmi:id="_lq3d1yVIEei5qZZL07t9lA" fontName="Segoe UI" fontHeight="10"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_lq3d2CVIEei5qZZL07t9lA" x="132" y="24" width="150" height="80"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_lq3d2yVIEei5qZZL07t9lA" type="2001" element="_lq3dpyVIEei5qZZL07t9lA">
+          <children xmi:type="notation:Node" xmi:id="_lq3d3iVIEei5qZZL07t9lA" type="5002">
+            <layoutConstraint xmi:type="notation:Location" xmi:id="_lq3d3yVIEei5qZZL07t9lA" y="5"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_lq9kVCVIEei5qZZL07t9lA" type="3003" element="_lq3dqCVIEei5qZZL07t9lA">
+            <styles xmi:type="notation:ShapeStyle" xmi:id="_lq9kVSVIEei5qZZL07t9lA" fontName="Segoe UI"/>
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_lq9kViVIEei5qZZL07t9lA"/>
+          </children>
+          <styles xmi:type="notation:ShapeStyle" xmi:id="_lq3d3CVIEei5qZZL07t9lA" fontName="Segoe UI" fontHeight="10"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_lq3d3SVIEei5qZZL07t9lA" y="795" width="150" height="80"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_lq3d4CVIEei5qZZL07t9lA" type="2001" element="_lq3dqSVIEei5qZZL07t9lA">
+          <children xmi:type="notation:Node" xmi:id="_lq3d4yVIEei5qZZL07t9lA" type="5002">
+            <layoutConstraint xmi:type="notation:Location" xmi:id="_lq3d5CVIEei5qZZL07t9lA" y="5"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_lq9kVyVIEei5qZZL07t9lA" type="3001" element="_lq3dqiVIEei5qZZL07t9lA">
+            <children xmi:type="notation:Node" xmi:id="_lq9kWiVIEei5qZZL07t9lA" type="5001">
+              <layoutConstraint xmi:type="notation:Location" xmi:id="_lq9kWyVIEei5qZZL07t9lA" y="5"/>
+            </children>
+            <children xmi:type="notation:Node" xmi:id="_lq9kXyVIEei5qZZL07t9lA" type="3003" element="_lq3dqyVIEei5qZZL07t9lA">
+              <styles xmi:type="notation:ShapeStyle" xmi:id="_lq9kYCVIEei5qZZL07t9lA" fontName="Segoe UI"/>
+              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_lq9kYSVIEei5qZZL07t9lA"/>
+            </children>
+            <styles xmi:type="notation:ShapeStyle" xmi:id="_lq9kWCVIEei5qZZL07t9lA" fontName="Segoe UI" fontHeight="10"/>
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_lq9kWSVIEei5qZZL07t9lA" y="-22" width="60" height="30"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_lq9kXCVIEei5qZZL07t9lA" type="3003" element="_lq3drCVIEei5qZZL07t9lA">
+            <styles xmi:type="notation:ShapeStyle" xmi:id="_lq9kXSVIEei5qZZL07t9lA" fontName="Segoe UI"/>
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_lq9kXiVIEei5qZZL07t9lA"/>
+          </children>
+          <styles xmi:type="notation:ShapeStyle" xmi:id="_lq3d4SVIEei5qZZL07t9lA" fontName="Segoe UI" fontHeight="10"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_lq3d4iVIEei5qZZL07t9lA" y="255" width="150" height="80"/>
+        </children>
+        <children xmi:type="notation:Node" xmi:id="_lq3d5SVIEei5qZZL07t9lA" type="2001" element="_lq3drSVIEei5qZZL07t9lA">
+          <children xmi:type="notation:Node" xmi:id="_lq3d6CVIEei5qZZL07t9lA" type="5002">
+            <layoutConstraint xmi:type="notation:Location" xmi:id="_lq3d6SVIEei5qZZL07t9lA" y="5"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_lq9kYiVIEei5qZZL07t9lA" type="3001" element="_lq3driVIEei5qZZL07t9lA">
+            <children xmi:type="notation:Node" xmi:id="_lq9kZSVIEei5qZZL07t9lA" type="5001">
+              <layoutConstraint xmi:type="notation:Location" xmi:id="_lq9kZiVIEei5qZZL07t9lA" y="5"/>
+            </children>
+            <children xmi:type="notation:Node" xmi:id="_lq9kaiVIEei5qZZL07t9lA" type="3003" element="_lq3dryVIEei5qZZL07t9lA">
+              <styles xmi:type="notation:ShapeStyle" xmi:id="_lq9kayVIEei5qZZL07t9lA" fontName="Segoe UI"/>
+              <layoutConstraint xmi:type="notation:Bounds" xmi:id="_lq9kbCVIEei5qZZL07t9lA"/>
+            </children>
+            <styles xmi:type="notation:ShapeStyle" xmi:id="_lq9kYyVIEei5qZZL07t9lA" fontName="Segoe UI" fontHeight="10"/>
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_lq9kZCVIEei5qZZL07t9lA" y="-22" width="60" height="30"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_A0WVsE6xEei09aW7eNfeog" type="3003" element="_A0RdME6xEei09aW7eNfeog">
+            <styles xmi:type="notation:ShapeStyle" xmi:id="_A0WVsU6xEei09aW7eNfeog" fontName="Segoe UI"/>
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_A0WVsk6xEei09aW7eNfeog"/>
+          </children>
+          <styles xmi:type="notation:ShapeStyle" xmi:id="_lq3d5iVIEei5qZZL07t9lA" fontName="Segoe UI" fontHeight="10"/>
+          <layoutConstraint xmi:type="notation:Bounds" xmi:id="_lq3d5yVIEei5qZZL07t9lA" y="540" width="150" height="80"/>
+        </children>
+        <styles xmi:type="notation:DiagramStyle" xmi:id="_lq3dxiVIEei5qZZL07t9lA"/>
+        <edges xmi:type="notation:Edge" xmi:id="_lq9kbSVIEei5qZZL07t9lA" type="4001" element="_lq3dsSVIEei5qZZL07t9lA" source="_lq9kOyVIEei5qZZL07t9lA" target="_lq3d5SVIEei5qZZL07t9lA">
+          <children xmi:type="notation:Node" xmi:id="_lq9kcSVIEei5qZZL07t9lA" type="6001">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_lq9kciVIEei5qZZL07t9lA" y="-10"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_lq9kcyVIEei5qZZL07t9lA" type="6002">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_lq9kdCVIEei5qZZL07t9lA" y="10"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_lq9kdSVIEei5qZZL07t9lA" type="6003">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_lq9kdiVIEei5qZZL07t9lA" y="10"/>
+          </children>
+          <styles xmi:type="notation:ConnectorStyle" xmi:id="_lq9kbiVIEei5qZZL07t9lA" routing="Rectilinear"/>
+          <styles xmi:type="notation:FontStyle" xmi:id="_lq9kbyVIEei5qZZL07t9lA" fontName="Segoe UI" fontHeight="8"/>
+          <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_lq9kcCVIEei5qZZL07t9lA" points="[-16, 97, 0, -100]$[-16, 157, 0, -40]"/>
+          <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_lq9kdyVIEei5qZZL07t9lA" id="(0.5,0.5)"/>
+          <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_lq9keCVIEei5qZZL07t9lA" id="(0.5,0.0)"/>
+        </edges>
+        <edges xmi:type="notation:Edge" xmi:id="_lq9keSVIEei5qZZL07t9lA" type="4001" element="_lq3dtCVIEei5qZZL07t9lA" source="_lq9kSSVIEei5qZZL07t9lA" target="_lq3dxyVIEei5qZZL07t9lA">
+          <children xmi:type="notation:Node" xmi:id="_lq9kfSVIEei5qZZL07t9lA" type="6001">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_lq9kfiVIEei5qZZL07t9lA" x="-12" y="10"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_lq9kfyVIEei5qZZL07t9lA" type="6002">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_lq9kgCVIEei5qZZL07t9lA" x="-29" y="10"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_lq9kgSVIEei5qZZL07t9lA" type="6003">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_lq9kgiVIEei5qZZL07t9lA" x="5" y="10"/>
+          </children>
+          <styles xmi:type="notation:ConnectorStyle" xmi:id="_lq9keiVIEei5qZZL07t9lA" routing="Rectilinear"/>
+          <styles xmi:type="notation:FontStyle" xmi:id="_lq9keyVIEei5qZZL07t9lA" fontName="Segoe UI" fontHeight="8"/>
+          <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_lq9kfCVIEei5qZZL07t9lA" points="[8, 15, 95, -103]$[8, 55, 95, -63]$[-87, 55, 0, -63]$[-87, 118, 0, 0]"/>
+          <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_lq9kgyVIEei5qZZL07t9lA" id="(0.5,0.5)"/>
+          <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_lq9khCVIEei5qZZL07t9lA" id="(0.5,0.0)"/>
+        </edges>
+        <edges xmi:type="notation:Edge" xmi:id="_lq9khSVIEei5qZZL07t9lA" type="4001" element="_lq3dtyVIEei5qZZL07t9lA" source="_lq9kYiVIEei5qZZL07t9lA" target="_lq3dzCVIEei5qZZL07t9lA">
+          <children xmi:type="notation:Node" xmi:id="_lq9kiSVIEei5qZZL07t9lA" type="6001">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_lq9kiiVIEei5qZZL07t9lA" y="-10"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_lq9kiyVIEei5qZZL07t9lA" type="6002">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_lq9kjCVIEei5qZZL07t9lA" y="10"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_lq9kjSVIEei5qZZL07t9lA" type="6003">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_lq9kjiVIEei5qZZL07t9lA" y="10"/>
+          </children>
+          <styles xmi:type="notation:ConnectorStyle" xmi:id="_lq9khiVIEei5qZZL07t9lA" routing="Rectilinear"/>
+          <styles xmi:type="notation:FontStyle" xmi:id="_lq9khyVIEei5qZZL07t9lA" fontName="Segoe UI" fontHeight="8"/>
+          <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_lq9kiCVIEei5qZZL07t9lA" points="[45, 87, 0, -60]$[45, 147, 0, 0]"/>
+          <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_lq9kjyVIEei5qZZL07t9lA" id="(0.5,0.5)"/>
+          <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_lq9kkCVIEei5qZZL07t9lA" id="(0.5,0.0)"/>
+        </edges>
+        <edges xmi:type="notation:Edge" xmi:id="_lq9kkSVIEei5qZZL07t9lA" type="4001" element="_lq3duiVIEei5qZZL07t9lA" source="_lq3dxyVIEei5qZZL07t9lA" target="_lq3d4CVIEei5qZZL07t9lA">
+          <children xmi:type="notation:Node" xmi:id="_lq9klSVIEei5qZZL07t9lA" type="6001">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_lq9kliVIEei5qZZL07t9lA" y="-10"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_lq9klyVIEei5qZZL07t9lA" type="6002">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_lq9kmCVIEei5qZZL07t9lA" y="10"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_lq9kmSVIEei5qZZL07t9lA" type="6003">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_lq9kmiVIEei5qZZL07t9lA" y="10"/>
+          </children>
+          <styles xmi:type="notation:ConnectorStyle" xmi:id="_lq9kkiVIEei5qZZL07t9lA" routing="Rectilinear"/>
+          <styles xmi:type="notation:FontStyle" xmi:id="_lq9kkyVIEei5qZZL07t9lA" fontName="Segoe UI" fontHeight="8"/>
+          <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_lq9klCVIEei5qZZL07t9lA" points="[0, 25, 0, -100]$[0, 85, 0, -40]"/>
+          <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_lq9kmyVIEei5qZZL07t9lA" id="(0.5,0.5)"/>
+          <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_lq9knCVIEei5qZZL07t9lA" id="(0.5,0.5)"/>
+        </edges>
+        <edges xmi:type="notation:Edge" xmi:id="_lq9knSVIEei5qZZL07t9lA" type="4001" element="_lq3dvSVIEei5qZZL07t9lA" source="_lq3dzCVIEei5qZZL07t9lA" target="_lq3d2yVIEei5qZZL07t9lA">
+          <children xmi:type="notation:Node" xmi:id="_lq9koSVIEei5qZZL07t9lA" type="6001">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_lq9koiVIEei5qZZL07t9lA" y="-10"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_lq9koyVIEei5qZZL07t9lA" type="6002">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_lq9kpCVIEei5qZZL07t9lA" y="10"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_lq9kpSVIEei5qZZL07t9lA" type="6003">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_lq9kpiVIEei5qZZL07t9lA" y="10"/>
+          </children>
+          <styles xmi:type="notation:ConnectorStyle" xmi:id="_lq9kniVIEei5qZZL07t9lA" routing="Rectilinear"/>
+          <styles xmi:type="notation:FontStyle" xmi:id="_lq9knyVIEei5qZZL07t9lA" fontName="Segoe UI" fontHeight="8"/>
+          <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_lq9koCVIEei5qZZL07t9lA" points="[0, 25, 0, -100]$[0, 85, 0, -40]"/>
+          <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_lrDq0CVIEei5qZZL07t9lA" id="(0.5,0.5)"/>
+          <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_lrDq0SVIEei5qZZL07t9lA" id="(0.5,0.5)"/>
+        </edges>
+        <edges xmi:type="notation:Edge" xmi:id="_lrDq0iVIEei5qZZL07t9lA" type="4001" element="_lq3dwCVIEei5qZZL07t9lA" source="_lq9kVyVIEei5qZZL07t9lA" target="_lq9kNiVIEei5qZZL07t9lA">
+          <children xmi:type="notation:Node" xmi:id="_lrDq1iVIEei5qZZL07t9lA" type="6001">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_lrDq1yVIEei5qZZL07t9lA" y="-10"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_lrDq2CVIEei5qZZL07t9lA" type="6002">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_lrDq2SVIEei5qZZL07t9lA" y="10"/>
+          </children>
+          <children xmi:type="notation:Node" xmi:id="_lrDq2iVIEei5qZZL07t9lA" type="6003">
+            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_lrDq2yVIEei5qZZL07t9lA" y="10"/>
+          </children>
+          <styles xmi:type="notation:ConnectorStyle" xmi:id="_lrDq0yVIEei5qZZL07t9lA" routing="Rectilinear"/>
+          <styles xmi:type="notation:FontStyle" xmi:id="_lrDq1CVIEei5qZZL07t9lA" fontName="Segoe UI" fontHeight="8"/>
+          <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_lrDq1SVIEei5qZZL07t9lA" points="[45, 87, 45, -53]$[45, 147, 45, 7]"/>
+          <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_lrDq3CVIEei5qZZL07t9lA" id="(0.5,0.5)"/>
+          <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_lrDq3SVIEei5qZZL07t9lA" id="(0.5,0.5)"/>
+        </edges>
+      </data>
+    </ownedAnnotationEntries>
+    <ownedDiagramElements xmi:type="diagram:DNode" xmi:id="_lq3dmSVIEei5qZZL07t9lA" name="FDMA&#xA;FDMA_0" outgoingEdges="_lq3duiVIEei5qZZL07t9lA" incomingEdges="_lq3dtCVIEei5qZZL07t9lA" width="9" height="5" resizeKind="NSEW">
+      <target xmi:type="com.nxp.s32ds.isp:IspFdmaTransfer" href="static_simple.isp#//@fdmas.0"/>
+      <semanticElements xmi:type="com.nxp.s32ds.isp:IspFdmaTransfer" href="static_simple.isp#//@fdmas.0"/>
+      <ownedStyle xmi:type="diagram:Square" xmi:id="_lq3dmiVIEei5qZZL07t9lA" labelSize="10" showIcon="false" description="_lq3dlCVIEei5qZZL07t9lA" borderSize="1" borderSizeComputationExpression="1" labelPosition="node" width="9" height="5" color="255,168,117"/>
+      <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/com.nxp.s32ds.gte.isp.design/description/isp.odesign#//@ownedViewpoints[name='isp_design']/@ownedRepresentations[name='ispprogram_flow']/@defaultLayer/@nodeMappings[name='Fdma']"/>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DNode" xmi:id="_lq3dmyVIEei5qZZL07t9lA" name="FDMA&#xA;FDMA_1" outgoingEdges="_lq3dvSVIEei5qZZL07t9lA" incomingEdges="_lq3dtyVIEei5qZZL07t9lA" width="9" height="5" resizeKind="NSEW">
+      <target xmi:type="com.nxp.s32ds.isp:IspFdmaTransfer" href="static_simple.isp#//@fdmas.1"/>
+      <semanticElements xmi:type="com.nxp.s32ds.isp:IspFdmaTransfer" href="static_simple.isp#//@fdmas.1"/>
+      <ownedStyle xmi:type="diagram:Square" xmi:id="_lq3dnCVIEei5qZZL07t9lA" labelSize="10" showIcon="false" description="_lq3dlCVIEei5qZZL07t9lA" borderSize="1" borderSizeComputationExpression="1" labelPosition="node" width="9" height="5" color="255,168,117"/>
+      <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/com.nxp.s32ds.gte.isp.design/description/isp.odesign#//@ownedViewpoints[name='isp_design']/@ownedRepresentations[name='ispprogram_flow']/@defaultLayer/@nodeMappings[name='Fdma']"/>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DNode" xmi:id="_lq3dnSVIEei5qZZL07t9lA" name="IPUS0&#xA;copy_1to1_ipus&#xA;(copy_1to1_ipus)" width="15" height="9" resizeKind="NSEW">
+      <target xmi:type="com.nxp.s32ds.isp:IspIpuEngine" href="static_simple.isp#//@engines.0"/>
+      <semanticElements xmi:type="com.nxp.s32ds.isp:IspIpuEngine" href="static_simple.isp#//@engines.0"/>
+      <ownedBorderedNodes xmi:type="diagram:DNode" xmi:id="_lq3dniVIEei5qZZL07t9lA" name="A[0]" incomingEdges="_lq3dwCVIEei5qZZL07t9lA" width="6" height="3" resizeKind="NSEW">
+        <target xmi:type="com.nxp.s32ds.isp:IspPortIn" href="static_simple.isp#//@engines.0/@portIn.0"/>
+        <semanticElements xmi:type="com.nxp.s32ds.isp:IspPortIn" href="static_simple.isp#//@engines.0/@portIn.0"/>
+        <ownedStyle xmi:type="diagram:Square" xmi:id="_AGg_UE6xEei09aW7eNfeog" labelSize="10" showIcon="false" borderSize="1" borderSizeComputationExpression="1" borderColor="136,136,136" labelPosition="node" width="6" height="3" color="251,253,213">
+          <description xmi:type="style:SquareDescription" href="platform:/plugin/com.nxp.s32ds.gte.isp.design/description/isp.odesign#//@ownedViewpoints[name='isp_design']/@ownedRepresentations[name='ispprogram_flow']/@defaultLayer/@nodeMappings[name='IpuEngine']/@borderedNodeMappings[name='PortIn']/@style"/>
+        </ownedStyle>
+        <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/com.nxp.s32ds.gte.isp.design/description/isp.odesign#//@ownedViewpoints[name='isp_design']/@ownedRepresentations[name='ispprogram_flow']/@defaultLayer/@nodeMappings[name='IpuEngine']/@borderedNodeMappings[name='PortIn']"/>
+      </ownedBorderedNodes>
+      <ownedBorderedNodes xmi:type="diagram:DNode" xmi:id="_lq3doCVIEei5qZZL07t9lA" name="[0]" outgoingEdges="_lq3dsSVIEei5qZZL07t9lA" width="6" height="3" resizeKind="NSEW">
+        <target xmi:type="com.nxp.s32ds.isp:IspPortOut" href="static_simple.isp#//@engines.0/@portOut.0"/>
+        <semanticElements xmi:type="com.nxp.s32ds.isp:IspPortOut" href="static_simple.isp#//@engines.0/@portOut.0"/>
+        <ownedStyle xmi:type="diagram:Square" xmi:id="_lq3doSVIEei5qZZL07t9lA" labelSize="10" showIcon="false" borderSize="1" borderSizeComputationExpression="1" labelPosition="node" width="6" height="3" color="109,177,218">
+          <description xmi:type="style:SquareDescription" href="platform:/plugin/com.nxp.s32ds.gte.isp.design/description/isp.odesign#//@ownedViewpoints[name='isp_design']/@ownedRepresentations[name='ispprogram_flow']/@defaultLayer/@nodeMappings[name='IpuEngine']/@borderedNodeMappings[name='PortOut']/@style"/>
+        </ownedStyle>
+        <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/com.nxp.s32ds.gte.isp.design/description/isp.odesign#//@ownedViewpoints[name='isp_design']/@ownedRepresentations[name='ispprogram_flow']/@defaultLayer/@nodeMappings[name='IpuEngine']/@borderedNodeMappings[name='PortOut']"/>
+      </ownedBorderedNodes>
+      <ownedStyle xmi:type="diagram:Square" xmi:id="_AGfxME6xEei09aW7eNfeog" labelSize="10" description="_AGfKIE6xEei09aW7eNfeog" borderSize="1" borderSizeComputationExpression="1" labelPosition="node" width="15" height="9" color="143,180,236">
+        <labelFormat>bold</labelFormat>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/com.nxp.s32ds.gte.isp.design/description/isp.odesign#//@ownedViewpoints[name='isp_design']/@ownedRepresentations[name='ispprogram_flow']/@defaultLayer/@nodeMappings[name='IpuEngine']"/>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DNode" xmi:id="_lq3doyVIEei5qZZL07t9lA" name="DDR&#xA;DDRBuffer_0&#xA;(GENERIC_8)" width="15" height="8" resizeKind="NSEW">
+      <target xmi:type="com.nxp.s32ds.isp:IspDdrBuffer" href="static_simple.isp#//@buffers.0"/>
+      <semanticElements xmi:type="com.nxp.s32ds.isp:IspDdrBuffer" href="static_simple.isp#//@buffers.0"/>
+      <ownedBorderedNodes xmi:type="diagram:DNode" xmi:id="_lq3dpCVIEei5qZZL07t9lA" name="[0]" outgoingEdges="_lq3dtCVIEei5qZZL07t9lA" width="6" height="3" resizeKind="NSEW">
+        <target xmi:type="com.nxp.s32ds.isp:IspChannel" href="static_simple.isp#//@buffers.0/@channels.0"/>
+        <semanticElements xmi:type="com.nxp.s32ds.isp:IspChannel" href="static_simple.isp#//@buffers.0/@channels.0"/>
+        <ownedStyle xmi:type="diagram:Square" xmi:id="_lq3dpSVIEei5qZZL07t9lA" labelSize="10" showIcon="false" description="_lq3dmCVIEei5qZZL07t9lA" borderSize="1" borderSizeComputationExpression="1" labelPosition="node" width="6" height="3" color="251,169,169"/>
+        <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/com.nxp.s32ds.gte.isp.design/description/isp.odesign#//@ownedViewpoints[name='isp_design']/@ownedRepresentations[name='ispprogram_flow']/@defaultLayer/@nodeMappings[name='Buffer']/@borderedNodeMappings[name='Channel']"/>
+      </ownedBorderedNodes>
+      <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
+      <arrangeConstraints>KEEP_SIZE</arrangeConstraints>
+      <arrangeConstraints>KEEP_RATIO</arrangeConstraints>
+      <ownedStyle xmi:type="diagram:Square" xmi:id="_lq3dpiVIEei5qZZL07t9lA" labelSize="10" description="_lq3dliVIEei5qZZL07t9lA" borderSize="1" borderSizeComputationExpression="1" labelPosition="node" width="15" height="8" color="255,248,162"/>
+      <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/com.nxp.s32ds.gte.isp.design/description/isp.odesign#//@ownedViewpoints[name='isp_design']/@ownedRepresentations[name='ispprogram_flow']/@defaultLayer/@nodeMappings[name='Buffer']"/>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DNode" xmi:id="_lq3dpyVIEei5qZZL07t9lA" name="DDR&#xA;DDRBuffer_1&#xA;(GENERIC_8)" incomingEdges="_lq3dvSVIEei5qZZL07t9lA" width="15" height="8" resizeKind="NSEW">
+      <target xmi:type="com.nxp.s32ds.isp:IspDdrBuffer" href="static_simple.isp#//@buffers.1"/>
+      <semanticElements xmi:type="com.nxp.s32ds.isp:IspDdrBuffer" href="static_simple.isp#//@buffers.1"/>
+      <ownedStyle xmi:type="diagram:Square" xmi:id="_lq3dqCVIEei5qZZL07t9lA" labelSize="10" description="_lq3dliVIEei5qZZL07t9lA" borderSize="1" borderSizeComputationExpression="1" labelPosition="node" width="15" height="8" color="255,248,162"/>
+      <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/com.nxp.s32ds.gte.isp.design/description/isp.odesign#//@ownedViewpoints[name='isp_design']/@ownedRepresentations[name='ispprogram_flow']/@defaultLayer/@nodeMappings[name='Buffer']"/>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DNode" xmi:id="_lq3dqSVIEei5qZZL07t9lA" name="SRAM&#xA;SRAMBuffer_0&#xA;(GENERIC_8)" incomingEdges="_lq3duiVIEei5qZZL07t9lA" width="15" height="8" resizeKind="NSEW">
+      <target xmi:type="com.nxp.s32ds.isp:IspBuffer" href="static_simple.isp#//@buffers.2"/>
+      <semanticElements xmi:type="com.nxp.s32ds.isp:IspBuffer" href="static_simple.isp#//@buffers.2"/>
+      <ownedBorderedNodes xmi:type="diagram:DNode" xmi:id="_lq3dqiVIEei5qZZL07t9lA" name="[0]" outgoingEdges="_lq3dwCVIEei5qZZL07t9lA" width="6" height="3" resizeKind="NSEW">
+        <target xmi:type="com.nxp.s32ds.isp:IspChannel" href="static_simple.isp#//@buffers.2/@channels.0"/>
+        <semanticElements xmi:type="com.nxp.s32ds.isp:IspChannel" href="static_simple.isp#//@buffers.2/@channels.0"/>
+        <ownedStyle xmi:type="diagram:Square" xmi:id="_lq3dqyVIEei5qZZL07t9lA" labelSize="10" showIcon="false" description="_lq3dmCVIEei5qZZL07t9lA" borderSize="1" borderSizeComputationExpression="1" labelPosition="node" width="6" height="3" color="251,169,169"/>
+        <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/com.nxp.s32ds.gte.isp.design/description/isp.odesign#//@ownedViewpoints[name='isp_design']/@ownedRepresentations[name='ispprogram_flow']/@defaultLayer/@nodeMappings[name='Buffer']/@borderedNodeMappings[name='Channel']"/>
+      </ownedBorderedNodes>
+      <ownedStyle xmi:type="diagram:Square" xmi:id="_lq3drCVIEei5qZZL07t9lA" labelSize="10" description="_lq3dlyVIEei5qZZL07t9lA" borderSize="1" borderSizeComputationExpression="1" labelPosition="node" width="15" height="8" color="212,243,162"/>
+      <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/com.nxp.s32ds.gte.isp.design/description/isp.odesign#//@ownedViewpoints[name='isp_design']/@ownedRepresentations[name='ispprogram_flow']/@defaultLayer/@nodeMappings[name='Buffer']"/>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DNode" xmi:id="_lq3drSVIEei5qZZL07t9lA" name="SRAM&#xA;SRAMBuffer_1&#xA;(GENERIC_8)" incomingEdges="_lq3dsSVIEei5qZZL07t9lA" width="15" height="8" resizeKind="NSEW">
+      <target xmi:type="com.nxp.s32ds.isp:IspBuffer" href="static_simple.isp#//@buffers.3"/>
+      <semanticElements xmi:type="com.nxp.s32ds.isp:IspBuffer" href="static_simple.isp#//@buffers.3"/>
+      <ownedBorderedNodes xmi:type="diagram:DNode" xmi:id="_lq3driVIEei5qZZL07t9lA" name="[0]" outgoingEdges="_lq3dtyVIEei5qZZL07t9lA" width="6" height="3" resizeKind="NSEW">
+        <target xmi:type="com.nxp.s32ds.isp:IspChannel" href="static_simple.isp#//@buffers.3/@channels.0"/>
+        <semanticElements xmi:type="com.nxp.s32ds.isp:IspChannel" href="static_simple.isp#//@buffers.3/@channels.0"/>
+        <ownedStyle xmi:type="diagram:Square" xmi:id="_lq3dryVIEei5qZZL07t9lA" labelSize="10" showIcon="false" description="_lq3dmCVIEei5qZZL07t9lA" borderSize="1" borderSizeComputationExpression="1" labelPosition="node" width="6" height="3" color="251,169,169"/>
+        <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/com.nxp.s32ds.gte.isp.design/description/isp.odesign#//@ownedViewpoints[name='isp_design']/@ownedRepresentations[name='ispprogram_flow']/@defaultLayer/@nodeMappings[name='Buffer']/@borderedNodeMappings[name='Channel']"/>
+      </ownedBorderedNodes>
+      <ownedStyle xmi:type="diagram:Square" xmi:id="_A0RdME6xEei09aW7eNfeog" labelSize="10" description="_lq3dlyVIEei5qZZL07t9lA" borderSize="1" borderSizeComputationExpression="1" labelPosition="node" width="15" height="8" color="212,243,162"/>
+      <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/com.nxp.s32ds.gte.isp.design/description/isp.odesign#//@ownedViewpoints[name='isp_design']/@ownedRepresentations[name='ispprogram_flow']/@defaultLayer/@nodeMappings[name='Buffer']"/>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DEdge" xmi:id="_lq3dsSVIEei5qZZL07t9lA" sourceNode="_lq3doCVIEei5qZZL07t9lA" targetNode="_lq3drSVIEei5qZZL07t9lA">
+      <target xmi:type="com.nxp.s32ds.isp:IspPortOut" href="static_simple.isp#//@engines.0/@portOut.0"/>
+      <ownedStyle xmi:type="diagram:EdgeStyle" xmi:id="_lq3dsiVIEei5qZZL07t9lA" size="2" routingStyle="manhattan">
+        <description xmi:type="style:EdgeStyleDescription" href="platform:/plugin/com.nxp.s32ds.gte.isp.design/description/isp.odesign#//@ownedViewpoints[name='isp_design']/@ownedRepresentations[name='ispprogram_flow']/@defaultLayer/@edgeMappings[name='EdgePortOutToBuffer']/@style"/>
+        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" xmi:id="_lq3dsyVIEei5qZZL07t9lA" showIcon="false"/>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/com.nxp.s32ds.gte.isp.design/description/isp.odesign#//@ownedViewpoints[name='isp_design']/@ownedRepresentations[name='ispprogram_flow']/@defaultLayer/@edgeMappings[name='EdgePortOutToBuffer']"/>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DEdge" xmi:id="_lq3dtCVIEei5qZZL07t9lA" sourceNode="_lq3dpCVIEei5qZZL07t9lA" targetNode="_lq3dmSVIEei5qZZL07t9lA">
+      <target xmi:type="com.nxp.s32ds.isp:IspChannel" href="static_simple.isp#//@buffers.0/@channels.0"/>
+      <ownedStyle xmi:type="diagram:EdgeStyle" xmi:id="_lq3dtSVIEei5qZZL07t9lA" size="2" routingStyle="manhattan" strokeColor="224,133,3">
+        <description xmi:type="style:EdgeStyleDescription" href="platform:/plugin/com.nxp.s32ds.gte.isp.design/description/isp.odesign#//@ownedViewpoints[name='isp_design']/@ownedRepresentations[name='ispprogram_flow']/@defaultLayer/@edgeMappings[name='ChannelToFdma']/@style"/>
+        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" xmi:id="_lq3dtiVIEei5qZZL07t9lA"/>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/com.nxp.s32ds.gte.isp.design/description/isp.odesign#//@ownedViewpoints[name='isp_design']/@ownedRepresentations[name='ispprogram_flow']/@defaultLayer/@edgeMappings[name='ChannelToFdma']"/>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DEdge" xmi:id="_lq3dtyVIEei5qZZL07t9lA" sourceNode="_lq3driVIEei5qZZL07t9lA" targetNode="_lq3dmyVIEei5qZZL07t9lA">
+      <target xmi:type="com.nxp.s32ds.isp:IspChannel" href="static_simple.isp#//@buffers.3/@channels.0"/>
+      <ownedStyle xmi:type="diagram:EdgeStyle" xmi:id="_lq3duCVIEei5qZZL07t9lA" size="2" routingStyle="manhattan" strokeColor="224,133,3">
+        <description xmi:type="style:EdgeStyleDescription" href="platform:/plugin/com.nxp.s32ds.gte.isp.design/description/isp.odesign#//@ownedViewpoints[name='isp_design']/@ownedRepresentations[name='ispprogram_flow']/@defaultLayer/@edgeMappings[name='ChannelToFdma']/@style"/>
+        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" xmi:id="_lq3duSVIEei5qZZL07t9lA"/>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/com.nxp.s32ds.gte.isp.design/description/isp.odesign#//@ownedViewpoints[name='isp_design']/@ownedRepresentations[name='ispprogram_flow']/@defaultLayer/@edgeMappings[name='ChannelToFdma']"/>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DEdge" xmi:id="_lq3duiVIEei5qZZL07t9lA" sourceNode="_lq3dmSVIEei5qZZL07t9lA" targetNode="_lq3dqSVIEei5qZZL07t9lA">
+      <target xmi:type="com.nxp.s32ds.isp:IspFdmaTransfer" href="static_simple.isp#//@fdmas.0"/>
+      <ownedStyle xmi:type="diagram:EdgeStyle" xmi:id="_lq3duyVIEei5qZZL07t9lA" size="2" routingStyle="manhattan" strokeColor="224,133,3">
+        <description xmi:type="style:EdgeStyleDescription" href="platform:/plugin/com.nxp.s32ds.gte.isp.design/description/isp.odesign#//@ownedViewpoints[name='isp_design']/@ownedRepresentations[name='ispprogram_flow']/@defaultLayer/@edgeMappings[name='FdmaToBuffer']/@style"/>
+        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" xmi:id="_lq3dvCVIEei5qZZL07t9lA"/>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/com.nxp.s32ds.gte.isp.design/description/isp.odesign#//@ownedViewpoints[name='isp_design']/@ownedRepresentations[name='ispprogram_flow']/@defaultLayer/@edgeMappings[name='FdmaToBuffer']"/>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DEdge" xmi:id="_lq3dvSVIEei5qZZL07t9lA" sourceNode="_lq3dmyVIEei5qZZL07t9lA" targetNode="_lq3dpyVIEei5qZZL07t9lA">
+      <target xmi:type="com.nxp.s32ds.isp:IspFdmaTransfer" href="static_simple.isp#//@fdmas.1"/>
+      <ownedStyle xmi:type="diagram:EdgeStyle" xmi:id="_lq3dviVIEei5qZZL07t9lA" size="2" routingStyle="manhattan" strokeColor="224,133,3">
+        <description xmi:type="style:EdgeStyleDescription" href="platform:/plugin/com.nxp.s32ds.gte.isp.design/description/isp.odesign#//@ownedViewpoints[name='isp_design']/@ownedRepresentations[name='ispprogram_flow']/@defaultLayer/@edgeMappings[name='FdmaToBuffer']/@style"/>
+        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" xmi:id="_lq3dvyVIEei5qZZL07t9lA"/>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/com.nxp.s32ds.gte.isp.design/description/isp.odesign#//@ownedViewpoints[name='isp_design']/@ownedRepresentations[name='ispprogram_flow']/@defaultLayer/@edgeMappings[name='FdmaToBuffer']"/>
+    </ownedDiagramElements>
+    <ownedDiagramElements xmi:type="diagram:DEdge" xmi:id="_lq3dwCVIEei5qZZL07t9lA" sourceNode="_lq3dqiVIEei5qZZL07t9lA" targetNode="_lq3dniVIEei5qZZL07t9lA">
+      <target xmi:type="com.nxp.s32ds.isp:IspChannel" href="static_simple.isp#//@buffers.2/@channels.0"/>
+      <ownedStyle xmi:type="diagram:EdgeStyle" xmi:id="_lq3dwSVIEei5qZZL07t9lA" size="2" routingStyle="manhattan">
+        <description xmi:type="style:EdgeStyleDescription" href="platform:/plugin/com.nxp.s32ds.gte.isp.design/description/isp.odesign#//@ownedViewpoints[name='isp_design']/@ownedRepresentations[name='ispprogram_flow']/@defaultLayer/@edgeMappings[name='BufferToNode']/@style"/>
+        <centerLabelStyle xmi:type="diagram:CenterLabelStyle" xmi:id="_lq3dwiVIEei5qZZL07t9lA"/>
+      </ownedStyle>
+      <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/com.nxp.s32ds.gte.isp.design/description/isp.odesign#//@ownedViewpoints[name='isp_design']/@ownedRepresentations[name='ispprogram_flow']/@defaultLayer/@edgeMappings[name='BufferToNode']"/>
+    </ownedDiagramElements>
+    <description xmi:type="description_1:DiagramDescription" href="platform:/plugin/com.nxp.s32ds.gte.isp.design/description/isp.odesign#//@ownedViewpoints[name='isp_design']/@ownedRepresentations[name='ispprogram_flow']"/>
+    <filterVariableHistory xmi:type="diagram:FilterVariableHistory" xmi:id="_lq3dwyVIEei5qZZL07t9lA"/>
+    <activatedLayers xmi:type="description_1:Layer" href="platform:/plugin/com.nxp.s32ds.gte.isp.design/description/isp.odesign#//@ownedViewpoints[name='isp_design']/@ownedRepresentations[name='ispprogram_flow']/@defaultLayer"/>
+    <activatedLayers xmi:type="description_1:AdditionalLayer" href="platform:/plugin/com.nxp.s32ds.gte.isp.design/description/isp.odesign#//@ownedViewpoints[name='isp_design']/@ownedRepresentations[name='ispprogram_flow']/@additionalLayers[name='Validation']"/>
+    <target xmi:type="com.nxp.s32ds.isp:IspGraph" href="static_simple.isp#/"/>
+  </diagram:DSemanticDiagram>
+</xmi:XMI>

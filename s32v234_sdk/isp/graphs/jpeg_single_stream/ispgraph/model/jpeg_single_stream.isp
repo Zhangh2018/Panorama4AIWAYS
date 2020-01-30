@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<com.nxp.s32ds.isp:IspGraph xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:com.nxp.s32ds.isp="http://s32ds.nxp.com/isp/1.0.0" kernelsRootDirectory="isp\kernels\generic\src" nrImageLines="" name="jpeg_single_stream">
+  <engines xsi:type="com.nxp.s32ds.isp:IspOtherEngine" name="JpegDec" engineType="JpegDec" nrImage="800">
+    <portOut nrPixelsToTransfer="1280" buffer="//@buffers.3"/>
+    <portOut index="1" nrPixelsToTransfer="640" buffer="//@buffers.0"/>
+    <portOut index="2" nrPixelsToTransfer="640" buffer="//@buffers.1"/>
+    <portOut index="3" nrPixelsToTransfer="1280" buffer="//@buffers.2"/>
+  </engines>
+  <engines xsi:type="com.nxp.s32ds.isp:IspIpuEngine" name="Yuv420planareToYuv422" engineIndex="4" nrProcessingSteps="400" parameters="    { D_IPUS_SYN_HOST_INACFG_OFF, 0x00000700 },&#xD;&#xA;    { D_IPUS_SYN_HOST_INBCFG_OFF, 0x00000100 },&#xD;&#xA;    { D_IPUS_SYN_HOST_XCFG_OFF, (1280 &lt;&lt; 16) | 0x1 },&#xD;&#xA;    { D_IPUS_SYN_HOST_OUTCFG_OFF, 0x00000300 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_INA_OFF, 0x10150000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH1_CFG_INA_OFF, 0x10190000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH2_CFG_INA_OFF, 0x10190000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_INB_OFF, 0x10150000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_OUT_OFF, 0x10000000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH1_CFG_OUT_OFF, 0x10000000 }," kernel="yuv420planar2yuv422interleaved">
+    <portIn nrLinesStartProcessing="2" nrReadPixels="1280" lineIncrement="2" source="//@buffers.3/@channels.0"/>
+    <portIn index="1" nrReadPixels="640" source="//@buffers.0/@channels.0"/>
+    <portIn index="2" nrReadPixels="640" source="//@buffers.1/@channels.0"/>
+    <portIn portType="B" nrLinesStartProcessing="2" nrReadPixels="1280" nrFirstLine="1" lineIncrement="2" source="//@buffers.3/@channels.1"/>
+    <portOut nrPixelsToTransfer="2560" buffer="//@buffers.4"/>
+    <portOut index="1" nrPixelsToTransfer="2560" buffer="//@buffers.5"/>
+  </engines>
+  <buffers name="JpegDecBuffer1" lineIncrement="8" stride="640" xSize="640" ySize="128" PortOut="//@engines.0/@portOut.1">
+    <channels bufferToNode="//@engines.1/@portIn.1"/>
+  </buffers>
+  <buffers name="JpegDecBuffer2" lineIncrement="8" stride="640" xSize="640" ySize="128" PortOut="//@engines.0/@portOut.2">
+    <channels bufferToNode="//@engines.1/@portIn.2"/>
+  </buffers>
+  <buffers name="JpegDecBuffer3" lineIncrement="16" stride="1280" xSize="1280" ySize="4" PortOut="//@engines.0/@portOut.3"/>
+  <buffers name="JpegDecBuffer0" lineIncrement="16" stride="1280" xSize="1280" ySize="256" PortOut="//@engines.0/@portOut.0">
+    <channels bufferToNode="//@engines.1/@portIn.0"/>
+    <channels number="1" bufferToNode="//@engines.1/@portIn.3"/>
+  </buffers>
+  <buffers name="Yuv420planareToYuv422Buffer0" stride="2560" xSize="2560" ySize="32" PortOut="//@engines.1/@portOut.0">
+    <channels fdma="//@fdmas.0"/>
+  </buffers>
+  <buffers name="Yuv420planareToYuv422Buffer1" stride="2560" xSize="2560" ySize="32" PortOut="//@engines.1/@portOut.1">
+    <channels fdma="//@fdmas.1"/>
+  </buffers>
+  <buffers xsi:type="com.nxp.s32ds.isp:IspDdrBuffer" name="UYVY_0Buffer" stride="7680" xSize="3840" ySize="400" fdma="//@fdmas.0"/>
+  <buffers xsi:type="com.nxp.s32ds.isp:IspDdrBuffer" name="UYVY_1Buffer" stride="7680" xSize="3840" ySize="400" fdma="//@fdmas.1"/>
+  <fdmas name="UYVY_0" source="//@buffers.4/@channels.0" target="//@buffers.6"/>
+  <fdmas name="UYVY_1" source="//@buffers.5/@channels.0" target="//@buffers.7"/>
+  <headers path="${S32DS_VSDK_DIR}\isp\graphs\jpeg_single_stream\inc\iofiles.h" fileName="iofiles.h" userDefined="false"/>
+  <headers path="${S32DS_VSDK_DIR}\isp\inc\ipus_mem_map.h" fileName="ipus_mem_map.h" userDefined="false"/>
+</com.nxp.s32ds.isp:IspGraph>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<com.nxp.s32ds.isp:IspGraph xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:com.nxp.s32ds.isp="http://s32ds.nxp.com/isp/1.0.0" name="isp_generic" kernelsRootDirectory="${S32DS_VSDK_DIR}/isp/kernels/generic/src" nrImageLines="720">
+  <engines xsi:type="com.nxp.s32ds.isp:IspIpuEngine" name="ISP" engineIndex="1" nrProcessingSteps="724" parameters="    { D_IPUS_SYN_HOST_XCFG_OFF, (1280 &lt;&lt; 16) | 0x1 },&#xD;&#xA;    { D_IPUS_SYN_HOST_INACFG_OFF, 0x00000700 },&#xD;&#xA;    { D_IPUS_SYN_HOST_OUTCFG_OFF, 0x00000700 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_INA_OFF, 0x00058000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH1_CFG_INA_OFF, 0x00058000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH2_CFG_INA_OFF, 0x00058000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_OUT_OFF, 0x10000000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH1_CFG_OUT_OFF, 0x10000000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH2_CFG_OUT_OFF, 0x10000000 }," kernel="all_in_one_isp">
+    <portIn dataType="GENERIC_16" nrLinesStartProcessing="2" nrReadPixels="1288" nrPixelsSkipped="2" source="//@buffers.2/@channels.0"/>
+    <portIn dataType="GENERIC_16" index="1" nrLinesStartProcessing="2" nrReadPixels="1288" nrFirstLine="1" nrPixelsSkipped="2" source="//@buffers.2/@channels.1"/>
+    <portIn dataType="GENERIC_16" index="2" nrLinesStartProcessing="3" nrReadPixels="1288" nrFirstLine="2" nrPixelsSkipped="2" source="//@buffers.2/@channels.2"/>
+    <portOut nrPixelsToTransfer="1280" buffer="//@buffers.6"/>
+    <portOut index="1" nrPixelsToTransfer="1280" buffer="//@buffers.7"/>
+    <portOut index="2" nrPixelsToTransfer="1280" buffer="//@buffers.8"/>
+  </engines>
+  <engines xsi:type="com.nxp.s32ds.isp:IspIpuEngine" name="OutputConversion" nrProcessingSteps="720" parameters="    { D_IPUS_SYN_HOST_XCFG_OFF, (1280 &lt;&lt; 16) | 0x1 },&#xD;&#xA;    { D_IPUS_SYN_HOST_INACFG_OFF, 0x00000700 },&#xD;&#xA;    { D_IPUS_SYN_HOST_OUTCFG_OFF, 0x00000101 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_INA_OFF, 0x10050000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH1_CFG_INA_OFF, 0x10058080 },&#xD;&#xA;    { D_IPUS_SYN_S_CH2_CFG_INA_OFF, 0x10058080 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_OUT_OFF, 0x10000000 }," kernel="yuvplanar2yuv422interleaved">
+    <portIn nrReadPixels="1280" source="//@buffers.9/@channels.0"/>
+    <portIn index="1" nrLinesStartProcessing="3" nrReadPixels="640" nrFirstLine="2" source="//@buffers.4/@channels.0"/>
+    <portIn index="2" nrLinesStartProcessing="3" nrReadPixels="640" nrFirstLine="2" source="//@buffers.5/@channels.0"/>
+    <portOut nrPixelsToTransfer="2560" buffer="//@buffers.0"/>
+  </engines>
+  <engines xsi:type="com.nxp.s32ds.isp:IspIpuEngine" name="RGB2YUV" engineIndex="1" engineType="VECTOR" nrProcessingSteps="724" parameters="    { D_IPUV_SYN_HOST_XCFG_OFF, (1280&lt;&lt; 16) | 0x0 },&#xD;&#xA;    { D_IPUV_SYN_HOST_INACFG_OFF, 0x00000700 },&#xD;&#xA;    { D_IPUV_SYN_HOST_OUTCFG_OFF, 0x00000700 },&#xD;&#xA;    { D_IPUV_SYN_S_CH0_CFG_INA_OFF, 0x10850080 },&#xD;&#xA;    { D_IPUV_SYN_S_CH1_CFG_INA_OFF, 0x10850080 },&#xD;&#xA;    { D_IPUV_SYN_S_CH2_CFG_INA_OFF, 0x10850080 },&#xD;&#xA;    { D_IPUV_SYN_S_CH0_CFG_OUT_OFF, 0x10000000 },&#xD;&#xA;    { D_IPUV_SYN_S_CH1_CFG_OUT_OFF, 0x10000000 },&#xD;&#xA;    { D_IPUV_SYN_S_CH2_CFG_OUT_OFF, 0x10000000 }," kernel="rgb2yuv_planar">
+    <portIn nrReadPixels="1280" source="//@buffers.7/@channels.0"/>
+    <portIn index="1" nrReadPixels="1280" source="//@buffers.6/@channels.0"/>
+    <portIn index="2" nrReadPixels="1280" source="//@buffers.8/@channels.0"/>
+    <portOut nrPixelsToTransfer="1280" buffer="//@buffers.3"/>
+    <portOut index="1" nrPixelsToTransfer="1280" buffer="//@buffers.4"/>
+    <portOut index="2" nrPixelsToTransfer="1280" buffer="//@buffers.5"/>
+  </engines>
+  <engines xsi:type="com.nxp.s32ds.isp:IspIpuEngine" name="Generic3x3" engineIndex="2" nrProcessingSteps="720" parameters="    { D_IPUS_SYN_HOST_XCFG_OFF, (1280 &lt;&lt; 16) | 0x1},&#xD;&#xA;    { D_IPUS_SYN_HOST_INACFG_OFF, 0x00000700 },&#xD;&#xA;    { D_IPUS_SYN_HOST_OUTCFG_OFF, 0x00000100 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_INA_OFF, 0x11150080 },&#xD;&#xA;    { D_IPUS_SYN_S_CH1_CFG_INA_OFF, 0x11150080 },&#xD;&#xA;    { D_IPUS_SYN_S_CH2_CFG_INA_OFF, 0x11150080 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_OUT_OFF, 0x10000000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH1_CFG_OUT_OFF, 0x10000000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH2_CFG_OUT_OFF, 0x10000000 }," kernel="generic_ipus3x3">
+    <portIn nrLinesStartProcessing="4" nrReadPixels="1280" nrFirstLine="1" source="//@buffers.3/@channels.0"/>
+    <portIn index="1" nrLinesStartProcessing="4" nrReadPixels="1280" nrFirstLine="2" source="//@buffers.3/@channels.1"/>
+    <portIn index="2" nrLinesStartProcessing="4" nrReadPixels="1280" nrFirstLine="3" source="//@buffers.3/@channels.2"/>
+    <portOut nrPixelsToTransfer="1280" buffer="//@buffers.9"/>
+  </engines>
+  <engines xsi:type="com.nxp.s32ds.isp:IspMipiEngine" name="MIPI0" cameraType="CSI_SONY224" nrInputLineImages="729">
+    <portOut dataType="GENERIC_16" nrPixelsToTransfer="1288" buffer="//@buffers.2"/>
+  </engines>
+  <buffers name="OutputConversionBuffer0" stride="2560" xSize="2560" ySize="8" PortOut="//@engines.1/@portOut.0">
+    <channels fdma="//@fdmas.0"/>
+  </buffers>
+  <buffers xsi:type="com.nxp.s32ds.isp:IspDdrBuffer" name="ISP_OUTPUTBuffer" stride="2560" xSize="2560" ySize="720" fdma="//@fdmas.0"/>
+  <buffers name="MIPI0Buffer0" stride="2576" dataType="GENERIC_16" xSize="1288" ySize="40" PortOut="//@engines.4/@portOut.0">
+    <channels bufferToNode="//@engines.0/@portIn.0"/>
+    <channels number="1" bufferToNode="//@engines.0/@portIn.1"/>
+    <channels number="2" bufferToNode="//@engines.0/@portIn.2"/>
+  </buffers>
+  <buffers name="RGB2YUVBuffer0" stride="1280" xSize="1280" ySize="16" PortOut="//@engines.2/@portOut.0">
+    <channels bufferToNode="//@engines.3/@portIn.0"/>
+    <channels number="1" bufferToNode="//@engines.3/@portIn.1"/>
+    <channels number="2" bufferToNode="//@engines.3/@portIn.2"/>
+  </buffers>
+  <buffers name="RGB2YUVBuffer1" stride="1280" xSize="1280" ySize="16" PortOut="//@engines.2/@portOut.1">
+    <channels bufferToNode="//@engines.1/@portIn.1"/>
+  </buffers>
+  <buffers name="RGB2YUVBuffer2" stride="1280" xSize="1280" ySize="16" PortOut="//@engines.2/@portOut.2">
+    <channels bufferToNode="//@engines.1/@portIn.2"/>
+  </buffers>
+  <buffers name="ISPBuffer0" stride="1280" xSize="1280" ySize="4" PortOut="//@engines.0/@portOut.0">
+    <channels bufferToNode="//@engines.2/@portIn.1"/>
+  </buffers>
+  <buffers name="ISPBuffer1" stride="1280" xSize="1280" ySize="4" PortOut="//@engines.0/@portOut.1">
+    <channels bufferToNode="//@engines.2/@portIn.0"/>
+  </buffers>
+  <buffers name="ISPBuffer2" stride="1280" xSize="1280" ySize="4" PortOut="//@engines.0/@portOut.2">
+    <channels bufferToNode="//@engines.2/@portIn.2"/>
+  </buffers>
+  <buffers name="Generic3x3Buffer0" stride="1280" xSize="1280" ySize="16" PortOut="//@engines.3/@portOut.0">
+    <channels bufferToNode="//@engines.1/@portIn.0"/>
+  </buffers>
+  <fdmas name="ISP_OUTPUT" source="//@buffers.0/@channels.0" target="//@buffers.1" nrPixelsToTransfer="3840"/>
+  <headers path="${S32DS_VSDK_DIR}/isp/graphs/isp_generic/inc/iofiles.h" fileName="iofiles.h"/>
+</com.nxp.s32ds.isp:IspGraph>

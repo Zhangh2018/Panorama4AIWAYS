@@ -1,0 +1,41 @@
+/*****************************************************************************
+* 
+* NXP Confidential Proprietary
+*
+* Copyright 2017-2018 NXP 
+* All Rights Reserved
+*
+******************************************************************************
+*
+* THIS SOFTWARE IS PROVIDED BY NXP "AS IS" AND ANY EXPRESSED OR
+* IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+* OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+* IN NO EVENT SHALL NXP OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+* INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+* HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+* STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+* IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+* THE POSSIBILITY OF SUCH DAMAGE.
+*
+****************************************************************************/
+#ifndef PASSTHROUGHKERNEL_H
+#define PASSTHROUGHKERNEL_H
+
+#ifdef ACF_KERNEL_METADATA
+#include "common_stringify_macros.h"
+#define PASSTHROUGH16_KERNEL_K                    passthrough16_kernel
+#define PASSTHROUGH16_KERNEL_KN                   XSTR(PASSTHROUGH16_KERNEL_K)
+#define PASSTHROUGH_KERNEL_K                      passthrough_kernel
+#define PASSTHROUGH_KERNEL_KN                     XSTR(PASSTHROUGH_KERNEL_K)
+#define INPUT_0                         "INPUT_0"
+#define OUTPUT_0                        "OUTPUT_0"
+
+extKernelInfoDecl(PASSTHROUGH_KERNEL_K);
+
+extKernelInfoDecl(PASSTHROUGH16_KERNEL_K);
+
+#endif //#ifdef ACF_KERNEL_METADATA
+
+#endif /* PASSTHROUGHKERNEL_H */

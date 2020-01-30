@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<com.nxp.s32ds.isp:IspGraph xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:com.nxp.s32ds.isp="http://s32ds.nxp.com/isp/1.0.0" kernelsRootDirectory="isp\kernels\generic\src" nrImageLines="729" name="mipi_stereo_ftf">
+  <engines xsi:type="com.nxp.s32ds.isp:IspIpuEngine" name="Debayer_RGB_0" nrProcessingSteps="720" parameters="    { D_IPUS_SYN_HOST_INACFG_OFF, 0x00000300 },&#xD;&#xA;    { D_IPUS_SYN_HOST_XCFG_OFF, (2560 &lt;&lt; 16) | 0x1 },&#xD;&#xA;    { D_IPUS_SYN_HOST_OUTCFG_OFF, 0x00000100 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_INA_OFF, 0x00150000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH1_CFG_INA_OFF, 0x00150000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_OUT_OFF, 0x10000000 }," kernel="debayer_rgb_simple_interleaved">
+    <portIn dataType="GENERIC_16" nrLinesStartProcessing="2" nrReadPixels="2584" source="//@buffers.2/@channels.0"/>
+    <portIn dataType="GENERIC_16" index="1" nrLinesStartProcessing="2" nrReadPixels="2584" nrFirstLine="1" source="//@buffers.2/@channels.1"/>
+    <portOut nrPixelsToTransfer="7680" buffer="//@buffers.0"/>
+  </engines>
+  <engines xsi:type="com.nxp.s32ds.isp:IspMipiEngine" name="MIPI0" cameraType="CSI_SONY224" nrInputLineImages="729">
+    <portOut dataType="GENERIC_16" nrPixelsToTransfer="1292" buffer="//@buffers.2"/>
+  </engines>
+  <engines xsi:type="com.nxp.s32ds.isp:IspMipiEngine" name="MIPI1" engineType="MIPICSI1" cameraType="CSI_SONY224" nrInputLineImages="729">
+    <portOut dataType="GENERIC_16" nrPixelsToTransfer="1292" offset="2584" buffer="//@buffers.2"/>
+  </engines>
+  <engines xsi:type="com.nxp.s32ds.isp:IspIpuEngine" name="Debayer_G" engineIndex="2" nrProcessingSteps="360" parameters="    { D_IPUS_SYN_HOST_XCFG_OFF, (2584 &lt;&lt; 16) | 0x1},&#xD;&#xA;    { D_IPUS_SYN_HOST_INACFG_OFF, 0x00000700 },&#xD;&#xA;    { D_IPUS_SYN_HOST_OUTCFG_OFF, 0x00000100 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_INA_OFF, 0x00058000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH1_CFG_INA_OFF, 0x00058000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_OUT_OFF, 0x10000000 }," kernel="debayer_y_subsample">
+    <portIn dataType="GENERIC_16" nrLinesStartProcessing="2" nrReadPixels="2584" lineIncrement="2" source="//@buffers.2/@channels.2"/>
+    <portIn dataType="GENERIC_16" index="1" nrLinesStartProcessing="2" nrReadPixels="2584" nrFirstLine="1" lineIncrement="2" source="//@buffers.2/@channels.3"/>
+    <portOut nrPixelsToTransfer="1292" buffer="//@buffers.4"/>
+  </engines>
+  <engines xsi:type="com.nxp.s32ds.isp:IspIpuEngine" name="Debayer_rgb_subsampled" engineIndex="1" nrProcessingSteps="360" parameters="    { D_IPUS_SYN_HOST_INACFG_OFF, 0x00000300 },&#xD;&#xA;    { D_IPUS_SYN_HOST_XCFG_OFF, (2584 &lt;&lt; 16) | 0x1 },&#xD;&#xA;    { D_IPUS_SYN_HOST_OUTCFG_OFF, 0x00000100 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_INA_OFF, 0x00150000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH1_CFG_INA_OFF, 0x00150000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_OUT_OFF, 0x10000000 }," kernel="debayer_rgb_subsample_interleaved">
+    <portIn dataType="GENERIC_16" nrLinesStartProcessing="2" nrReadPixels="2584" lineIncrement="2" source="//@buffers.2/@channels.4"/>
+    <portIn dataType="GENERIC_16" index="1" nrLinesStartProcessing="2" nrReadPixels="2584" nrFirstLine="1" lineIncrement="2" source="//@buffers.2/@channels.5"/>
+    <portOut nrPixelsToTransfer="3876" buffer="//@buffers.8"/>
+  </engines>
+  <buffers name="Debayer_RGB_0Buffer0" stride="7752" xSize="7752" ySize="16" PortOut="//@engines.0/@portOut.0">
+    <channels fdma="//@fdmas.0"/>
+    <channels number="1" fdma="//@fdmas.1"/>
+  </buffers>
+  <buffers xsi:type="com.nxp.s32ds.isp:IspDdrBuffer" name="FastDMA_Right_OutBuffer" stride="3840" xSize="3840" ySize="720" fdma="//@fdmas.0"/>
+  <buffers name="MIPI1Buffer0" stride="5168" dataType="GENERIC_16" xSize="2584" ySize="16" PortOut="//@engines.1/@portOut.0 //@engines.2/@portOut.0">
+    <channels bufferToNode="//@engines.0/@portIn.0"/>
+    <channels number="1" bufferToNode="//@engines.0/@portIn.1"/>
+    <channels number="2" bufferToNode="//@engines.3/@portIn.0"/>
+    <channels number="3" bufferToNode="//@engines.3/@portIn.1"/>
+    <channels number="4" bufferToNode="//@engines.4/@portIn.0"/>
+    <channels number="5" bufferToNode="//@engines.4/@portIn.1"/>
+  </buffers>
+  <buffers xsi:type="com.nxp.s32ds.isp:IspDdrBuffer" name="FastDMA_Left_OutBuffer" stride="3840" xSize="3840" ySize="720" fdma="//@fdmas.1"/>
+  <buffers name="Debayer_GBuffer0" stride="1296" xSize="1292" ySize="16" PortOut="//@engines.3/@portOut.0">
+    <channels fdma="//@fdmas.3"/>
+    <channels number="1" fdma="//@fdmas.2"/>
+  </buffers>
+  <buffers xsi:type="com.nxp.s32ds.isp:IspDdrBuffer" name="FastDMA_LeftGs_OutBuffer" stride="640" xSize="640" ySize="360" fdma="//@fdmas.2"/>
+  <buffers xsi:type="com.nxp.s32ds.isp:IspDdrBuffer" name="FastDMA_RightGs_OutBuffer" stride="640" xSize="640" ySize="360" fdma="//@fdmas.3"/>
+  <buffers xsi:type="com.nxp.s32ds.isp:IspDdrBuffer" name="FastDMA_RgbSub_OutBuffer" stride="3840" xSize="3840" ySize="360" fdma="//@fdmas.4"/>
+  <buffers name="Debayer_rgb_subsampledBuffer0" stride="3880" xSize="3880" ySize="8" PortOut="//@engines.4/@portOut.0">
+    <channels fdma="//@fdmas.4"/>
+  </buffers>
+  <fdmas name="FastDMA_Right_Out" source="//@buffers.0/@channels.0" target="//@buffers.1" nrPixelsToTransfer="1920"/>
+  <fdmas name="FastDMA_Left_Out" source="//@buffers.0/@channels.1" target="//@buffers.3"/>
+  <fdmas name="FastDMA_LeftGs_Out" source="//@buffers.4/@channels.1" target="//@buffers.5"/>
+  <fdmas name="FastDMA_RightGs_Out" source="//@buffers.4/@channels.0" target="//@buffers.6"/>
+  <fdmas name="FastDMA_RgbSub_Out" source="//@buffers.8/@channels.0" target="//@buffers.7"/>
+  <headers path="${S32DS_VSDK_DIR}\isp\inc\ipus_mem_map.h" fileName="ipus_mem_map.h" userDefined="false"/>
+  <headers path="${S32DS_VSDK_DIR}\isp\inc\ipuv_mem_map.h" fileName="ipuv_mem_map.h" userDefined="false"/>
+  <headers path="${S32DS_VSDK_DIR}\isp\inc\mipi_mem_map.h" fileName="mipi_mem_map.h" userDefined="false"/>
+</com.nxp.s32ds.isp:IspGraph>

@@ -1,0 +1,14 @@
+Document UG-10328-02-06 revision history
+Version Date 		Comment 							Author
+01  	Aug. 1, 2014  	Initial Revision      						Doxygen
+02  	Oct. 1, 2014  	Update to add Image Pyramid, Interpolate, Accumulate, Accumulate Squared, and Gaussian.	Doxygen
+03  	Oct. 31, 2014  	Update Harris Corner Detection documentation	A. Saechao
+06  	Aug. 20, 2015  	updated the document to match release 1.8.4, APEX-CV high level description	S. Ashby
+07    Nov. 1, 2015      APEX-CV pro update: Canny, HOG, Affine, GFTT, Remap, Resize
+08    May. 13, 2016  APEX-CV pro update: Fast, Harris Corners, LKTrackerOpticalFlow, LKPyramidOptical, PyramidMultiCreation
+09    Aug. 30, 2016  APEX-CV pro update: TMO, LBP, Harris/GFTT new interface
+10    Dec. 20, 2016  APEX-CV pro update: Laplacian Pyramid, ORB and AggCF
+11    Jul. 11, 2017  APEX-CV pro update: update documentation to RTM 1.0 content
+12    March 06, 2018 APEX-CV pro update: Hog, Orb, GFTT, Image Pyramid, Canny, Resize, Affine
+13    Aug. 11, 2018  APEX-CV pro update: Resize, PyramidMultiCreation, Orb, Hog
+14    Dec. 06, 2018  Umat replace by SUmat, APEX-CV pro update: Remap, HOG

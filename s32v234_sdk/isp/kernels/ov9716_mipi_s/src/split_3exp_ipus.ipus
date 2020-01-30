@@ -1,0 +1,71 @@
+# Function:
+# de-interleave 3 exposure into planar buffers.
+# support multi lines per trigger
+# requires 3 output so can only be ran on IPUS 1, 2, 4 and 5
+# input to line 0
+# out0 : copied input value first pixels
+# out1 : copied input value second pixels
+# out2 : copied input value third pixels
+# Parameters:
+# gpr0: length per line
+# gpr1: gap between line end to start of next lines (for multi lesnes per trigger)
+# gpr2: switch between camera and offline image
+# Constants:
+# none
+# Variables:
+# none
+
+
+.global split_3exp_ipus_start
+split_3exp_ipus_start:
+  mov confalu,(0 /*unsigned*/ | (1<<1) /*saturate*/ | (14<<4) /*shr*/)
+  mov loopcnt,gpr0                      // set line length
+  done split_3exp_ipus_in1, i           // load in first 3 pixels
+split_3exp_ipus_in1:
+  done split_3exp_ipus_in2, i
+split_3exp_ipus_in2:
+  done split_3exp_ipus_loop, i
+	
+
+split_3exp_ipus_loop:
+  sub zero,zero,gpr2                    // switch between camera and offline image
+  bne offline_image
+
+  mov out2, ina0                        // 3rd pixel to out2
+  mov out1, ina1                        // 2nd pixels to out1
+  dout ina2,split_3exp_ipus_next, ixo   // 1st pxiels to out0
+
+// Instructions for processing offline image
+offline_image:
+  mov out2, ina3                        // 3rd pixel to out2
+  mov out1, ina4                        // 2nd pixels to out1
+  dout ina5,split_3exp_ipus_next, ixo   // 1st pxiels to out0
+
+split_3exp_ipus_next:
+  done split_3exp_ipus_next2, i
+
+split_3exp_ipus_next2:
+  ldon split_3exp_ipus_loop, i          // check if active line area has ended
+
+
+split_3exp_ipus_eol:                    // skip gpr1 pixels sets at end of line
+  sub zero,zero,gpr1                    // check if no skip
+  beq split_3exp_ipus_newline
+
+  mov loopcnt,gpr1                      // skip pixels
+split_3exp_ipus_eol0:
+  done split_3exp_ipus_eol1, i
+split_3exp_ipus_eol1:
+  done split_3exp_ipus_eol2, i
+split_3exp_ipus_eol2:
+  ldon split_3exp_ipus_eol0, i
+
+split_3exp_ipus_newline:                // prepare new line
+  mov loopcnt,gpr0
+  bal split_3exp_ipus_loop
+
+// Instructions for processing offline image
+
+//halt
+.global split_3exp_ipus_end
+split_3exp_ipus_end:

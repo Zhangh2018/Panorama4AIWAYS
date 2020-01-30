@@ -1,0 +1,11 @@
+# aarch64-sa-gnu-rdimon.specs
+#
+# Spec file for AArch64 baremetal newlib with AngelAPI semi-hosting.
+
+%rename lib libc
+
+*libgloss:
+-lrdimon
+
+*lib:
+--start-group %(libc) %(libgloss) --end-group

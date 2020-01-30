@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<com.nxp.s32ds.isp:IspGraph xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:com.nxp.s32ds.isp="http://s32ds.nxp.com/isp/1.0.0" name="max9286_96705_4_uyvy" kernelsRootDirectory="${workspace_loc:max9286_96705_4_uyvy}/../../../kernels/max9286_96705_4">
+  <engines xsi:type="com.nxp.s32ds.isp:IspMipiEngine" name="MIPI_0" cameraType="CSI_MAX9286_96705" attachedCameras="4" nrInputLineImages="720">
+    <portOut xsi:type="com.nxp.s32ds.isp:IspMipiPortOut" nrPixelsToTransfer="10240" buffer="//@buffers.0"/>
+  </engines>
+  <engines xsi:type="com.nxp.s32ds.isp:IspIpuEngine" name="copy_1to1_ipus_1" engineIndex="1" nrProcessingSteps="720" parameters="{ D_IPUS_SYN_HOST_XCFG_OFF, (2560&lt;&lt; 16) | 0x1 },&#xD;&#xA;{ D_IPUS_SYN_HOST_INACFG_OFF, 0x00000700 },&#xD;&#xA;{ D_IPUS_SYN_HOST_OUTCFG_OFF, 0x00000700 },&#xD;&#xA;{ D_IPUS_SYN_S_CH0_CFG_OUT_OFF, 0x10000000 },&#xD;&#xA;{ D_IPUS_SYN_S_CH1_CFG_OUT_OFF, 0x10000000 },&#xD;&#xA;{ D_IPUS_SYN_S_CH2_CFG_OUT_OFF, 0x10000000 },&#xD;&#xA;{ D_IPUS_SYN_S_CH0_CFG_INA_OFF, 0x10150000 },&#xD;&#xA;{ D_IPUS_SYN_S_CH1_CFG_INA_OFF, 0x10150000 },&#xD;&#xA;{ D_IPUS_SYN_S_CH2_CFG_INA_OFF, 0x10150000 }," kernel="copy_1to1_ipus">
+    <portIn nrReadPixels="2560" source="//@buffers.0/@channels.0"/>
+    <portIn index="1" nrReadPixels="2560" nrPixelsSkipped="2560" source="//@buffers.0/@channels.1"/>
+    <portIn index="2" nrReadPixels="2560" nrPixelsSkipped="5120" source="//@buffers.0/@channels.2"/>
+    <portOut nrPixelsToTransfer="2560" buffer="//@buffers.1"/>
+    <portOut index="1" nrPixelsToTransfer="2560" buffer="//@buffers.2"/>
+    <portOut index="2" nrPixelsToTransfer="2560" buffer="//@buffers.3"/>
+  </engines>
+  <engines xsi:type="com.nxp.s32ds.isp:IspIpuEngine" name="copy_1to1_ipus_2" nrProcessingSteps="720" parameters="{ D_IPUS_SYN_HOST_XCFG_OFF, (2560&lt;&lt; 16) | 0x1 },&#xD;&#xA;{ D_IPUS_SYN_HOST_INACFG_OFF, 0x00000100 },&#xD;&#xA;{ D_IPUS_SYN_HOST_OUTCFG_OFF, 0x00000100 },&#xD;&#xA;{ D_IPUS_SYN_S_CH0_CFG_OUT_OFF, 0x10000000 },&#xD;&#xA;{ D_IPUS_SYN_S_CH0_CFG_INA_OFF, 0x10150000 }," kernel="copy_1to1_ipus">
+    <portIn nrReadPixels="2560" nrPixelsSkipped="7680" source="//@buffers.0/@channels.3"/>
+    <portOut nrPixelsToTransfer="2560" buffer="//@buffers.4"/>
+  </engines>
+  <buffers name="SRAMBuffer_MIPI" stride="10240" xSize="10240" ySize="60" PortOut="//@engines.0/@portOut.0">
+    <channels bufferToNode="//@engines.1/@portIn.0"/>
+    <channels number="1" bufferToNode="//@engines.1/@portIn.1"/>
+    <channels number="2" bufferToNode="//@engines.1/@portIn.2"/>
+    <channels number="3" bufferToNode="//@engines.2/@portIn.0"/>
+  </buffers>
+  <buffers name="SRAMBuffer_SV1" stride="2560" xSize="2560" ySize="30" PortOut="//@engines.1/@portOut.0">
+    <channels fdma="//@fdmas.0"/>
+  </buffers>
+  <buffers name="SRAMBuffer_SV2" stride="2560" xSize="2560" ySize="30" PortOut="//@engines.1/@portOut.1">
+    <channels fdma="//@fdmas.1"/>
+  </buffers>
+  <buffers name="SRAMBuffer_SV3" stride="2560" xSize="2560" ySize="30" PortOut="//@engines.1/@portOut.2">
+    <channels fdma="//@fdmas.2"/>
+  </buffers>
+  <buffers name="SRAMBuffer_SV4" stride="2560" xSize="2560" ySize="30" PortOut="//@engines.2/@portOut.0">
+    <channels fdma="//@fdmas.3"/>
+  </buffers>
+  <buffers xsi:type="com.nxp.s32ds.isp:IspDdrBuffer" name="DDRBuffer_SV1" stride="2560" xSize="2560" ySize="720" fdma="//@fdmas.0"/>
+  <buffers xsi:type="com.nxp.s32ds.isp:IspDdrBuffer" name="DDRBuffer_SV2" stride="2560" xSize="2560" ySize="720" fdma="//@fdmas.1"/>
+  <buffers xsi:type="com.nxp.s32ds.isp:IspDdrBuffer" name="DDRBuffer_SV3" stride="2560" xSize="2560" ySize="720" fdma="//@fdmas.2"/>
+  <buffers xsi:type="com.nxp.s32ds.isp:IspDdrBuffer" name="DDRBuffer_SV4" stride="2560" xSize="2560" ySize="720" fdma="//@fdmas.3"/>
+  <fdmas name="FastDMA_Out_SV1" source="//@buffers.1/@channels.0" target="//@buffers.5" nrPixelsToTransfer="2560"/>
+  <fdmas name="FastDMA_Out_SV2" source="//@buffers.2/@channels.0" target="//@buffers.6" nrPixelsToTransfer="2560"/>
+  <fdmas name="FastDMA_Out_SV3" source="//@buffers.3/@channels.0" target="//@buffers.7" nrPixelsToTransfer="2560"/>
+  <fdmas name="FastDMA_Out_SV4" source="//@buffers.4/@channels.0" target="//@buffers.8" nrPixelsToTransfer="2560"/>
+</com.nxp.s32ds.isp:IspGraph>

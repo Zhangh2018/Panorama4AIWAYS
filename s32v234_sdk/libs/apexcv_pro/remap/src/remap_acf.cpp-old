@@ -1,0 +1,149 @@
+/******************************************************************************
+ *  (C) Copyright CogniVue Corporation. 2013 All right reserved.
+ *
+ *  Confidential Information
+ *
+ *  All parts of the CogniVue Program Source are protected by copyright law
+ *  and all rights are reserved.
+ *  This documentation may not, in whole or in part, be copied, photocopied,
+ *  reproduced, translated, or reduced to any electronic medium or machine
+ *  readable form without prior consent, in writing, from CogniVue.
+ ******************************************************************************/
+ 
+#include "cimg_refdewarp.h"
+#include "remap_util.h"
+ 
+// this is one of the autobuild outputs
+// Kernels used here
+#include "REMAP_2MEGAPIXEL_GRAY.hpp"
+#include "REMAP.hpp"
+#include "REMAP_GRAY.hpp"
+#include "REMAP_MEGAPIXEL_GRAY.hpp"
+
+int remap_bilin_rgb_execute_acf(
+      icp::DataDescriptor& lSrc, 
+      icp::DataDescriptor& lBlockOffset,
+      icp::DataDescriptor& lLocalOffset, 
+      icp::DataDescriptor& lDelta,
+      icp::DataDescriptor& lDest
+)
+{
+   int lRetVal = 0;
+
+   REMAP lProcess;
+   lRetVal |= lProcess.Initialize();
+
+   lRetVal |= lProcess.ConnectIndirectInput("SRC_IMG", lSrc, lBlockOffset);
+   lRetVal |= lProcess.ConnectIO("DST_IMG", lDest);
+   lRetVal |= lProcess.ConnectIO("LOCAL_OFFSET", lLocalOffset);
+   lRetVal |= lProcess.ConnectIO("DELTA", lDelta);
+
+   lRetVal |= lProcess.Start();
+   lRetVal |= lProcess.Wait();
+
+   return lRetVal;
+}
+
+int remap_test(
+      icp::DataDescriptor& lSrc, 
+      icp::DataDescriptor& lBlockOffset,
+      icp::DataDescriptor& lLocalOffset, 
+      icp::DataDescriptor& lDelta,
+      icp::DataDescriptor& lDest
+)
+{
+   int lRetVal = 0;
+
+   REMAP_GRAY lProcess;
+   lRetVal |= lProcess.Initialize();
+
+   lRetVal |= lProcess.ConnectIndirectInput("SRC_IMG", lSrc, lBlockOffset);
+   lRetVal |= lProcess.ConnectIO("DST_IMG", lDest);
+   lRetVal |= lProcess.ConnectIO("LOCAL_OFFSET", lLocalOffset);
+   lRetVal |= lProcess.ConnectIO("DELTA", lDelta);
+
+   lRetVal |= lProcess.Start();
+   lRetVal |= lProcess.Wait();
+
+   return lRetVal;
+}
+
+int remap_megapixel_test(
+      icp::DataDescriptor& lSrc, 
+      icp::DataDescriptor& lBlockOffset,
+      icp::DataDescriptor& lLocalOffset, 
+      icp::DataDescriptor& lDelta,
+      icp::DataDescriptor& lDest
+)
+{
+   int lRetVal = 0;
+
+   REMAP_MEGAPIXEL_GRAY lProcess;
+   lRetVal |= lProcess.Initialize();
+
+   lRetVal |= lProcess.ConnectIndirectInput("SRC_IMG", lSrc, lBlockOffset);
+   lRetVal |= lProcess.ConnectIO("DST_IMG", lDest);
+   lRetVal |= lProcess.ConnectIO("LOCAL_OFFSET", lLocalOffset);
+   lRetVal |= lProcess.ConnectIO("DELTA", lDelta);
+
+   lRetVal |= lProcess.Start();
+   lRetVal |= lProcess.Wait();
+
+   return lRetVal;
+}
+
+int remap_2megapixel_test(
+      icp::DataDescriptor& lSrc, 
+      icp::DataDescriptor& lBlockOffset,
+      icp::DataDescriptor& lLocalOffset, 
+      icp::DataDescriptor& lDelta,
+      icp::DataDescriptor& lDest
+)
+{
+   int lRetVal = 0;
+
+   REMAP_2MEGAPIXEL_GRAY lProcess;
+   lRetVal |= lProcess.Initialize();
+
+   lRetVal |= lProcess.ConnectIndirectInput("SRC_IMG", lSrc, lBlockOffset);
+   lRetVal |= lProcess.ConnectIO("DST_IMG", lDest);
+   lRetVal |= lProcess.ConnectIO("LOCAL_OFFSET", lLocalOffset);
+   lRetVal |= lProcess.ConnectIO("DELTA", lDelta);
+
+   lRetVal |= lProcess.Start();
+   lRetVal |= lProcess.Wait();
+
+   return lRetVal;
+}
+
+
+int remap_bilin_grayscale_execute_acf(
+      icp::DataDescriptor& lSrc, 
+      icp::DataDescriptor& lBlockOffset,
+      icp::DataDescriptor& lLocalOffset, 
+      icp::DataDescriptor& lDelta,
+      icp::DataDescriptor& lDest
+)
+{
+   int lRetVal = 0;
+
+   // Pending ACF updates, call the appropriate (small test, megapixel, 2 megapixel) graph,
+   // as appropriate
+   int imgWidth = lDest.GetWidth();
+   switch (imgWidth) {
+   case 640:
+      lRetVal = remap_test(lSrc, lBlockOffset, lLocalOffset, lDelta, lDest);
+   break;
+   case 1280:
+      // megapixel / 32 CU case
+      lRetVal = remap_megapixel_test(lSrc, lBlockOffset, lLocalOffset, lDelta, lDest);
+   break;
+   case 1920:
+      // 2 megapixel / 64 CU case
+      lRetVal = remap_2megapixel_test(lSrc, lBlockOffset, lLocalOffset, lDelta, lDest);
+   break;
+   }
+   
+   return lRetVal;
+}
+

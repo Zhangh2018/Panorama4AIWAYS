@@ -1,0 +1,126 @@
+##############################################################################
+#
+# Freescale Confidential Proprietary
+#
+# Copyright (c) 2015 Freescale Semiconductor;
+# Copyright 2017 NXP;
+# All Rights Reserved
+#
+##############################################################################
+#
+# THIS SOFTWARE IS PROVIDED BY FREESCALE "AS IS" AND ANY EXPRESSED OR
+# IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+# OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+# IN NO EVENT SHALL FREESCALE OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+# INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+# (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+# HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+# STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+# IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
+# THE POSSIBILITY OF SUCH DAMAGE.
+#
+##############################################################################
+#
+#  CONTENT
+#    ov10640_12bcomb_surround ISP graph. Includes build of relevant kernels
+#    Sequencer Firmware for both dynamic and static mode (for M0+)
+#
+#  AUTHOR
+#    Armin Strobl
+#    Mihail Marian Nistor
+#
+#  DATE
+#    2018-01-09
+#
+#  LANGUAGE
+#    make
+#
+##############################################################################
+
+##############################################################################
+# check required parameters
+##############################################################################
+
+ifeq ($(origin SDK_ROOT),undefined)
+  $(error error: SDK_ROOT undefined)
+endif
+
+include $(SDK_ROOT)/isp/firmware/seq_fw.mk
+
+ifeq ($(origin TOOLCH),undefined)
+  $(error error: TOOLCH undefined)
+endif
+
+GRAPH_NAME = ov10640_12bcomb_surround
+
+##############################################################################
+# Sequencer Firmware
+##############################################################################
+SEQ_APP =sequencer
+
+VPATH +=$(SDK_ROOT)/isp/graphs/$(GRAPH_NAME)/src
+
+SEQ_APP_SRCS = \
+	$(SEQ_MODE)_$(GRAPH_NAME).c
+
+SEQ_DEFS +=
+SEQ_INCS +=
+SEQ_CCOPTS +=
+
+SEQ_APP_LIBS = $(SDK_ROOT)/isp/firmware/$(ODIR)/libsequencer.a
+
+ifeq ($(TOOLCH),ghs)	### GHS ###########################
+
+SEQ_LDSCRIPT =$(SDK_ROOT)/isp/firmware/$(TOOLCH)/cm0_ram.ld
+
+else	### GCC ###########################################
+
+SEQ_LDOPTS =$(DBG_CCOPTS) -Xlinker -Map=$(SEQ_APP).map -Xlinker -L.
+
+SEQ_LDSCRIPT =-Xlinker -T -Xlinker $(SDK_ROOT)/isp/firmware/$(TOOLCH)/cm0_ram.ld
+
+endif
+
+##############################################################################
+# ISP Graph
+##############################################################################
+ARM_LIB = lib$(SEQ_MODE)_$(GRAPH_NAME).a
+
+ARM_LIB_SRCS =                                                                  \
+	$(GRAPH_NAME).c                                                             \
+	sequencer_srec.c
+
+ARM_INCS = \
+	-I$(SDK_ROOT)/include                                                     \
+	-I$(SDK_ROOT)/isp/graphs/$(GRAPH_NAME)/inc                                  \
+	-I$(SDK_ROOT)/isp/inc                                                       \
+	-I$(SDK_ROOT)/platform/s32_v234
+
+##############################################################################
+# IPUx kernels 
+##############################################################################
+IPUS_APP = ipus.elf
+IPUS_APP_SRCS = \
+  $(SDK_ROOT)/isp/kernels/ov10640_isp_multi/src/lut4k.ipus                      \
+  $(SDK_ROOT)/isp/kernels/ov10640_isp_multi/src/tee.ipus                        \
+  $(SDK_ROOT)/isp/kernels/ov10640_isp_multi/src/endian.ipus                     \
+  $(SDK_ROOT)/isp/kernels/ov10640_isp_multi/src/exposure.ipus                   \
+  $(SDK_ROOT)/isp/kernels/ov10640_isp_multi/src/rgb2y_lut.ipus                  \
+  $(SDK_ROOT)/isp/kernels/ov10640_isp_multi/src/debayer.ipus                    \
+  $(SDK_ROOT)/isp/kernels/ov10640_isp_multi/src/debayer_even.ipus               \
+  $(SDK_ROOT)/isp/kernels/ov10640_isp_multi/src/debayer_odd.ipus                \
+  $(SDK_ROOT)/isp/kernels/ov10640_isp_multi/src/copy_replicate3x.ipus           \
+  $(SDK_ROOT)/isp/kernels/ov10640_isp_multi/src/yuv444touyvy.ipus               \
+  $(SDK_ROOT)/isp/kernels/ov10640_isp_multi/src/probe2bgr_2x.ipus               \
+  $(SDK_ROOT)/isp/kernels/ov10640_isp_multi/src/planar444_to_interleaved.ipus   \
+
+IPUV_APP = ipuv.elf
+IPUV_APP_SRCS = \
+  $(SDK_ROOT)/isp/kernels/ov10640_isp_multi/src/tonemap_12b.ipuv                \
+  $(SDK_ROOT)/isp/kernels/ov10640_isp_multi/src/rgb2y.ipuv                      \
+  $(SDK_ROOT)/isp/kernels/ov10640_isp_multi/src/rgb2uyvy.ipuv                   \
+  $(SDK_ROOT)/isp/kernels/ov10640_isp_multi/src/rgb_compress.ipuv               \
+  $(SDK_ROOT)/isp/kernels/ov10640_isp_multi/src/rgb_compress_rgba.ipuv          \
+
+KMEM = kmem

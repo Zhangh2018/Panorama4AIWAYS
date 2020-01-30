@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<com.nxp.s32ds.isp:IspGraph xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:com.nxp.s32ds.isp="http://s32ds.nxp.com/isp/1.0.0" name="sony_dualexp" kernelsRootDirectory="${S32DS_VSDK_DIR}/isp/kernels/sony_isp/src" nrImageLines="1550" variablesSuffix="sony_dualexp">
+  <engines xsi:type="com.nxp.s32ds.isp:IspIpuEngine" name="ConvertOut" engineIndex="3" nrProcessingSteps="720" parameters="    { D_IPUS_SYN_HOST_XCFG_OFF, (2560 &lt;&lt; 16) | 0x1 },&#xD;&#xA;    { D_IPUS_SYN_HOST_INACFG_OFF, 0x00000700 },&#xD;&#xA;    { D_IPUS_SYN_HOST_OUTCFG_OFF, 0x00000100 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_INA_OFF, 0x00054000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH1_CFG_INA_OFF, 0x00058000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH2_CFG_INA_OFF, 0x00058000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_OUT_OFF, 0x10000000 }," kernel="lut4k_yuv444touyvy">
+    <portIn dataType="GENERIC_16" nrReadPixels="1280" source="//@buffers.13/@channels.0"/>
+    <portIn dataType="GENERIC_16" index="1" nrLinesStartProcessing="3" nrReadPixels="1280" nrFirstLine="2" nrPixelsSkipped="2" source="//@buffers.9/@channels.0"/>
+    <portIn dataType="GENERIC_16" index="2" nrLinesStartProcessing="3" nrReadPixels="1280" nrFirstLine="2" nrPixelsSkipped="2" source="//@buffers.10/@channels.0"/>
+    <portOut nrPixelsToTransfer="2560" buffer="//@buffers.1"/>
+  </engines>
+  <engines xsi:type="com.nxp.s32ds.isp:IspIpuEngine" name="ChGain_Exposure" nrProcessingSteps="728" parameters="    { D_IPUS_SYN_HOST_XCFG_OFF, (1288 &lt;&lt; 16) | 0x1 },&#xD;&#xA;    { D_IPUS_SYN_HOST_INACFG_OFF, 0x00000300 },&#xD;&#xA;    { D_IPUS_SYN_HOST_OUTCFG_OFF, 0x00000100 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_INA_OFF, 0x00058000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH1_CFG_INA_OFF, 0x00058000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_OUT_OFF, 0x00000000 }," kernel="exposure_tonehdr">
+    <portIn dataType="GENERIC_16" nrLinesStartProcessing="6" nrReadPixels="1288" nrFirstLine="5" lineIncrement="2" source="//@buffers.11/@channels.0"/>
+    <portIn dataType="GENERIC_16" index="1" nrLinesStartProcessing="51" nrReadPixels="1288" nrFirstLine="50" lineIncrement="2" source="//@buffers.11/@channels.1"/>
+    <portOut dataType="GENERIC_16" nrPixelsToTransfer="1288" buffer="//@buffers.12"/>
+  </engines>
+  <engines xsi:type="com.nxp.s32ds.isp:IspIpuEngine" name="Debayer_G" engineIndex="1" nrProcessingSteps="726" parameters="    { D_IPUS_SYN_HOST_XCFG_OFF, (1286 &lt;&lt; 16) | 0x1},&#xD;&#xA;    { D_IPUS_SYN_HOST_INACFG_OFF, 0x00000700 },&#xD;&#xA;    { D_IPUS_SYN_HOST_OUTCFG_OFF, 0x00000300 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_INA_OFF, 0x00058000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH1_CFG_INA_OFF, 0x00058000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH2_CFG_INA_OFF, 0x00058000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_OUT_OFF, 0x00000000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH1_CFG_OUT_OFF, 0x00010000 }," kernel="debayer_g">
+    <portIn dataType="GENERIC_16" nrReadPixels="1288" source="//@buffers.2/@channels.0"/>
+    <portIn dataType="GENERIC_16" index="1" nrLinesStartProcessing="2" nrReadPixels="1288" nrFirstLine="1" source="//@buffers.2/@channels.1"/>
+    <portIn dataType="GENERIC_16" index="2" nrLinesStartProcessing="3" nrReadPixels="1288" nrFirstLine="2" source="//@buffers.2/@channels.2"/>
+    <portOut dataType="GENERIC_16" nrPixelsToTransfer="1286" buffer="//@buffers.3"/>
+    <portOut dataType="GENERIC_16" index="1" nrPixelsToTransfer="643" buffer="//@buffers.4"/>
+  </engines>
+  <engines xsi:type="com.nxp.s32ds.isp:IspIpuEngine" name="Debayer_BR" engineIndex="5" nrProcessingSteps="724" parameters="    { D_IPUS_SYN_HOST_XCFG_OFF, (1284 &lt;&lt; 16) | 0x1},&#xD;&#xA;    { D_IPUS_SYN_HOST_INACFG_OFF, 0x00000700 },&#xD;&#xA;    { D_IPUS_SYN_HOST_INBCFG_OFF, 0x00000700 },&#xD;&#xA;    { D_IPUS_SYN_HOST_OUTCFG_OFF, 0x00000700 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_INA_OFF, 0x00098000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH1_CFG_INA_OFF, 0x00098000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH2_CFG_INA_OFF, 0x00098000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_INB_OFF, 0x00058000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH1_CFG_INB_OFF, 0x00058000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH2_CFG_INB_OFF, 0x00058000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_OUT_OFF, 0x00000000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH1_CFG_OUT_OFF, 0x00000000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH2_CFG_OUT_OFF, 0x00000000 }," kernel="debayer_br_advanced">
+    <portIn dataType="GENERIC_16" nrReadPixels="643" source="//@buffers.4/@channels.0"/>
+    <portIn dataType="GENERIC_16" index="1" nrLinesStartProcessing="2" nrReadPixels="643" nrFirstLine="1" source="//@buffers.4/@channels.1"/>
+    <portIn dataType="GENERIC_16" index="2" nrLinesStartProcessing="3" nrReadPixels="643" nrFirstLine="2" source="//@buffers.4/@channels.2"/>
+    <portIn dataType="GENERIC_16" portType="B" nrReadPixels="1286" source="//@buffers.3/@channels.0"/>
+    <portIn dataType="GENERIC_16" portType="B" index="1" nrLinesStartProcessing="2" nrReadPixels="1286" nrFirstLine="1" source="//@buffers.3/@channels.1"/>
+    <portIn dataType="GENERIC_16" portType="B" index="2" nrLinesStartProcessing="3" nrReadPixels="1286" nrFirstLine="2" source="//@buffers.3/@channels.2"/>
+    <portOut dataType="GENERIC_16" nrPixelsToTransfer="1284" buffer="//@buffers.7"/>
+    <portOut dataType="GENERIC_16" index="1" nrPixelsToTransfer="1284" buffer="//@buffers.6"/>
+    <portOut dataType="GENERIC_16" index="2" nrPixelsToTransfer="1284" buffer="//@buffers.5"/>
+  </engines>
+  <engines xsi:type="com.nxp.s32ds.isp:IspIpuEngine" name="RGB_2_YUV" engineIndex="1" engineType="VECTOR" nrProcessingSteps="724" parameters="    { D_IPUV_SYN_HOST_XCFG_OFF, (1284&lt;&lt; 16) | 0x0 },&#xD;&#xA;    { D_IPUV_SYN_HOST_INACFG_OFF, 0x00000700 },&#xD;&#xA;    { D_IPUV_SYN_HOST_OUTCFG_OFF, 0x00000700 },&#xD;&#xA;    { D_IPUV_SYN_S_CH0_CFG_INA_OFF, 0x00054000 },&#xD;&#xA;    { D_IPUV_SYN_S_CH1_CFG_INA_OFF, 0x00058000 },&#xD;&#xA;    { D_IPUV_SYN_S_CH2_CFG_INA_OFF, 0x00054000 },&#xD;&#xA;    { D_IPUV_SYN_S_CH0_CFG_OUT_OFF, 0x00000000 },&#xD;&#xA;    { D_IPUV_SYN_S_CH1_CFG_OUT_OFF, 0x00000000 },&#xD;&#xA;    { D_IPUV_SYN_S_CH2_CFG_OUT_OFF, 0x00000000 }," kernel="rgb2yuv_sint">
+    <portIn dataType="GENERIC_16" nrReadPixels="1284" source="//@buffers.7/@channels.0"/>
+    <portIn dataType="GENERIC_16" index="2" nrReadPixels="1284" source="//@buffers.6/@channels.0"/>
+    <portIn dataType="GENERIC_16" index="1" nrReadPixels="1284" source="//@buffers.5/@channels.0"/>
+    <portOut dataType="GENERIC_16" nrPixelsToTransfer="1284" buffer="//@buffers.8"/>
+    <portOut dataType="GENERIC_16" index="1" nrPixelsToTransfer="1284" buffer="//@buffers.9"/>
+    <portOut dataType="GENERIC_16" index="2" nrPixelsToTransfer="1284" buffer="//@buffers.10"/>
+  </engines>
+  <engines xsi:type="com.nxp.s32ds.isp:IspMipiEngine" name="CAM0" cameraType="CSI_SONY224" nrInputLineImages="NUM_CAM_LINES">
+    <portOut dataType="GENERIC_16" nrPixelsToTransfer="1288" buffer="//@buffers.11"/>
+  </engines>
+  <engines xsi:type="com.nxp.s32ds.isp:IspIpuEngine" name="Vignetting" engineIndex="2" nrProcessingSteps="728" parameters="    { D_IPUS_SYN_HOST_XCFG_OFF, (1288 &lt;&lt; 16) | 0x1 },&#xD;&#xA;    { D_IPUS_SYN_HOST_INACFG_OFF, 0x00000100 },&#xD;&#xA;    { D_IPUS_SYN_HOST_OUTCFG_OFF, 0x00000100 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_INA_OFF, 0x00058000 },&#xD;&#xA;    { D_IPUS_SYN_S_CH0_CFG_OUT_OFF, 0x00000000 }," kernel="vignetting">
+    <portIn dataType="GENERIC_16" nrReadPixels="1288" source="//@buffers.12/@channels.0"/>
+    <portOut dataType="GENERIC_16" nrPixelsToTransfer="1288" buffer="//@buffers.2"/>
+  </engines>
+  <engines xsi:type="com.nxp.s32ds.isp:IspIpuEngine" name="DenoiseFilter" engineIndex="2" engineType="VECTOR" nrProcessingSteps="720" parameters="    { D_IPUV_SYN_HOST_XCFG_OFF, (1280&lt;&lt; 16) | 0x0 },&#xD;&#xA;    { D_IPUV_SYN_HOST_INACFG_OFF, 0x00001F00 },&#xD;&#xA;    { D_IPUV_SYN_HOST_OUTCFG_OFF, 0x00000100 },&#xD;&#xA;    { D_IPUV_SYN_S_CH0_CFG_INA_OFF, 0x00058000 },&#xD;&#xA;    { D_IPUV_SYN_S_CH1_CFG_INA_OFF, 0x00058000 },&#xD;&#xA;    { D_IPUV_SYN_S_CH2_CFG_INA_OFF, 0x00058000 },&#xD;&#xA;    { D_IPUV_SYN_S_CH3_CFG_INA_OFF, 0x00058000 },&#xD;&#xA;    { D_IPUV_SYN_S_CH4_CFG_INA_OFF, 0x00058000 },&#xD;&#xA;    { D_IPUV_SYN_S_CH0_CFG_OUT_OFF, 0x00000000 },&#xD;&#xA;    { D_IPUV_SYN_S_CH1_CFG_OUT_OFF, 0x00000000 }," kernel="denoise">
+    <portIn dataType="GENERIC_16" nrReadPixels="1284" source="//@buffers.8/@channels.0"/>
+    <portIn dataType="GENERIC_16" index="1" nrLinesStartProcessing="2" nrReadPixels="1284" nrFirstLine="1" source="//@buffers.8/@channels.1"/>
+    <portIn dataType="GENERIC_16" index="2" nrLinesStartProcessing="3" nrReadPixels="1284" nrFirstLine="2" source="//@buffers.8/@channels.2"/>
+    <portIn dataType="GENERIC_16" index="3" nrLinesStartProcessing="4" nrReadPixels="1284" nrFirstLine="3" source="//@buffers.8/@channels.3"/>
+    <portIn dataType="GENERIC_16" index="4" nrLinesStartProcessing="5" nrReadPixels="1284" nrFirstLine="4" source="//@buffers.8/@channels.4"/>
+    <portOut dataType="GENERIC_16" nrPixelsToTransfer="1280" buffer="//@buffers.13"/>
+  </engines>
+  <buffers xsi:type="com.nxp.s32ds.isp:IspDdrBuffer" name="ISP_UYVY_OUTPUTBuffer" stride="2560" xSize="2560" ySize="720" fdma="//@fdmas.0"/>
+  <buffers name="ConvertOutBuffer0" stride="2560" xSize="2560" ySize="8" PortOut="//@engines.0/@portOut.0">
+    <channels fdma="//@fdmas.0"/>
+  </buffers>
+  <buffers name="VignettingBuffer0" stride="2576" dataType="GENERIC_16" xSize="1288" ySize="16" PortOut="//@engines.6/@portOut.0">
+    <channels bufferToNode="//@engines.2/@portIn.0"/>
+    <channels number="1" bufferToNode="//@engines.2/@portIn.1"/>
+    <channels number="2" bufferToNode="//@engines.2/@portIn.2"/>
+  </buffers>
+  <buffers name="Debayer_GBuffer0" stride="2576" dataType="GENERIC_16" xSize="1286" ySize="16" PortOut="//@engines.2/@portOut.0">
+    <channels bufferToNode="//@engines.3/@portIn.3"/>
+    <channels number="1" bufferToNode="//@engines.3/@portIn.4"/>
+    <channels number="2" bufferToNode="//@engines.3/@portIn.5"/>
+  </buffers>
+  <buffers name="Debayer_GBuffer1" stride="1288" dataType="GENERIC_16" xSize="643" ySize="21" PortOut="//@engines.2/@portOut.1">
+    <channels bufferToNode="//@engines.3/@portIn.0"/>
+    <channels number="1" bufferToNode="//@engines.3/@portIn.1"/>
+    <channels number="2" bufferToNode="//@engines.3/@portIn.2"/>
+  </buffers>
+  <buffers name="Debayer_BRBuffer2" stride="2568" dataType="GENERIC_16" xSize="1284" ySize="16" PortOut="//@engines.3/@portOut.2">
+    <channels bufferToNode="//@engines.4/@portIn.2"/>
+  </buffers>
+  <buffers name="Debayer_BRBuffer1" stride="2568" dataType="GENERIC_16" xSize="1284" ySize="16" PortOut="//@engines.3/@portOut.1">
+    <channels bufferToNode="//@engines.4/@portIn.1"/>
+  </buffers>
+  <buffers name="Debayer_BRBuffer0" stride="2568" dataType="GENERIC_16" xSize="1284" ySize="16" PortOut="//@engines.3/@portOut.0">
+    <channels bufferToNode="//@engines.4/@portIn.0"/>
+  </buffers>
+  <buffers name="RGB_2_YUVBuffer0" stride="2568" dataType="GENERIC_16" xSize="1284" ySize="16" PortOut="//@engines.4/@portOut.0">
+    <channels bufferToNode="//@engines.7/@portIn.0"/>
+    <channels number="1" bufferToNode="//@engines.7/@portIn.1"/>
+    <channels number="2" bufferToNode="//@engines.7/@portIn.2"/>
+    <channels number="3" bufferToNode="//@engines.7/@portIn.3"/>
+    <channels number="4" bufferToNode="//@engines.7/@portIn.4"/>
+  </buffers>
+  <buffers name="RGB_2_YUVBuffer1" stride="2568" dataType="GENERIC_16" xSize="1284" ySize="21" PortOut="//@engines.4/@portOut.1">
+    <channels bufferToNode="//@engines.0/@portIn.1"/>
+  </buffers>
+  <buffers name="RGB_2_YUVBuffer2" stride="2568" dataType="GENERIC_16" xSize="1284" ySize="21" PortOut="//@engines.4/@portOut.2">
+    <channels bufferToNode="//@engines.0/@portIn.2"/>
+  </buffers>
+  <buffers name="CAM0Buffer0" stride="2576" dataType="GENERIC_16" xSize="NUM_CAM_PIXELS" ySize="200" PortOut="//@engines.5/@portOut.0">
+    <channels bufferToNode="//@engines.1/@portIn.0"/>
+    <channels number="1" bufferToNode="//@engines.1/@portIn.1"/>
+  </buffers>
+  <buffers name="ChGain_ExposureBuffer0" stride="2576" dataType="GENERIC_16" xSize="1288" ySize="16" PortOut="//@engines.1/@portOut.0">
+    <channels bufferToNode="//@engines.6/@portIn.0"/>
+  </buffers>
+  <buffers name="DenoiseFilterBuffer0" stride="2560" dataType="GENERIC_16" xSize="1280" ySize="16" PortOut="//@engines.7/@portOut.0">
+    <channels bufferToNode="//@engines.0/@portIn.0"/>
+  </buffers>
+  <fdmas name="ISP_UYVY_OUTPUT" source="//@buffers.1/@channels.0" target="//@buffers.0" nrPixelsToTransfer="2560"/>
+  <headers path="${S32DS_VSDK_DIR}/isp/graphs/sony_dualexp/inc/iofiles_sony_dualexp.h" fileName="iofiles_sony_dualexp.h"/>
+</com.nxp.s32ds.isp:IspGraph>

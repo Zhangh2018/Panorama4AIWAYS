@@ -1,0 +1,150 @@
+// IPUV
+// Function:
+// HDR blending of 3 exposures. Fade in shorter while longer fades out.
+// Compression of output data with 2.5 kneepoints
+
+// Channel settings
+// set shift_in/x/out to 4 pixels
+// in0  :  L
+// in0  :  S
+// in1  :  VS
+// out0 :  HDR combined compressed 16 bit
+// out1 :  HDR combined linear upper 16 bit from 20 bit
+
+// Parameters:
+// @param[in]  gpr0 : combination threshold for l exposure
+// @param[in]  gpr8 : combination threshold for s exposure
+// @param[in]  gpr14: combination scale for L  exposure in 8.8 (LSB aligned >>4)
+// @param[in]  gpr15: combination scale for s  exposure in 8.8 (LSB aligned >>4)
+// @param[in]  gpr16: combination scale for vs exposure in 8.8 (LSB aligned >>4)
+// @param[in]  gpr17: slope to X2 (in 16 bit space), knee point with maximum value
+// @param[in]  gpr18: combination slope at min threshold (S->L)  (in 8.8)
+// @param[in]  gpr19: combination slope at max threshold (S->VS) (in 8.8)
+// @param[in]  gpr20: X0 for compression (in 20 bit space)
+// @param[in]  gpr21: slope to X0 (in 16 bit space)
+// @param[in]  gpr22: X1 for compression (in 16 bit space)
+// @param[in]  gpr23: slope to X1 (in 16 bit space)
+// @param[in]  gpr24: switch to test mode (for calibration)
+
+// Output results
+// @param[out] gpr12: maximum ypos (debugging)
+// @param[out] gpr13: maximum ypos by alternative kernel (debugging)
+
+
+//Variables:
+// vgpr0: gpr1 - 3: threshold for L (vectored)
+// vgpr2: gpr9 -11: threshold for S (vectored)
+// vgpr7: gpr28-31: LSBs for compression
+// gpr25: 4 LSB bit mask: 0xf
+// gpr26: shift for LSBs: 4
+// gpr27: 0x8000 constant for test mode
+// vh4  : alpha for L   in 0.16
+// vh9  : alpha for S   in 0.16
+// vh14 : alpha for VS  in 0.16
+// vh15 : alhpa * scale * L, LSBs for scaled L
+// vh19 : alhpa * scale * S
+// vh20 : alhpa * scale * V
+// vacc0: linear sum (upper 16 bits from 20 bits)
+// vacc1: compressed sum
+
+.global hdr_blend_3exp_start
+hdr_blend_3exp_start:
+
+  max gpr12,gpr12,ypos             // check for last line (debugging)
+  mov vgpr0,gpr0                   // vectoring L threshold
+  mov vgpr2,gpr8                   // vectoring S threshold
+  mov gpr25,0xf
+  mov gpr26,4
+  mov gpr27,0x8000
+
+  // load first pixel
+  done hdr_blend_3exp_loop, i      // first input 4 pixels
+
+hdr_blend_3exp_loop:
+  // **** compute alpha
+  mov  confalu,(0 /* unsigned*/ | (1 << 1) /* saturate*/ | (4<<4) /* 12.4 multiplication*/ )
+  sub  vh4,vgpr0,vh0               // (threshold_L-L)
+  mulh vh4,vh4,gpr18               // alpha_L=(threshold_L-L)*slope_L
+  sub  vh9,vgpr2,vh5               // (threshold_S-S)
+  mulh vh9,vh9,gpr19               // alpha_S=(threshold_S-S)*slope_S
+  sub  vh9,vh9,vh4                 // alpha_S-=alpha_L
+  sub  vh14,vone,vh9               // alpha_VS=1-alpha_S
+  sub  vh14,vh14,vh4               // alpha_VS-=alpha_L
+
+  // **** multiply with scales
+  mov  confalu,(0 /* unsigned*/ | (1 << 1) /* saturate*/ | (16<<4) /* 0.16 multiplication*/ )
+  mulh vh15,vh0, gpr14             // scaled_L = scale_L * L
+  mulh vh19,vh5, gpr15             // scaled_S = scale_S * S
+  mulh vh20,vh10,gpr16             // scaled_V = scale_V * V
+  max  vh20,vh20,vh19		   // scaled_V = max(scaled_V,scaled_s)
+
+  // **** do alpha blending
+  // scale
+  mulh vsacc0,vh15,vh4             // hdr  = scaled_L * alpha_L
+  mulh vacc0, vh19,vh9             // hdr += scaled_S * alpha_S
+  mulh vacc0, vh20,vh14            // hdr += scaled_V * alpha_V
+
+  // **** store linear to vout1
+  mov vout1,vacc0
+
+  // test if calibration mode
+  sub zero,zero,gpr24
+  bne hdr_blend_3exp_test
+
+  // **** do compression
+  // get LSBs from scaled_L * alpha_L
+  mov  confalu,(0 /* unsigned*/ | (1 << 1) /* saturate*/ | (12<<4) /* 4.12 multiplication*/ )
+  mulh vh15,vh15,vh4               // scaled_L = scaled_L * alpha_L
+  asl  vgpr7,vout1,gpr26           // shift output word 4 bit up
+  and  vh15,vh15,gpr25             // mask out 4 LSB from scaled_L
+  add  vgpr7,vgpr7,vh15            // and add LSBs
+
+  // apply slopes and limit to knee point
+  mov  confalu,(0 /* unsigned*/ | (1 << 1) /* saturate*/ | (8<<4) /* 8.8 multiplication*/ )
+  min vgpr7,vgpr7,gpr20            // threshold low area to low knee point
+  mulh vsacc1,vgpr7,gpr21          // apply slope to to low area
+  min vout0,vout1,gpr22            // threshold mid area to mid knee point
+  mulh vacc1,vout0,gpr23           // apply slope to mid area
+  //mulh vgpr7,vgpr7,gpr21           // apply slope to to low area
+  //mulh vout0,vout1,gpr23           // apply slope to mid area
+  //min vsacc1,vgpr7,gpr20           // threshold low area to low knee point
+  //min vacc1,vout0,gpr22            // threshold mid area to mid knee point
+
+  //high area
+  mulh vacc1,vout1,gpr17           // apply slope to high area
+
+  dvot vacc1,hdr_blend_3exp_loop,ixo
+  //halt
+
+// NONE PRODUCTION CODE!!!
+hdr_blend_3exp_test:
+  mov gpr27,gpr24
+  mov vh0,vzero
+  mov vh5,vzero
+  mov vh10,vzero
+  sub gpr27,0x10                   // first level select only L
+  bhi hdr_blend_3exp_testS
+  mov vh0,vone
+  bal hdr_blend_3exp_testmerge
+hdr_blend_3exp_testS:
+  sub gpr27,0x10                   // second level select only S
+  bhi hdr_blend_3exp_testVS
+  mov vh5,vone
+  bal hdr_blend_3exp_testmerge
+hdr_blend_3exp_testVS:
+  mov vh10,vone                    // third level select only VS
+
+//  mov vh0,vzero
+//  mov vh5,gpr27
+//  mov vh10,vone
+
+hdr_blend_3exp_testmerge:
+  mulh vsacc1,vh0, vh4
+  mulh vacc1, vh5, vh9
+  mulh vacc1, vh10,vh14
+
+  dvot vacc1,hdr_blend_3exp_loop,ixo
+
+
+.global hdr_blend_3exp_end
+hdr_blend_3exp_end:

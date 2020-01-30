@@ -1,0 +1,51 @@
+&LINUX_S32V234_DIR=os.env(LINUX_S32V234_DIR)
+//Of course missing is the sequence to wakeup the A53 cluster.
+
+RESET
+SYStem.RESet
+SYStem.CPU S32V234
+SYStem.Option.ResBreak OFF
+SYStem.Option.WaitReset 1s
+
+// Linux
+SYStem.Option MMUSPACES ON
+CORE.ASSIGN 1.,2.,3.,4.       // starting only with one core first
+Trace.DISable        // Maybe required
+SYStem.Mode.Attach
+
+IF RUN()
+    Break.direct
+
+// Linux
+SETUP.IMASKASM ON ;lock interrupts while stepping
+
+Data.LOAD.ELF &LINUX_S32V234_DIR/vmlinux /NOCODE /strippart "linux" /sourcepath "&LINUX_S32V234_DIR"
+
+; Declare the MMU format to the debugger
+ ; - table format is "LINUX"
+ ; - table base address is at label "swapper_pg_dir"
+ ; - kernel address translation
+ ; Map the virtual kernel symbols to physical addresses to give
+ ; the debugger access to it before CPU MMU is initialized
+
+ print "initializing debugger MMU..."
+; assume 39bit physical addresses, 4k Pagesize -> first level pagetable is 8k in size
+; attention, recompiling the kernel might alter the addresses !!!
+ MMU.FORMAT LINUXSWAP3 swapper_pg_dir 0xFFFFFF800887A000++0x1FFF 0x8087A000
+
+ ; prepare debugger translation
+ TRANSLATION.COMMON 0xF000000000000000--0xffffffffffffffff            ; common area for kernel and processes
+ TRANSLATION.TableWalk ON   ; debugger uses a table walk to decode virtual addresses
+ TRANSlation.ON             ; switch on debugger(!) address translation
+
+; Initialize Linux Awareness
+; Note that the Linux awareness needs the kernel symbols to work
+
+PRINT "initializing multitask support..."
+TASK.CONFIG ~~/demo/arm64/kernel/linux/linux-3.x/linux3.t32       ; loads Linux awareness (linux.t32)
+MENU.ReProgram ~~/demo/arm64/kernel/linux/linux-3.x/linux.men     ; loads Linux menu (linux.men)
+sYmbol.Autoload.CHECKLINUX "do ~~/demo/arm64/kernel/linux/linux-3.x/autoload.cmm "
+
+go
+
+ENDDO

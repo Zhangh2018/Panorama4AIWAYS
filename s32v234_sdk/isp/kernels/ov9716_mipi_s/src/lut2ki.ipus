@@ -1,0 +1,73 @@
+#.org    0x00
+#Engine: IPUS2, IPUS3 (LUT)
+#Function:
+#LUT with 12 bit in 16 out with interpoaltion between two seeds
+#
+#step_x, step_in, step_out=1
+# no neighborhood used
+#input:
+#line0: Y 16 bit
+#output:
+#line0: Y 16 bit
+#
+# parameters:
+# gpr15   LUT offset
+#variables:
+# gpr0    shifted down input
+# gpr1    fractional bits (from data word)
+# gpr2    (1-wheight) * lut[lower]
+# constants:
+# gpr3    max luta for clipping
+# gpr4    fractional bit mask
+# gpr5    32 max fractional value
+# gpr13   maximum ypos
+
+.global lut2ki_start
+
+lut2ki_start:
+  mov confalu,(0 /* unsigned*/ | (1 << 1) /* saturate*/ | (5<<4) /* 11.5 fixedpoint mult*/)
+  //mov out0,0     // initialize for first pixels becasue of delayed mult
+  mov gpr3,0x7ff        // maximum lut bin = 2047
+  add gpr3,gpr3,gpr15   // add lut offset to maximum bin
+  mov gpr4,0x1f         // fraction bit mask = 0x1f
+  mov gpr5,32           // 
+  done lut2ki_d1,i
+lut2ki_d1:
+  max  gpr13,gpr13,ypos
+  done lut2ki_d2,i
+lut2ki_d2:
+  lsr gpr0,ina1,gpr14   // 16bit to 11bit
+  add gpr0,gpr0,gpr15   // add lut offset to 11bit
+  mov luta,gpr0         // add lut offset to 11bit
+  //nop // stall 2  cycles from luta->lut
+  //nop // stall 2  cycles from luta->lut
+
+lut2ki_loop:
+  and gpr1,ina1,gpr4    // mask out fractional bits
+  mulh gpr2,lut,gpr1    // (fractional) * lut[lower] (wheight = 1-fractional)
+  //nop // stall after mul
+  add gpr0,1            // get next luta
+  sub sacc0,lut,gpr2    // (wheight = 1-fractional) * lut[lower]
+  //mov gpr6,lut          // debug
+
+  //min gpr0,gpr0,gpr3    //    after clipping to max
+  min luta,gpr0,gpr3    //    after clipping to max
+  //nop // stall 2 cycles from luta->lut
+  //nop // stall 2 cycles from luta->lut
+  lsr gpr0,ina0,gpr14   // do shift for next value to fill stall slot
+  add gpr0,gpr0,gpr15   // add lut offset to 11bit
+  //lsr hbinincl,ina1,8   // add to histogram
+  mulh acc0,lut,gpr1    // += fractional * lut[higher]
+  //nop // stall after acc write
+
+  //mov gpr6,lut          // debug
+
+  mov luta,gpr0         // request lut for next pixels
+  //nop // stall 2 cycles from luta->lut
+  //nop // stall 2 cycles from luta->lut
+  
+  dout acc0,lut2ki_loop,ixo
+  //halt
+
+.global lut2ki_end
+lut2ki_end:

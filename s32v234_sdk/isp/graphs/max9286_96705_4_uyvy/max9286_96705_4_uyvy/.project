@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>max9286_96705_4_uyvy</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.sirius.nature.modelingproject</nature>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>ISP_kernels/copy_1to1_ipus.ipus</name>
+			<type>1</type>
+			<location>C:/NXP/S32DS_Vision_v2.0/S32DS/s32v234_sdk/isp/kernels/max9286_96705_4/src/copy_1to1_ipus.ipus</location>
+		</link>
+	</linkedResources>
+</projectDescription>

@@ -1,0 +1,84 @@
+##############################################################################
+#
+# Copyright 2018 NXP 
+# All Rights Reserved
+#
+##############################################################################
+#
+#  CONTENT
+#    APU Emulator makefiles
+#
+#  AUTHOR
+#    Dmitry Kudryavtsev
+#    Mihail Marian Nistor
+#
+#  DATE
+#    2018-11-27
+#
+##############################################################################
+LIB = libmisc_lib.a
+
+OBJDIR = obj_libmisc
+
+SRC_DIR = \
+  $(VISION_DIR)/libs/utils/common/src \
+  $(VISION_DIR)/libs/utils/umat/src \
+  $(VISION_DIR)/libs/utils/oal/user/src/windows
+
+CXXINCLUDES = -I"$(EMULATOR_DIR)/acf/src" \
+  -I"$(OPENCV_DIR)" \
+  -I"$(VISION_DIR)/libs/utils/umat/include" \
+  -I"$(VISION_DIR)/libs/utils/oal/user/include" \
+  -I"$(VISION_DIR)/libs/utils/oal/kernel/include" \
+  -I"$(VISION_DIR)/libs/utils/common/include" \
+  -I"$(VISION_DIR)/libs/utils/oal/user/include" \
+  -I"$(VISION_DIR)/libs/io/semihost/include" \
+  -I"$(VISION_DIR)/include"
+
+CXXDEFINES = -DVSDK_UMAT_USE_OPENCV -DAPEX2_EMULATE -DOSDIR=linux
+
+ifeq ($(OS),Windows_NT)
+CXXDEFINES += -DWIN32
+endif
+
+CXXFLAGS = $(CXXINCLUDES) \
+  $(CXXDEFINES) \
+  $(CXXOPTS)
+
+SRC = $(foreach sdir,$(SRC_DIR),$(wildcard $(sdir)/*.cpp))
+
+LIBSRC_ALL = $(notdir $(SRC))
+LIBSRC = $(filter-out $(SRCEXCLUSION),$(LIBSRC_ALL))
+LIBOBJ = $(addprefix $(OBJDIR)/, $(notdir $(LIBSRC:.cpp=.o)))
+
+define make-goal
+$(OBJDIR)/%.o: $1/%.cpp
+	@$(CXX) $(CXXFLAGS) -c $$< -o $$@
+endef
+.PHONY: all clean install uninstall checkdirs
+
+all: checkdirs $(LIB)
+
+$(LIB): $(LIBOBJ)
+	@ar $(ARFLAGS) $@ $^
+
+checkdirs: $(OBJDIR)
+
+$(OBJDIR):
+	@mkdir -p $@
+
+clean:
+	@$(RM) $(LIB) $(OBJDIR)
+
+install:
+	@mkdir -p $(INSTALLDIR)
+	@cp $(LIB) ./$(INSTALLDIR)
+
+uninstall:
+	@$(RM) ./$(INSTALLDIR)/$(LIB)
+
+ifneq "$(MAKECMDGOALS)" "clean"
+-include $(LIBOBJ:.o=.d)
+endif
+
+$(foreach sdir,$(SRC_DIR),$(eval $(call make-goal,$(sdir))))

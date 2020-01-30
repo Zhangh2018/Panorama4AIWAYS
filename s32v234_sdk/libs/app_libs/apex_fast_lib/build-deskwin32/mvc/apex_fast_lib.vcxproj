@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{F7749567-EDA1-455D-80E6-1BB0720E8D6C}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>apex_fast_lib</RootNamespace>
+    <ProjectName>apex_fast_lib</ProjectName>
+    <S32V244_SDK_ROOT>..\..\..\..\..\</S32V244_SDK_ROOT>
+    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="..\..\..\..\..\build\mvc\property_sheets_vs\OpenCVInc.props" />
+    <Import Project="..\..\..\..\..\build\mvc\property_sheets_vs\oal.props" />
+    <Import Project="..\..\..\..\..\build\mvc\property_sheets_vs\umat.props" />
+    <Import Project="..\..\..\..\..\build\mvc\property_sheets_vs\ACF_Lib.props" />
+    <Import Project="..\..\..\..\..\build\mvc\property_sheets_vs\KernelDirectory.props" />
+    <Import Project="..\..\..\..\..\build\mvc\property_sheets_vs\apex_fast_lib.props" />
+    <Import Project="..\..\..\..\..\build\mvc\property_sheets_vs\common.props" />
+    <Import Project="..\..\..\..\..\build\mvc\property_sheets_vs\feature_detection_kernels.props" />
+    <Import Project="..\..\..\..\..\build\mvc\property_sheets_vs\filtering_kernels.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="..\..\..\..\..\build\mvc\property_sheets_vs\KernelDirectory.props" />
+    <Import Project="..\..\..\..\..\build\mvc\property_sheets_vs\ACF_Lib.props" />
+    <Import Project="..\..\..\..\..\build\mvc\property_sheets_vs\apex_fast_lib.props" />
+    <Import Project="..\..\..\..\..\build\mvc\property_sheets_vs\common.props" />
+    <Import Project="..\..\..\..\..\build\mvc\property_sheets_vs\OpenCVInc.props" />
+    <Import Project="..\..\..\..\..\build\mvc\property_sheets_vs\feature_detection_kernels.props" />
+    <Import Project="..\..\..\..\..\build\mvc\property_sheets_vs\filtering_kernels.props" />
+    <Import Project="..\..\..\..\..\build\mvc\property_sheets_vs\umat.props" />
+    <Import Project="..\..\..\..\..\build\mvc\property_sheets_vs\oal.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <TargetExt>.lib</TargetExt>
+    <IntDir>$(SolutionDir)$(ProjectName)_$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)d</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(ProjectDir)$(Configuration)\</OutDir>
+    <TargetExt>.lib</TargetExt>
+    <IntDir>$(ProjectDir)$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>APEX2_EMULATE;_WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(KernelDirectory)\sample_feature_detection_kernels\inc;$(ProjectDir)..\..\inc;$(ProjectDir)..\..\graphs;$(KernelDirectory)\sample_filtering_kernels\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ProgramDataBaseFileName>$(IntDir)_$(ProjectName)vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
+      <CompileAs>Default</CompileAs>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <ProjectReference>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>APEX2_EMULATE;_WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <ProgramDataBaseFileName>$(IntDir)vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
+      <AdditionalOptions>/FS %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(KernelDirectory)\sample_feature_detection_kernels\inc;$(ProjectDir)..\..\inc;$(ProjectDir)..\..\graphs;$(KernelDirectory)\sample_filtering_kernels\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PreBuildEvent>
+      <Command />
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command />
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\apex_fast.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\graphs\apu_fast_apu_process_desc.hpp" />
+    <ClInclude Include="..\..\graphs\apu_fast_graph.hpp" />
+    <ClInclude Include="..\..\graphs\apu_fast_graph_names.h" />
+    <ClInclude Include="..\..\graphs\apu_fast_nms_apu_process_desc.hpp" />
+    <ClInclude Include="..\..\graphs\apu_fast_nms_graph.hpp" />
+    <ClInclude Include="..\..\inc\apex_fast.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

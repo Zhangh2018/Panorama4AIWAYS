@@ -1,0 +1,246 @@
+%===== COGNIVUE HEADER =====================================================
+
+% WARNING: This header was tested with Doxygen 1.8.6.
+%          It generates errors with early versions of Doxygen.
+%          Later versions have not been tested.
+
+\documentclass[oneside]{book}
+
+%===== DOCUMENT INFO =======================================================
+\newcommand{\docTitleLineOne}{ACF Reference Guide} % First line of document title.
+\newcommand{\docTitleLineTwo}{}          % Second line of document title.  If the title has only one line, leave this empty.
+\newcommand{\docID}{UG-10267-04-08}      % Document ID
+\newcommand{\copyrightYear}{2018}        % Copyright year
+\newcommand{\logoPath}{../../../../../script/doxygen/NXP_logo_RGB_512x960.pdf}   % Specify the path to the NXP logo
+%===== DOCUMENT INFO END ===================================================
+
+%===== PACKAGES REQUIRED BY DOXYGEN ========================================
+\usepackage{calc}
+\usepackage{doxygen}
+\usepackage{graphicx}
+\usepackage[utf8]{inputenc}
+\usepackage{makeidx}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{fixltx2e}
+\PassOptionsToPackage{warn}{textcomp}
+\usepackage{textcomp}
+\usepackage[nointegrals]{wasysym}
+\usepackage[table]{xcolor}
+\usepackage{geometry}
+\usepackage{lastpage}
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+%===== PACKAGES REQUIRED BY DOXYGEN END ====================================
+
+%===== FONT SELECTION ======================================================
+\usepackage[T1]{fontenc}
+\usepackage{mathptmx}
+\usepackage[scaled=.90]{helvet}
+\usepackage{courier}
+\usepackage{amssymb}
+\usepackage{sectsty}
+\renewcommand{\familydefault}{\sfdefault}
+\allsectionsfont{%
+  \fontseries{bc}\selectfont%
+  %\color{darkgray}%
+}
+\renewcommand{\DoxyLabelFont}{%
+  \fontseries{bc}\selectfont%
+  %\color{darkgray}%
+}
+\newcommand{\+}{\discretionary{\mbox{\scriptsize$\hookleftarrow$}}{}{}}
+%===== FONT SELECTION END ==================================================
+
+%===== PAGE AND TEXT LAYOUT ================================================
+\geometry{%
+  letterpaper,%
+  top=2.5cm,%
+  bottom=2.5cm,%
+  left=2.5cm,%
+  right=2.5cm,%
+  footskip=1.4cm
+}
+\tolerance=750
+\hfuzz=15pt
+\hbadness=750
+\setlength{\emergencystretch}{15pt}
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{0.2cm}
+\makeatletter
+\renewcommand{\paragraph}{%
+  \@startsection{paragraph}{4}{0ex}{-1.0ex}{1.0ex}{%
+    \normalfont\normalsize\bfseries\SS@parafont%
+  }%
+}
+\renewcommand{\subparagraph}{%
+  \@startsection{subparagraph}{5}{0ex}{-1.0ex}{1.0ex}{%
+    \normalfont\normalsize\bfseries\SS@subparafont%
+  }%
+}
+\makeatother
+%===== PAGE AND TEXT LAYOUT END ============================================
+
+%===== HEADERS AND FOOTERS =================================================
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0.0pt}   %remove footer line
+%===== HEADERS AND FOOTERS END =============================================
+
+%===== INDECES AND BIBLIOGRAPHY ============================================
+\usepackage{natbib}
+\usepackage[titles]{tocloft}
+\setcounter{tocdepth}{3}
+\setcounter{secnumdepth}{5}
+\makeindex
+%===== INDECES AND BIBLIOGRAPHY END ========================================
+
+%===== HYPERLINKS (required, but should be loaded last) ====================
+\usepackage{ifpdf}
+\ifpdf
+  \usepackage[pdftex,pagebackref=true]{hyperref}
+\else
+  \usepackage[ps2pdf,pagebackref=true]{hyperref}
+\fi
+\definecolor{cognivue_blue}{rgb}{0.09375,0.2734375,0.54296875}   % [24, 70, 139]
+\newcommand{\linkColor}{cognivue_blue}   % For e-publishing use "cognivue_blue".  For printing use "black".
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=\linkColor,
+  citecolor=\linkColor,
+  filecolor=\linkColor,
+  urlcolor=\linkColor,
+  unicode
+}
+
+%===== HYPERLINKS END ======================================================
+
+%===== PAGE BORDER =========================================================
+\usepackage{background}
+\usetikzlibrary{calc} 
+\usetikzlibrary{babel}
+\backgroundsetup{color=black, scale=1, opacity=1, angle=0,
+  contents={\tikz\draw[line width=1pt]
+  ( $ (current page.south east) + (-0,1.6) $ ) rectangle ( $ (current page.north west) + (1.6,0) $ );}
+}
+%===== PAGE BORDER END =====================================================
+
+%===== CUSTOM COMMANDS =====================================================
+\newcommand{\clearemptydoublepage}{%
+  \newpage{\pagestyle{empty}\cleardoublepage}%
+}
+\newcommand{\cgvrhead}   % Right header for the Cognivue Document
+  {\footnotesize{ \docID \newline  \textit{NXP Confidential and Proprietary}}}
+%===== CUSTOM COMMANDS END =================================================
+
+%===== CONTENTS ============================================================
+\begin{document}
+
+%===== COGNIVUE TITLE PAGE =================================================
+\pagestyle{empty} % No headers or page numbers
+
+%===== COGNIVUE LOGO =======================================================
+\begin{figure}
+	\centering
+	\includegraphics[width=0.4\textwidth]{\logoPath}
+\end{figure}
+%===== COGNIVUE LOGO END ===================================================
+
+%===== DOCUMENT TITLE ======================================================
+\vspace*{2.5cm}
+\begin{flushright}
+	\Huge
+	\textbf{ \docTitleLineOne} \vspace*{0.4cm} \\ 
+	\textbf{ \docTitleLineTwo} \\
+	\huge
+	\vspace*{2.0cm}
+	\textbf{\docID}
+\end{flushright}
+\vspace*{2.4cm}
+%===== DOCUMENT TITLE END ==================================================
+
+%===== LEGAL DISCLAIMER ====================================================
+\footnotesize
+{ \setlength{\parindent}{0pt} \textbf{Copyright} }
+%\vspace{6pt}
+\newline \newline
+\vspace{4pt}
+Copyright \copyright \ \copyrightYear \ NXP Semiconductor ("NXP") All rights reserved.
+\newline
+\scriptsize
+This document contains information which is proprietary to NXP and may be used for non-commercial purposes within your organization in support of NXP's products.
+No other use or transmission of all or any part of this document is permitted without written permission from NXP, and must include all copyright and other proprietary notices.
+Use or transmission of all or any part of this document in violation of any applicable Canadian or other legislation is hereby expressly prohibited.
+\vspace{4pt}
+\newline
+User obtains no rights in the information or in any product, process, technology or trademark which it includes or describes, and is expressly prohibited from modifying the information or creating derivative works without the express written consent of NXP.
+\newline \newline \newline
+{\footnotesize \textbf{Disclaimer}}
+\vspace{5pt}
+\newline
+NXP assumes no responsibility for the accuracy or completeness of the information presented which is subject to change without notice.
+In no event will NXP be liable for any direct, indirect, special, incidental or consequential damages, including lost profits, lost business or lost data, resulting from the use of or reliance upon the information, whether or not NXP has been advised of the possibility of such damages.
+\vspace{3pt}
+\newline
+Mention of non-NXP products or services is for information purposes only and constitutes neither an endorsement nor a recommendation.
+\newline \newline \newline
+{\footnotesize \textbf{Uncontrolled Copy}}
+\vspace{5pt}
+\newline
+The master of this document is stored on NXP's document management system Docushare / Confluence.  Viewing of the master electronically ensures access to the current issue. Any hardcopies are considered uncontrolled copies.
+\newpage
+\normalsize
+%===== LEGAL DISCLAIMER END================================================
+
+%===== REVISION HISTORY ===================================================
+\renewcommand{\arraystretch}{1.5}
+\begin{table}[h]
+\centering
+\begin{tabular}{|p{1cm}|p{8cm}|p{2.5cm}|p{2.5cm}|}
+\hline
+\rowcolor[HTML]{C0C0C0} 
+\multicolumn{1}{|c|}{\cellcolor[HTML]{C0C0C0}\textbf{Version}} & \multicolumn{1}{|c|}{\cellcolor[HTML]{C0C0C0}\textbf{Details of Change}}                                                  & \multicolumn{1}{|c|}{\cellcolor[HTML]{C0C0C0}\textbf{Author}} & \multicolumn{1}{|c|}{\cellcolor[HTML]{C0C0C0}\textbf{Date}} \\ \hline
+01                                                             & Initial Revision                                                                                                          & C. Moulder                                                    & October 27, 2015                                            \\ \hline
+02                                                             & AcfProfilingInfo related items added, misc. updates                                                                       & C. Moulder                                                    & May 16, 2016                                                \\ \hline
+03                                                             & Formatting improvements, misc. updates                                                                                    & C. Moulder                                                    & Sept 27, 2016                                               \\ \hline
+04                                                             & Update for UMAT interfaces                                                                                                & C. Moulder                                                    & Mar 13, 2017                                                \\ \hline
+05                                                             & Added interface description for Start w/ callback                                                                         & C. Moulder                                                    & May 3, 2017                                                 \\ \hline
+06                                                             & Misc. edits related to limits                                                                                             & C. Moulder                                                    & Feb 16, 2018                                                \\ \hline
+07                                                             & Edits for Start, Wait, CfgWaitTimeout                                                                                     & C. Moulder                                                    & Aug 10, 2018                                                \\ \hline
+08                                                             & Umat replace by SUmat                                                                                     & K.Pham                                                    & Dec 06, 2018                                                \\ \hline
+\end{tabular}
+\end{table}
+\renewcommand{\arraystretch}{1}
+%===== REVISION HISTORY END ================================================
+
+%===== COGNIVUE TITLE PAGE END =============================================
+
+%===== HEADERS FOR THE TABLE OF CONTENTES ==================================
+\fancyhf{} % clear the headers
+\fancypagestyle{plain}{
+  \fancyhead[R]{\fancyplain{}{\cgvrhead}}
+  \fancyfoot[C]{\fancyplain{}{\thepage}}
+}
+\pagestyle{plain}
+%===== HEADERS FOR THE TABLE OF CONTENTES END===============================
+
+%===== TABLE OF CONTENTES ==================================================
+\begingroup
+  \hypersetup{linkcolor=black,pageanchor=false}   % Use black for the links int the TOC.
+  \pagenumbering{roman}
+  \clearemptydoublepage
+  \tableofcontents
+  \clearemptydoublepage
+\endgroup
+\pagenumbering{arabic}
+\hypersetup{pageanchor=true}
+%===== TABLE OF CONTENTES END ==============================================
+
+%===== HEADERS FOR THE DOCUMENT ============================================
+\fancyhf{} % clear the headers
+\fancypagestyle{plain}{
+  \fancyhead[R]{\fancyplain{}{\cgvrhead}}
+  \fancyfoot[C]{\fancyplain{}{\thepage /\pageref*{LastPage}}}
+}
+\pagestyle{plain}
+%===== HEADERS FOR THE DOCUMENT END ========================================

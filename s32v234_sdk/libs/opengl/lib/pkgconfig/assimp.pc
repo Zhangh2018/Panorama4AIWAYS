@@ -1,0 +1,10 @@
+prefix=/home/changjy/S32V/s32v/usr-static
+exec_prefix=/home/changjy/S32V/s32v/usr-static/bin
+libdir=/home/changjy/S32V/s32v/usr-static/lib
+includedir=/home/changjy/S32V/s32v/usr-static/include/assimp
+
+Name: Assimp
+Description: Import various well-known 3D model formats in an uniform manner.
+Version: 3.0.1264
+Libs: -L${libdir} -lassimp
+Cflags: -I${includedir} 

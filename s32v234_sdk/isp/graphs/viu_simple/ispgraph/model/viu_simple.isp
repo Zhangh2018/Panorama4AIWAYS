@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<com.nxp.s32ds.isp:IspGraph xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:com.nxp.s32ds.isp="http://s32ds.nxp.com/isp/1.0.0" name="viu_simple" kernelsRootDirectory="${S32DS_VSDK_DIR}/isp/kernels/generic/src" nrImageLines="729" heartBeatSource="//@engines.0">
+  <engines xsi:type="com.nxp.s32ds.isp:IspViuEngine" name="VIU_0" cameraType="VIU_OV10635" nrInputLineImages="800">
+    <portOut dataType="GENERIC_16" nrPixelsToTransfer="1280" buffer="//@buffers.0"/>
+  </engines>
+  <buffers name="VIU_0Buffer0" stride="2560" dataType="GENERIC_16" xSize="1280" ySize="32" PortOut="//@engines.0/@portOut.0">
+    <channels fdma="//@fdmas.0"/>
+  </buffers>
+  <buffers xsi:type="com.nxp.s32ds.isp:IspDdrBuffer" name="FastDMA_OutBuffer" stride="3840" dataType="GENERIC_16" xSize="1280" ySize="720" fdma="//@fdmas.0"/>
+  <fdmas name="FastDMA_Out" source="//@buffers.0/@channels.0" target="//@buffers.1"/>
+</com.nxp.s32ds.isp:IspGraph>
